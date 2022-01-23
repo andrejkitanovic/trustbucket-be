@@ -1,0 +1,31 @@
+{
+  "name": "zerox-cms-backend",
+  "version": "1.0.0",
+  "description": "Zerox CMS Backend",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "local": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write \"{routes,models,controllers}/**/*.{js,jsx,json,md}\""
+  },
+  "author": "Andrej Kitanovic",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^14.2.0",
+    "express": "^4.17.1",
+    "express-form-data": "^2.0.14",
+    "express-validator": "^6.6.1",
+    "geoip-lite": "^1.4.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.12",
+    "multer": "^1.4.2",
+    "socket.io": "^4.1.2"
+  },
+  "devDependencies": {
+    "prettier": "^2.2.1"
+  }
+}
