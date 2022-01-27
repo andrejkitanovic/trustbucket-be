@@ -1,15 +1,22 @@
 const express = require('express');
-const ratingController = require('../controllers/rating');
+const googleRatingController = require('../controllers/rating/google');
+const freshaRatingController = require('../controllers/rating/fresha');
+const recoseRatingController = require('../controllers/rating/recose');
+const bookingRatingController = require('../controllers/rating/booking');
 
 const router = express.Router();
 
-//SEARCH
-router.get('/google/search', ratingController.getGoogleProfile);
+//GOOGLE
+router.get('/google/search', googleRatingController.getGoogleProfile);
+router.post('/google', googleRatingController.saveGoogleRating);
 
-//POST
-router.post('/google', ratingController.saveGoogleRating);
-router.post('/booking', ratingController.saveBookingProfile);
-router.post('/fresha', ratingController.saveFreshaProfile);
-router.post('/recose', ratingController.saveRecoseProfile);
+//FRESHA
+router.post('/fresha', freshaRatingController.saveFreshaProfile);
+
+//BOOKING
+router.post('/booking', bookingRatingController.saveBookingProfile);
+
+//RECOSE
+router.post('/recose', recoseRatingController.saveRecoseProfile);
 
 module.exports = router;
