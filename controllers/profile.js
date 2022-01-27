@@ -7,8 +7,10 @@ exports.updateRatingHandle = async (user, rating) => {
 	const ratings = user.ratings;
 	const { type } = rating;
 
-	const updatedRatings = ratings.filter((single) => single.type !== type);
+	let updatedRatings = ratings.filter((single) => single.type !== type);
 	updatedRatings.push(rating);
+	updatedRatings = calculateOverallRating(updatedRatings);
+	console.log(updatedRatings);
 
 	user.ratings = updatedRatings;
 
@@ -19,14 +21,27 @@ exports.updateRatingHandle = async (user, rating) => {
 const deleteRatingHandle = async (user, type) => {
 	const ratings = user.ratings;
 
-	const updatedRatings = ratings.filter((single) => single.type !== type);
+	let updatedRatings = ratings.filter((single) => single.type !== type);
+	updatedRatings = calculateOverallRating(updatedRatings);
 
 	user.ratings = updatedRatings;
 
 	await user.save();
 	return user;
 };
-exports.deleteRatingHandle
+
+const calculateOverallRating = (ratings) => {
+	const updatedRatings = ratings.filter((single) => single.type !== 'overall');
+	const ratingCount = updatedRatings.reduce((prev, current) => prev + current.ratingCount, 0);
+	const rating = updatedRatings.reduce((prev, current) => prev + current.rating * current.ratingCount, 0) / ratingCount;
+	const overall = {
+		type: 'overall',
+		rating,
+		ratingCount,
+	};
+
+	return [overall, ...updatedRatings];
+};
 
 // ROUTES
 
