@@ -41,7 +41,7 @@ const userSchema = new Schema(
 			{
 				type: {
 					type: String,
-					enum: ['overall', 'google'],
+					enum: ['overall', 'google', 'booking', 'fresha', 'recose'],
 					default: 'overall',
 				},
 				rating: {

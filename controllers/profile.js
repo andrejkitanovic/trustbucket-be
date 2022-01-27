@@ -1,6 +1,19 @@
 const { getIdAndTypeFromAuth } = require('./auth');
 const User = require('../models/user');
 
+exports.updateRating = async (user, rating) => {
+	const ratings = user.ratings;
+	const { type } = rating;
+
+	const updatedRatings = ratings.filter((single) => single.type !== type);
+	updatedRatings.push(rating);
+
+	user.ratings = updatedRatings;
+
+	await user.save();
+	return user;
+};
+
 exports.getProfile = (req, res, next) => {
 	(async function () {
 		try {
