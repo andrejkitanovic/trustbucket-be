@@ -20,7 +20,6 @@ exports.searchTrustpilotProfile = (req, res, next) => {
 			const { id } = auth;
 
 			const profile = await User.findById(id);
-			console.log(url)
 			const result = await rp(url);
 
 			const $ = cheerio.load(result);

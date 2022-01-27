@@ -21,6 +21,7 @@ router.post('/fresha', freshaRatingController.saveFreshaProfile);
 router.post('/booking', bookingRatingController.saveBookingProfile);
 
 //RECOSE
+router.get('/recose', recoseRatingController.searchRecoseProfile);
 router.post('/recose', recoseRatingController.saveRecoseProfile);
 
 module.exports = router;
