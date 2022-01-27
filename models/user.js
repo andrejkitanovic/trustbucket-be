@@ -46,6 +46,11 @@ const userSchema = new Schema(
 				},
 				rating: {
 					type: Number,
+					set: function (v) {
+						return v.toLocaleString('en-US', {
+							maximumFractionDigits: 1,
+						});
+					},
 				},
 				ratingCount: {
 					type: Number,
