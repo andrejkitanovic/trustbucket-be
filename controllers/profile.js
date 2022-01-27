@@ -34,8 +34,6 @@ exports.updateProfile = (req, res, next) => {
 			}
 			const { id } = auth;
 
-			// const { firstName, lastName, role, country, language } = req.body;
-
 			const updatedUser = await User.findOneAndUpdate(
 				{ _id: id },
 				{

@@ -7,6 +7,6 @@ const router = express.Router();
 router.get('/google/search', ratingController.getGoogleProfile);
 
 //POST
-router.post('/google', ratingController.postGoogleRating);
+router.post('/google', ratingController.saveGoogleRating);
 
 module.exports = router;

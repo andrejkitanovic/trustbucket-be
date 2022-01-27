@@ -25,7 +25,7 @@ exports.getGoogleProfile = (req, res, next) => {
 	})();
 };
 
-exports.postGoogleRating = (req, res, next) => {
+exports.saveGoogleRating = (req, res, next) => {
 	const fields = ['name', 'rating', 'review', 'user_ratings_total'].join('%2C');
 	const placeId = req.body.placeId;
 	const url = `https://maps.googleapis.com/maps/api/place/details/json?fields=${fields}&place_id=${placeId}&key=${process.env.API_KEY_GOOGLE}`;
