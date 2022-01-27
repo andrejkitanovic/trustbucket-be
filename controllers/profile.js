@@ -1,7 +1,9 @@
 const { getIdAndTypeFromAuth } = require('./auth');
 const User = require('../models/user');
 
-exports.updateRating = async (user, rating) => {
+// HANDLES
+
+exports.updateRatingHandle = async (user, rating) => {
 	const ratings = user.ratings;
 	const { type } = rating;
 
@@ -13,6 +15,20 @@ exports.updateRating = async (user, rating) => {
 	await user.save();
 	return user;
 };
+
+const deleteRatingHandle = async (user, type) => {
+	const ratings = user.ratings;
+
+	const updatedRatings = ratings.filter((single) => single.type !== type);
+
+	user.ratings = updatedRatings;
+
+	await user.save();
+	return user;
+};
+exports.deleteRatingHandle
+
+// ROUTES
 
 exports.getProfile = (req, res, next) => {
 	(async function () {
@@ -85,6 +101,31 @@ exports.deleteProfile = (req, res, next) => {
 
 			res.status(200).json({
 				message: 'Profile successfully deleted!',
+			});
+		} catch (err) {
+			next(err);
+		}
+	})();
+};
+
+exports.deleteRating = (req, res, next) => {
+	const { type } = req.query;
+	(async function () {
+		try {
+			const auth = getIdAndTypeFromAuth(req, res, next);
+			if (!auth) {
+				const error = new Error('Not Authorized!');
+				error.statusCode = 401;
+				next(error);
+			}
+			const { id } = auth;
+
+			const profile = await User.findById(id);
+
+			await deleteRatingHandle(profile, type);
+
+			res.status(200).json({
+				message: `Rating for ${type} successfully disconnected!`,
 			});
 		} catch (err) {
 			next(err);

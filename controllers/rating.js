@@ -4,7 +4,7 @@ const cheerio = require('cheerio');
 
 const { getIdAndTypeFromAuth } = require('./auth');
 const User = require('../models/user');
-const { updateRating } = require('./profile');
+const { updateRatingHandle } = require('./profile');
 
 exports.getGoogleProfile = (req, res, next) => {
 	const fields = ['formatted_address', 'name', 'place_id', 'icon_background_color', 'rating'].join('%2C');
@@ -51,7 +51,7 @@ exports.saveGoogleRating = (req, res, next) => {
 				rating: data.result.rating,
 				ratingCount: data.result.user_ratings_total,
 			};
-			await updateRating(profile, rating);
+			await updateRatingHandle(profile, rating);
 
 			res.json(data);
 		} catch (err) {
@@ -84,7 +84,7 @@ exports.saveBookingProfile = (req, res, next) => {
 				rating: json.aggregateRating.ratingValue,
 				ratingCount: json.aggregateRating.reviewCount,
 			};
-			await updateRating(profile, rating);
+			await updateRatingHandle(profile, rating);
 
 			res.json(rating);
 		} catch (err) {
@@ -118,7 +118,7 @@ exports.saveFreshaProfile = (req, res, next) => {
 				rating: json.aggregateRating.ratingValue,
 				ratingCount: json.aggregateRating.reviewCount,
 			};
-			await updateRating(profile, rating);
+			await updateRatingHandle(profile, rating);
 
 			res.json(rating);
 		} catch (err) {
@@ -152,7 +152,7 @@ exports.saveRecoseProfile = (req, res, next) => {
 				rating: json.aggregateRating.ratingValue,
 				ratingCount: json.aggregateRating.ratingCount,
 			};
-			await updateRating(profile, rating);
+			await updateRatingHandle(profile, rating);
 
 			res.json(json);
 		} catch (err) {
