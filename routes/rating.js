@@ -14,6 +14,7 @@ router.post('/google', googleRatingController.saveGoogleRating);
 
 //TRUSTPILOT
 router.get('/trustpilot/search', trustpilotController.searchTrustpilotProfile);
+router.post('/trustpilot', trustpilotController.saveTrustpilotProfile)
 
 //FRESHA
 router.get('/fresha/search', freshaRatingController.searchFreshaProfile);
@@ -26,9 +27,11 @@ router.post('/booking', bookingRatingController.saveBookingProfile);
 //RECOSE
 router.get('/recose/search', recoseRatingController.searchRecoseProfile);
 router.post('/recose', recoseRatingController.saveRecoseProfile);
+router.post('/recose/download', recoseRatingController.downloadRecoseReviews);
 
 //BOKADIREKT
 router.get('/bokadirekt/search', bokadirektController.searchBokadirektProfile);
 router.post('/bokadirekt', bokadirektController.saveBokadirektProfile);
+router.post('/bokadirekt/download', bokadirektController.downloadBokadirektReviews);
 
 module.exports = router;

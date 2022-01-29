@@ -8,12 +8,15 @@ const ratingSchema = new Schema({
 	},
 	type: {
 		type: String,
-		enum: ['trustbucket', 'google', 'facebook', 'tripadvisor', 'reco.se', 'trustpilot'],
+		enum: ['trustbucket', 'google', 'booking', 'fresha', 'recose', 'bokadirekt', 'trustpilot'],
 		default: 'trustbucket',
 	},
-	reviewer: {
+	name: {
 		type: String,
 		required: true,
+	},
+	image: {
+		type: String,
 	},
 	rating: {
 		type: Number,
@@ -21,6 +24,9 @@ const ratingSchema = new Schema({
 	},
 	description: {
 		type: String,
+	},
+	date: {
+		type: Date,
 	},
 });
 

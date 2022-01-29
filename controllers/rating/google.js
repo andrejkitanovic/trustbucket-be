@@ -51,7 +51,7 @@ exports.saveGoogleRating = (req, res, next) => {
 			};
 			await updateRatingHandle(profile, rating);
 
-			res.json(data);
+			res.json(rating);
 		} catch (err) {
 			next(err);
 		}
