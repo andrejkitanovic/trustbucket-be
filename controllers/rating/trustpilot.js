@@ -1,4 +1,4 @@
-const rp = require('request-promise');
+// const rp = require('request-promise');
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
 
@@ -19,7 +19,10 @@ exports.searchTrustpilotProfile = (req, res, next) => {
 				next(error);
 			}
 
-			const browser = await puppeteer.launch();
+			const browser = await puppeteer.launch({
+				headless: false,
+				args: ['--no-sandbox'],
+			});
 			const page = await browser.newPage();
 			await page.goto(url);
 
@@ -68,7 +71,10 @@ exports.saveTrustpilotProfile = (req, res, next) => {
 
 			const profile = await User.findById(id);
 
-			const browser = await puppeteer.launch();
+			const browser = await puppeteer.launch({
+				headless: false,
+				args: ['--no-sandbox'],
+			});
 			const page = await browser.newPage();
 			await page.goto(url);
 
@@ -80,7 +86,7 @@ exports.saveTrustpilotProfile = (req, res, next) => {
 				type: 'trustpilot',
 				rating: Number(json[0].aggregateRating.ratingValue),
 				ratingCount: Number(json[0].aggregateRating.reviewCount),
-				url
+				url,
 			};
 			await updateRatingHandle(profile, rating);
 
