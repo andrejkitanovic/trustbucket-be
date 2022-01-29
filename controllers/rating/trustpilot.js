@@ -20,8 +20,7 @@ exports.searchTrustpilotProfile = (req, res, next) => {
 			}
 
 			const browser = await puppeteer.launch({
-				headless: false,
-				args: ['--no-sandbox'],
+				args: ['--no-sandbox', '--disable-setuid-sandbox'],
 			});
 			const page = await browser.newPage();
 			await page.goto(url);
@@ -72,8 +71,7 @@ exports.saveTrustpilotProfile = (req, res, next) => {
 			const profile = await User.findById(id);
 
 			const browser = await puppeteer.launch({
-				headless: false,
-				args: ['--no-sandbox'],
+				args: ['--no-sandbox', '--disable-setuid-sandbox'],
 			});
 			const page = await browser.newPage();
 			await page.goto(url);
