@@ -32,6 +32,8 @@ const deleteRatingHandle = async (user, type) => {
 
 const calculateOverallRating = (ratings) => {
 	const updatedRatings = ratings.filter((single) => single.type !== 'overall');
+	if (!updatedRatings.length) [ratings];
+	
 	const ratingCount = updatedRatings.reduce((prev, current) => prev + current.ratingCount, 0);
 	const rating = updatedRatings.reduce((prev, current) => prev + current.rating * current.ratingCount, 0) / ratingCount;
 	const overall = {
