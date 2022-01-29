@@ -1,6 +1,5 @@
-// const rp = require('request-promise');
 const cheerio = require('cheerio');
-const puppeteer = require('puppeteer');
+const usePuppeteer = require('../../helpers/puppeteer');
 
 const { getIdAndTypeFromAuth } = require('../auth');
 const { updateRatingHandle } = require('../profile');
@@ -19,11 +18,7 @@ exports.searchTrustpilotProfile = (req, res, next) => {
 				next(error);
 			}
 
-			const browser = await puppeteer.launch({
-				args: ['--no-sandbox', '--disable-setuid-sandbox'],
-			});
-			const page = await browser.newPage();
-			await page.goto(url);
+			const page = await usePuppeteer(url);
 
 			const result = await page.content();
 			const $ = cheerio.load(result);

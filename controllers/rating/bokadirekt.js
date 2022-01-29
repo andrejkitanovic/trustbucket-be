@@ -1,6 +1,5 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
-const puppeteer = require('puppeteer');
 const { isAbsoluteURL } = require('../../helpers/utils');
 const dayjs = require('dayjs');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
@@ -8,6 +7,7 @@ const customParseFormat = require('dayjs/plugin/customParseFormat');
 const { getIdAndTypeFromAuth } = require('../auth');
 const { updateRatingHandle } = require('../profile');
 const User = require('../../models/user');
+const usePuppeteer = require('../../helpers/puppeteer');
 
 dayjs.extend(customParseFormat);
 
@@ -81,7 +81,7 @@ exports.saveBokadirektProfile = (req, res, next) => {
 				type: 'bokadirekt',
 				rating: ratingText ? Number(ratingText.trim()) : null,
 				ratingCount: ratingCountText ? Number(ratingCountText.trim()) : 0,
-				url
+				url,
 			};
 			await updateRatingHandle(profile, rating);
 
@@ -112,9 +112,7 @@ exports.downloadBokadirektReviews = (req, res, next) => {
 			const { id } = auth;
 
 			// LOGIC
-			const browser = await puppeteer.launch();
-			const page = await browser.newPage();
-			await page.goto(url);
+			const page = await usePuppeteer(url);
 			await page.click('button.view-all-reviews');
 			await page.waitForNetworkIdle();
 

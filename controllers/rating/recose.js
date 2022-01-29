@@ -1,6 +1,6 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
-const puppeteer = require('puppeteer');
+const usePuppeteer = require('../../helpers/puppeteer');
 const dayjs = require('dayjs');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 
@@ -108,9 +108,7 @@ exports.downloadRecoseReviews = (req, res, next) => {
 			const { id } = auth;
 
 			// LOGIC
-			const browser = await puppeteer.launch();
-			const page = await browser.newPage();
-			await page.goto(url);
+			const page = await usePuppeteer(url);
 
 			const loadMore = async () => {
 				await page.click('a.more-reviews-button');

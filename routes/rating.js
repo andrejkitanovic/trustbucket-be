@@ -23,6 +23,7 @@ router.post('/fresha', freshaRatingController.saveFreshaProfile);
 //BOOKING
 router.get('/booking/search', bookingRatingController.searchBookingProfile);
 router.post('/booking', bookingRatingController.saveBookingProfile);
+router.post('/booking/download', bookingRatingController.downloadBookingReviews);
 
 //RECOSE
 router.get('/recose/search', recoseRatingController.searchRecoseProfile);
