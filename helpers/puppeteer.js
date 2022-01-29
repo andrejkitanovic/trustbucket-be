@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 
 const options = {
-	headless: false,
+	// headless: false,
 	args: ['--no-sandbox', '--disable-setuid-sandbox'],
 };
 
