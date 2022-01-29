@@ -5,7 +5,7 @@ const { updateRatingHandle } = require('../profile');
 const User = require('../../models/user');
 
 exports.getGoogleProfile = (req, res, next) => {
-	const fields = ['formatted_address', 'name', 'place_id', 'icon_background_color', 'rating', 'lat', 'lng'].join('%2C');
+	const fields = ['formatted_address', 'name', 'place_id', 'icon_background_color', 'rating', 'geometry'].join('%2C');
 	const textquery = req.query.q;
 	const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=${fields}&input=${textquery}&inputtype=textquery&key=${process.env.API_KEY_GOOGLE}`;
 
