@@ -10,7 +10,6 @@ exports.updateRatingHandle = async (user, rating) => {
 	let updatedRatings = ratings.filter((single) => single.type !== type);
 	updatedRatings.push(rating);
 	updatedRatings = calculateOverallRating(updatedRatings);
-	console.log(updatedRatings);
 
 	user.ratings = updatedRatings;
 
@@ -32,10 +31,18 @@ const deleteRatingHandle = async (user, type) => {
 
 const calculateOverallRating = (ratings) => {
 	const updatedRatings = ratings.filter((single) => single.type !== 'overall');
-	if (!updatedRatings.length) [ratings];
-	
+	if (!updatedRatings.length) return [{ type: 'overall', rating: null, ratingCount: 0 }];
+
 	const ratingCount = updatedRatings.reduce((prev, current) => prev + current.ratingCount, 0);
-	const rating = updatedRatings.reduce((prev, current) => prev + current.rating * current.ratingCount, 0) / ratingCount;
+	const rating =
+		updatedRatings.reduce((prev, current) => {
+			if (!current.rating) return prev;
+			if (current.type !== 'booking') {
+				return prev + current.rating * current.ratingCount;
+			}
+			return prev + (current.rating / 2) * current.ratingCount;
+		}, 0) / ratingCount;
+
 	const overall = {
 		type: 'overall',
 		rating,

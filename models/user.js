@@ -41,17 +41,17 @@ const userSchema = new Schema(
 			{
 				type: {
 					type: String,
-					enum: ['overall', 'google', 'booking', 'fresha', 'recose'],
+					enum: ['overall', 'google', 'booking', 'fresha', 'recose', 'bokadirekt'],
 					default: 'overall',
 				},
 				rating: {
 					type: Number,
 					set: function (v) {
-						if (isNaN(v)) return null;
-						
-						return v.toLocaleString('en-US', {
-							maximumFractionDigits: 1,
-						});
+						if (v !== null) {
+							return v.toLocaleString('en-US', {
+								maximumFractionDigits: 1,
+							});
+						}
 					},
 				},
 				ratingCount: {

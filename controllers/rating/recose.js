@@ -17,9 +17,7 @@ exports.searchRecoseProfile = (req, res, next) => {
 				error.statusCode = 401;
 				next(error);
 			}
-			const { id } = auth;
 
-			const profile = await User.findById(id);
 			const result = await rp(url);
 
 			const $ = cheerio.load(result);
@@ -36,8 +34,9 @@ exports.searchRecoseProfile = (req, res, next) => {
 					};
 					items.push(object);
 				});
+			if (!items.length) throw new Error('Not Found!');
 
-			res.json(items);
+			res.json(items[0]);
 		} catch (err) {
 			next(err);
 		}

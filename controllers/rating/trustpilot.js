@@ -25,7 +25,6 @@ exports.searchTrustpilotProfile = (req, res, next) => {
 			const $ = cheerio.load(result);
 			const items = await JSON.parse($('.item').html());
 
-			console.log(items);
 
 			// const rating = {
 			// 	type: 'recose',

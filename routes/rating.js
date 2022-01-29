@@ -4,6 +4,7 @@ const freshaRatingController = require('../controllers/rating/fresha');
 const recoseRatingController = require('../controllers/rating/recose');
 const bookingRatingController = require('../controllers/rating/booking');
 const trustpilotController = require('../controllers/rating/trustpilot');
+const bokadirektController = require('../controllers/rating/bokadirekt');
 
 const router = express.Router();
 
@@ -15,13 +16,19 @@ router.post('/google', googleRatingController.saveGoogleRating);
 router.get('/trustpilot/search', trustpilotController.searchTrustpilotProfile);
 
 //FRESHA
+router.get('/fresha/search', freshaRatingController.searchFreshaProfile);
 router.post('/fresha', freshaRatingController.saveFreshaProfile);
 
 //BOOKING
+router.get('/booking/search', bookingRatingController.searchBookingProfile);
 router.post('/booking', bookingRatingController.saveBookingProfile);
 
 //RECOSE
 router.get('/recose/search', recoseRatingController.searchRecoseProfile);
 router.post('/recose', recoseRatingController.saveRecoseProfile);
+
+//BOKADIREKT
+router.get('/bokadirekt/search', bokadirektController.searchBokadirektProfile);
+router.post('/bokadirekt', bokadirektController.saveBokadirektProfile);
 
 module.exports = router;
