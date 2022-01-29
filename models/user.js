@@ -47,6 +47,8 @@ const userSchema = new Schema(
 				rating: {
 					type: Number,
 					set: function (v) {
+						if (isNaN(v)) return null;
+						
 						return v.toLocaleString('en-US', {
 							maximumFractionDigits: 1,
 						});
