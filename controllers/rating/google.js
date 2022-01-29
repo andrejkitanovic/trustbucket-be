@@ -5,7 +5,7 @@ const { updateRatingHandle } = require('../profile');
 const User = require('../../models/user');
 
 exports.getGoogleProfile = (req, res, next) => {
-	const fields = ['formatted_address', 'name', 'place_id', 'icon_background_color', 'rating'].join('%2C');
+	const fields = ['formatted_address', 'name', 'place_id', 'icon_background_color', 'rating', 'lat', 'lng'].join('%2C');
 	const textquery = req.query.q;
 	const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=${fields}&input=${textquery}&inputtype=textquery&key=${process.env.API_KEY_GOOGLE}`;
 
@@ -27,7 +27,7 @@ exports.getGoogleProfile = (req, res, next) => {
 };
 
 exports.saveGoogleRating = (req, res, next) => {
-	const fields = ['name', 'rating', 'review', 'user_ratings_total'].join('%2C');
+	const fields = ['name', 'rating', 'review', 'user_ratings_total', 'url'].join('%2C');
 	const placeId = req.body.placeId;
 	const url = `https://maps.googleapis.com/maps/api/place/details/json?fields=${fields}&place_id=${placeId}&key=${process.env.API_KEY_GOOGLE}`;
 
@@ -48,7 +48,7 @@ exports.saveGoogleRating = (req, res, next) => {
 				type: 'google',
 				rating: data.result.rating,
 				ratingCount: data.result.user_ratings_total,
-				url
+				url: data.url,
 			};
 			await updateRatingHandle(profile, rating);
 
