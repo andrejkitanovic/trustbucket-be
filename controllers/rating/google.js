@@ -48,6 +48,7 @@ exports.saveGoogleRating = (req, res, next) => {
 				type: 'google',
 				rating: data.result.rating,
 				ratingCount: data.result.user_ratings_total,
+				url
 			};
 			await updateRatingHandle(profile, rating);
 

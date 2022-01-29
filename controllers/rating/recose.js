@@ -77,6 +77,7 @@ exports.saveRecoseProfile = (req, res, next) => {
 				type: 'recose',
 				rating: json.aggregateRating.ratingValue,
 				ratingCount: json.aggregateRating.ratingCount,
+				url
 			};
 			await updateRatingHandle(profile, rating);
 

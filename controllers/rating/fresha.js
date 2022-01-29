@@ -58,6 +58,7 @@ exports.saveFreshaProfile = (req, res, next) => {
 				type: 'fresha',
 				rating: json.aggregateRating.ratingValue,
 				ratingCount: json.aggregateRating.reviewCount,
+				url
 			};
 			await updateRatingHandle(profile, rating);
 

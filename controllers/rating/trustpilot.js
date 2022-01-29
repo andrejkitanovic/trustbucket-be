@@ -80,6 +80,7 @@ exports.saveTrustpilotProfile = (req, res, next) => {
 				type: 'trustpilot',
 				rating: Number(json[0].aggregateRating.ratingValue),
 				ratingCount: Number(json[0].aggregateRating.reviewCount),
+				url
 			};
 			await updateRatingHandle(profile, rating);
 

@@ -81,6 +81,7 @@ exports.saveBokadirektProfile = (req, res, next) => {
 				type: 'bokadirekt',
 				rating: ratingText ? Number(ratingText.trim()) : null,
 				ratingCount: ratingCountText ? Number(ratingCountText.trim()) : 0,
+				url
 			};
 			await updateRatingHandle(profile, rating);
 
