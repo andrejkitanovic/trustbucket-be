@@ -23,21 +23,21 @@ router.post('/trustpilot', trustpilotController.saveTrustpilotProfile);
 //FRESHA
 router.get('/fresha/search', freshaRatingController.searchFreshaProfile);
 router.post('/fresha', freshaRatingController.saveFreshaProfile);
-router.post('/fresha/download', freshaRatingController.downloadFreshaReviews);
+router.post('/fresha/load', freshaRatingController.loadFreshaReviews);
 
 //BOOKING
 router.get('/booking/search', bookingRatingController.searchBookingProfile);
 router.post('/booking', bookingRatingController.saveBookingProfile);
-router.post('/booking/download', bookingRatingController.downloadBookingReviews);
+router.post('/booking/load', bookingRatingController.loadBookingReviews);
 
 //RECOSE
 router.get('/recose/search', recoseRatingController.searchRecoseProfile);
 router.post('/recose', recoseRatingController.saveRecoseProfile);
-router.post('/recose/download', recoseRatingController.downloadRecoseReviews);
+router.post('/recose/load', recoseRatingController.loadRecoseReviews);
 
 //BOKADIREKT
 router.get('/bokadirekt/search', bokadirektController.searchBokadirektProfile);
 router.post('/bokadirekt', bokadirektController.saveBokadirektProfile);
-router.post('/bokadirekt/download', bokadirektController.downloadBokadirektReviews);
+router.post('/bokadirekt/load', bokadirektController.loadBokadirektReviews);
 
 module.exports = router;

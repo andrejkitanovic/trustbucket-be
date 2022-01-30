@@ -1,10 +1,15 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
 const usePuppeteer = require('../../helpers/puppeteer');
+const dayjs = require('dayjs');
+const customParseFormat = require('dayjs/plugin/customParseFormat');
 
 const { getIdAndTypeFromAuth } = require('../auth');
 const { updateRatingHandle } = require('../profile');
 const Company = require('../../models/company');
+const Rating = require('../../models/rating');
+
+dayjs.extend(customParseFormat);
 
 exports.searchFreshaProfile = (req, res, next) => {
 	const { q: url } = req.query;
@@ -29,7 +34,7 @@ exports.searchFreshaProfile = (req, res, next) => {
 				link: url,
 			};
 
-			res.json(object)
+			res.json(object);
 		} catch (err) {
 			next(err);
 		}
@@ -65,10 +70,11 @@ exports.saveFreshaProfile = (req, res, next) => {
 				type: 'fresha',
 				rating: json.aggregateRating.ratingValue,
 				ratingCount: json.aggregateRating.reviewCount,
-				url
+				url,
 			};
 			await updateRatingHandle(company, rating);
 
+			downloadFreshaReviewsHandle(selectedCompany, url);
 			res.json(rating);
 		} catch (err) {
 			next(err);
@@ -76,7 +82,7 @@ exports.saveFreshaProfile = (req, res, next) => {
 	})();
 };
 
-exports.downloadFreshaReviews = (req, res, next) => {
+exports.loadFreshaReviews = (req, res, next) => {
 	const url = req.body.url;
 
 	(async function () {
@@ -93,56 +99,9 @@ exports.downloadFreshaReviews = (req, res, next) => {
 				error.statusCode = 401;
 				next(error);
 			}
-			const { id } = auth;
+			const { selectedCompany } = auth;
 
-			// LOGIC
-			const page = await usePuppeteer(url + '/reviews');
-			// await page.click('a[data-qa=see-all-reviews-btn]');
-			// await page.waitForNetworkIdle();
-
-			const loadMore = async () => {
-				await page.click('div[data-qa=reviews-list] button');
-				await page.waitForNetworkIdle();
-
-				if (await page.$('div[data-qa=reviews-list] button')) {
-					await loadMore();
-				}
-			};
-			if (await page.$('div[data-qa=reviews-list] button')) {
-				await loadMore();
-			}
-
-			const result = await page.content();
-			const $ = cheerio.load(result);
-
-			const items = [];
-			await $('div[data-qa=reviews-list] li').map((index, el) => {
-				const $el = cheerio.load(el);
-
-				// let image = 'https://www.reco.se/assets/images/icons/default-user.svg';
-
-				// $el.prototype.exists = function (selector) {
-				// 	return this.find(selector).length > 0;
-				// };
-				// if ($el('.review-card--reviewer-person-image').exists('img')) {
-				// 	image = $el('.review-card--reviewer-person-image img').attr('src').trim();
-				// }
-
-				$el.prototype.count = function (selector) {
-					return this.find(selector).length;
-				};
-				const object = {
-					user: id,
-					type: 'fresha',
-					name: $el('p[data-qa=review-user-name]').text(),
-					// image: image,
-					rating: Number($el('div[data-qa=review-rating]').count('div[type=selected]')),
-					// description: $el('p[data-qa=review-text]').html(),
-					// date: dayjs($el('.submit-date').text(), 'YYYY-MM-DD'),
-				};
-
-				items.push(object);
-			});
+			const items = await downloadFreshaReviewsHandle(selectedCompany, url, true);
 
 			res.json({
 				count: items.length,
@@ -153,3 +112,60 @@ exports.downloadFreshaReviews = (req, res, next) => {
 		}
 	})();
 };
+
+const downloadFreshaReviewsHandle = async (selectedCompany, url, load) => {
+	const page = await usePuppeteer(url + '/reviews');
+
+	const loadMore = async () => {
+		await page.click('div[data-qa=reviews-list] button');
+		await page.waitForNetworkIdle();
+
+		if (await page.$('div[data-qa=reviews-list] button')) {
+			await loadMore();
+		}
+	};
+	if (await page.$('div[data-qa=reviews-list] button')) {
+		await loadMore();
+	}
+
+	const result = await page.content();
+	const $ = cheerio.load(result);
+
+	const items = [];
+	await $('div[data-qa=reviews-list] li').map((index, el) => {
+		const $el = cheerio.load(el);
+
+		// let image = null;
+
+		// $el.prototype.exists = function (selector) {
+		// 	return this.find(selector).length > 0;
+		// };
+		// if ($el(el).exists('div[data-qa=avatar-image]')) {
+		// 	// image = $el('div[data-qa=avatar-image]')
+		// 	console.log($el('div[data-qa=avatar-image]').css('background-image'))
+		// }
+
+		$el.prototype.count = function (selector) {
+			return this.find(selector).length;
+		};
+		const object = {
+			company: selectedCompany,
+			type: 'fresha',
+			name: $el('p[data-qa=review-user-name]').text(),
+			image: null,
+			rating: Number($el('div[data-qa=review-rating]').count('div[type=selected]')),
+			description: $el('p[class*=StyledParagraph]').text(),
+			date: dayjs($el('p[data-qa=review-appt-date]').text(), 'MMM D, YYYY'),
+		};
+
+		items.push(object);
+	});
+
+	if (!load) {
+		await Rating.insertMany(items);
+	}
+
+	return items;
+};
+
+// MISSING IMAGE LOGIC

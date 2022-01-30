@@ -8,7 +8,7 @@ const customParseFormat = require('dayjs/plugin/customParseFormat');
 const { getIdAndTypeFromAuth } = require('../auth');
 const { updateRatingHandle } = require('../profile');
 const Company = require('../../models/company');
-const Rating = require('../../models/rating')
+const Rating = require('../../models/rating');
 
 dayjs.extend(customParseFormat);
 
@@ -85,15 +85,15 @@ exports.saveBokadirektProfile = (req, res, next) => {
 			};
 			await updateRatingHandle(company, rating);
 
+			downloadBokadirektReviewsHandle(selectedCompany, url);
 			res.json(rating);
-			await downloadBokadirektReviewsHandle(selectedCompany, url);
 		} catch (err) {
 			next(err);
 		}
 	})();
 };
 
-exports.downloadBokadirektReviews = (req, res, next) => {
+exports.loadBokadirektReviews = (req, res, next) => {
 	const url = req.body.url;
 
 	(async function () {
@@ -112,7 +112,7 @@ exports.downloadBokadirektReviews = (req, res, next) => {
 			}
 			const { selectedCompany } = auth;
 
-			const items = await downloadBokadirektReviewsHandle(selectedCompany, url);
+			const items = await downloadBokadirektReviewsHandle(selectedCompany, url, true);
 
 			res.json({
 				count: items.length,
@@ -124,7 +124,7 @@ exports.downloadBokadirektReviews = (req, res, next) => {
 	})();
 };
 
-const downloadBokadirektReviewsHandle = async (selectedCompany, url) => {
+const downloadBokadirektReviewsHandle = async (selectedCompany, url, load) => {
 	const page = await usePuppeteer(url);
 	await page.click('button.view-all-reviews');
 	await page.waitForNetworkIdle();
@@ -164,8 +164,11 @@ const downloadBokadirektReviewsHandle = async (selectedCompany, url) => {
 
 		items.push(object);
 	});
-	await Rating.insertMany(items);
-	
+
+	if (!load) {
+		await Rating.insertMany(items);
+	}
+
 	return items;
 };
 
