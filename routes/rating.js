@@ -19,6 +19,7 @@ router.post('/trustpilot', trustpilotController.saveTrustpilotProfile)
 //FRESHA
 router.get('/fresha/search', freshaRatingController.searchFreshaProfile);
 router.post('/fresha', freshaRatingController.saveFreshaProfile);
+router.post('/fresha/download', freshaRatingController.downloadFreshaReviews);
 
 //BOOKING
 router.get('/booking/search', bookingRatingController.searchBookingProfile);

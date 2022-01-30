@@ -65,11 +65,7 @@ exports.saveTrustpilotProfile = (req, res, next) => {
 
 			const profile = await User.findById(id);
 
-			const browser = await puppeteer.launch({
-				args: ['--no-sandbox', '--disable-setuid-sandbox'],
-			});
-			const page = await browser.newPage();
-			await page.goto(url);
+			const page = await usePuppeteer(url);
 
 			const result = await page.content();
 			const $ = cheerio.load(result);

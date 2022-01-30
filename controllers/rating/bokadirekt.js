@@ -1,13 +1,14 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
 const { isAbsoluteURL } = require('../../helpers/utils');
+const usePuppeteer = require('../../helpers/puppeteer');
 const dayjs = require('dayjs');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 
 const { getIdAndTypeFromAuth } = require('../auth');
 const { updateRatingHandle } = require('../profile');
 const User = require('../../models/user');
-const usePuppeteer = require('../../helpers/puppeteer');
+
 
 dayjs.extend(customParseFormat);
 

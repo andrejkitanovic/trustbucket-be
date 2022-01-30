@@ -105,6 +105,7 @@ exports.downloadBookingReviews = (req, res, next) => {
 			const page = await usePuppeteer(url);
 			await page.click('a.toggle_review');
 			await page.waitForNetworkIdle();
+			await page.waitForTimeout(300)
 
 			await page.screenshot({ path: 'test.png' });
 
