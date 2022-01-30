@@ -8,14 +8,6 @@ const userSchema = new Schema(
 			enum: ['basic', 'admin'],
 			default: 'basic',
 		},
-		websiteURL: {
-			type: String,
-			required: true,
-		},
-		companyName: {
-			type: String,
-			required: true,
-		},
 		firstName: {
 			type: String,
 			required: true,
@@ -37,30 +29,14 @@ const userSchema = new Schema(
 			type: String,
 			required: true,
 		},
-		ratings: [
+		selectedCompany: {
+			type: Schema.Types.ObjectID,
+			ref: 'Company',
+		},
+		companies: [
 			{
-				type: {
-					type: String,
-					enum: ['overall', 'google', 'booking', 'fresha', 'recose', 'bokadirekt', 'trustpilot'],
-					default: 'overall',
-				},
-				rating: {
-					type: Number,
-					set: function (v) {
-						if (v !== null) {
-							return v.toLocaleString('en-US', {
-								maximumFractionDigits: 1,
-							});
-						}
-					},
-				},
-				ratingCount: {
-					type: Number,
-					default: 0,
-				},
-				url: {
-					type: String,
-				},
+				type: Schema.Types.ObjectID,
+				ref: 'Company',
 			},
 		],
 	},

@@ -2,7 +2,7 @@ const axios = require('axios');
 
 const { getIdAndTypeFromAuth } = require('../auth');
 const { updateRatingHandle } = require('../profile');
-const User = require('../../models/user');
+const Company = require('../../models/company');
 
 exports.getGoogleProfile = (req, res, next) => {
 	const fields = ['formatted_address', 'name', 'place_id', 'icon_background_color', 'rating', 'geometry'].join('%2C');
@@ -39,8 +39,8 @@ exports.saveGoogleRating = (req, res, next) => {
 				error.statusCode = 401;
 				next(error);
 			}
-			const { id } = auth;
-			const profile = await User.findById(id);
+			const { selectedCompany } = auth;
+			const company = await Company.findById(selectedCompany);
 
 			const { data } = await axios.get(url);
 
@@ -50,7 +50,7 @@ exports.saveGoogleRating = (req, res, next) => {
 				ratingCount: data.result.user_ratings_total,
 				url: data.url,
 			};
-			await updateRatingHandle(profile, rating);
+			await updateRatingHandle(company, rating);
 
 			res.json(rating);
 		} catch (err) {

@@ -7,8 +7,8 @@ const customParseFormat = require('dayjs/plugin/customParseFormat');
 
 const { getIdAndTypeFromAuth } = require('../auth');
 const { updateRatingHandle } = require('../profile');
-const User = require('../../models/user');
-
+const Company = require('../../models/company');
+const Rating = require('../../models/rating')
 
 dayjs.extend(customParseFormat);
 
@@ -68,9 +68,8 @@ exports.saveBokadirektProfile = (req, res, next) => {
 				error.statusCode = 401;
 				next(error);
 			}
-			const { id } = auth;
-
-			const profile = await User.findById(id);
+			const { selectedCompany } = auth;
+			const company = await Company.findById(selectedCompany);
 
 			const result = await rp(url);
 			const $ = cheerio.load(result);
@@ -84,9 +83,10 @@ exports.saveBokadirektProfile = (req, res, next) => {
 				ratingCount: ratingCountText ? Number(ratingCountText.trim()) : 0,
 				url,
 			};
-			await updateRatingHandle(profile, rating);
+			await updateRatingHandle(company, rating);
 
 			res.json(rating);
+			await downloadBokadirektReviewsHandle(selectedCompany, url);
 		} catch (err) {
 			next(err);
 		}
@@ -110,48 +110,9 @@ exports.downloadBokadirektReviews = (req, res, next) => {
 				error.statusCode = 401;
 				next(error);
 			}
-			const { id } = auth;
+			const { selectedCompany } = auth;
 
-			// LOGIC
-			const page = await usePuppeteer(url);
-			await page.click('button.view-all-reviews');
-			await page.waitForNetworkIdle();
-
-			const loadMore = async () => {
-				await page.click('.modal-content button.view-all-reviews');
-				await page.waitForNetworkIdle();
-
-				if (await page.$('.modal-content button.view-all-reviews')) {
-					await loadMore();
-				}
-			};
-			if (await page.$('.modal-content button.view-all-reviews')) {
-				await loadMore();
-			}
-
-			const result = await page.content();
-
-			const $ = cheerio.load(result);
-
-			const items = [];
-			await $('.modal-content div[itemprop=review]').map((index, el) => {
-				const $el = cheerio.load(el);
-
-				const imageSrc = $el('div.review-user img').attr('src');
-				const image = isAbsoluteURL(imageSrc) ? imageSrc : 'https://www.bokadirekt.se' + imageSrc;
-
-				const object = {
-					user: id,
-					type: 'bokadirekt',
-					name: $el('span[itemprop=name]').text(),
-					image: image,
-					rating: Number($el('meta[itemprop=ratingValue]').attr('content')),
-					description: $el('div.review-text').text(),
-					date: dayjs($el('time[datetime]').attr('datetime'), 'YYYY-MM-DD'),
-				};
-
-				items.push(object);
-			});
+			const items = await downloadBokadirektReviewsHandle(selectedCompany, url);
 
 			res.json({
 				count: items.length,
@@ -162,3 +123,50 @@ exports.downloadBokadirektReviews = (req, res, next) => {
 		}
 	})();
 };
+
+const downloadBokadirektReviewsHandle = async (selectedCompany, url) => {
+	const page = await usePuppeteer(url);
+	await page.click('button.view-all-reviews');
+	await page.waitForNetworkIdle();
+
+	const loadMore = async () => {
+		await page.click('.modal-content button.view-all-reviews');
+		await page.waitForNetworkIdle();
+
+		if (await page.$('.modal-content button.view-all-reviews')) {
+			await loadMore();
+		}
+	};
+	if (await page.$('.modal-content button.view-all-reviews')) {
+		await loadMore();
+	}
+
+	const result = await page.content();
+
+	const $ = cheerio.load(result);
+
+	const items = [];
+	await $('.modal-content div[itemprop=review]').map((index, el) => {
+		const $el = cheerio.load(el);
+
+		const imageSrc = $el('div.review-user img').attr('src');
+		const image = isAbsoluteURL(imageSrc) ? imageSrc : 'https://www.bokadirekt.se' + imageSrc;
+
+		const object = {
+			company: selectedCompany,
+			type: 'bokadirekt',
+			name: $el('span[itemprop=name]').text(),
+			image: image,
+			rating: Number($el('meta[itemprop=ratingValue]').attr('content')),
+			description: $el('div.review-text').text(),
+			date: dayjs($el('time[datetime]').attr('datetime'), 'YYYY-MM-DD'),
+		};
+
+		items.push(object);
+	});
+	await Rating.insertMany(items);
+	
+	return items;
+};
+
+// ALL DONE

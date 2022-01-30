@@ -3,7 +3,7 @@ const usePuppeteer = require('../../helpers/puppeteer');
 
 const { getIdAndTypeFromAuth } = require('../auth');
 const { updateRatingHandle } = require('../profile');
-const User = require('../../models/user');
+const Company = require('../../models/company');
 
 exports.searchTrustpilotProfile = (req, res, next) => {
 	const { q } = req.query;
@@ -61,9 +61,8 @@ exports.saveTrustpilotProfile = (req, res, next) => {
 				error.statusCode = 401;
 				next(error);
 			}
-			const { id } = auth;
-
-			const profile = await User.findById(id);
+			const { selectedCompany } = auth;
+			const company = await Company.findById(selectedCompany);
 
 			const page = await usePuppeteer(url);
 
@@ -77,7 +76,7 @@ exports.saveTrustpilotProfile = (req, res, next) => {
 				ratingCount: Number(json[0].aggregateRating.reviewCount),
 				url,
 			};
-			await updateRatingHandle(profile, rating);
+			await updateRatingHandle(company, rating);
 
 			res.json(rating);
 		} catch (err) {

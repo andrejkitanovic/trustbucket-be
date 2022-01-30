@@ -6,7 +6,7 @@ const customParseFormat = require('dayjs/plugin/customParseFormat');
 
 const { getIdAndTypeFromAuth } = require('../auth');
 const { updateRatingHandle } = require('../profile');
-const User = require('../../models/user');
+const Company = require('../../models/company');
 
 dayjs.extend(customParseFormat);
 
@@ -65,9 +65,8 @@ exports.saveRecoseProfile = (req, res, next) => {
 				error.statusCode = 401;
 				next(error);
 			}
-			const { id } = auth;
-
-			const profile = await User.findById(id);
+			const { selectedCompany } = auth;
+			const company = await Company.findById(selectedCompany);
 
 			const result = await rp(url);
 			const $ = cheerio.load(result);
@@ -77,11 +76,12 @@ exports.saveRecoseProfile = (req, res, next) => {
 				type: 'recose',
 				rating: json.aggregateRating.ratingValue,
 				ratingCount: json.aggregateRating.ratingCount,
-				url
+				url,
 			};
-			await updateRatingHandle(profile, rating);
+			await updateRatingHandle(company, rating);
 
 			res.json(rating);
+			await downloadRecoseReviewsHandle(selectedCompany, url);
 		} catch (err) {
 			next(err);
 		}
@@ -105,54 +105,9 @@ exports.downloadRecoseReviews = (req, res, next) => {
 				error.statusCode = 401;
 				next(error);
 			}
-			const { id } = auth;
+			const { selectedCompany } = auth;
 
-			// LOGIC
-			const page = await usePuppeteer(url);
-
-			const loadMore = async () => {
-				await page.click('a.more-reviews-button');
-				await page.waitForNetworkIdle();
-
-				if (await page.$('a.more-reviews-button')) {
-					await loadMore();
-				}
-			};
-			if (await page.$('a.more-reviews-button')) {
-				await loadMore();
-			}
-
-			const result = await page.content();
-			const $ = cheerio.load(result);
-
-			const items = [];
-			await $('.review-card').map((index, el) => {
-				const $el = cheerio.load(el);
-
-				let image = 'https://www.reco.se/assets/images/icons/default-user.svg';
-
-				$el.prototype.exists = function (selector) {
-					return this.find(selector).length > 0;
-				};
-				if ($el('.review-card--reviewer-person-image').exists('img')) {
-					image = $el('.review-card--reviewer-person-image img').attr('src').trim();
-				}
-
-				$el.prototype.count = function (selector) {
-					return this.find(selector).length;
-				};
-				const object = {
-					user: id,
-					type: 'recose',
-					name: $el('.review-card--reviewer-person-info a').text(),
-					image: image,
-					rating: Number($el('div.reco-rating.rxs.iblock').count('span')),
-					description: $el('div.text-clamp--inner').text().trim(),
-					date: dayjs($el('.submit-date').text(), 'YYYY-MM-DD'),
-				};
-
-				items.push(object);
-			});
+			const items = await downloadRecoseReviewsHandle(selectedCompany, url);
 
 			res.json({
 				count: items.length,
@@ -163,3 +118,56 @@ exports.downloadRecoseReviews = (req, res, next) => {
 		}
 	})();
 };
+
+const downloadRecoseReviewsHandle = async (selectedCompany, url) => {
+	const page = await usePuppeteer(url);
+
+	const loadMore = async () => {
+		await page.click('a.more-reviews-button');
+		await page.waitForNetworkIdle();
+
+		if (await page.$('a.more-reviews-button')) {
+			await loadMore();
+		}
+	};
+	if (await page.$('a.more-reviews-button')) {
+		await loadMore();
+	}
+
+	const result = await page.content();
+	const $ = cheerio.load(result);
+
+	const items = [];
+	await $('.review-card').map((index, el) => {
+		const $el = cheerio.load(el);
+
+		let image = 'https://www.reco.se/assets/images/icons/default-user.svg';
+
+		$el.prototype.exists = function (selector) {
+			return this.find(selector).length > 0;
+		};
+		if ($el('.review-card--reviewer-person-image').exists('img')) {
+			image = $el('.review-card--reviewer-person-image img').attr('src').trim();
+		}
+
+		$el.prototype.count = function (selector) {
+			return this.find(selector).length;
+		};
+		const object = {
+			company: selectedCompany,
+			type: 'recose',
+			name: $el('.review-card--reviewer-person-info a').text(),
+			image: image,
+			rating: Number($el('div.reco-rating.rxs.iblock').count('span')),
+			description: $el('div.text-clamp--inner').text().trim(),
+			date: dayjs($el('.submit-date').text(), 'YYYY-MM-DD'),
+		};
+
+		items.push(object);
+	});
+	await Rating.insertMany(items);
+
+	return items;
+};
+
+// ALL DONE

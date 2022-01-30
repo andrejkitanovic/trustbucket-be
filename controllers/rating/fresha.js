@@ -4,7 +4,7 @@ const usePuppeteer = require('../../helpers/puppeteer');
 
 const { getIdAndTypeFromAuth } = require('../auth');
 const { updateRatingHandle } = require('../profile');
-const User = require('../../models/user');
+const Company = require('../../models/company');
 
 exports.searchFreshaProfile = (req, res, next) => {
 	const { q: url } = req.query;
@@ -53,9 +53,9 @@ exports.saveFreshaProfile = (req, res, next) => {
 				error.statusCode = 401;
 				next(error);
 			}
-			const { id } = auth;
 
-			const profile = await User.findById(id);
+			const { selectedCompany } = auth;
+			const company = await Company.findById(selectedCompany);
 
 			const result = await rp(url);
 			const $ = cheerio.load(result);
@@ -67,7 +67,7 @@ exports.saveFreshaProfile = (req, res, next) => {
 				ratingCount: json.aggregateRating.reviewCount,
 				url
 			};
-			await updateRatingHandle(profile, rating);
+			await updateRatingHandle(company, rating);
 
 			res.json(rating);
 		} catch (err) {

@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ratingSchema = new Schema({
-	user: {
+	company: {
 		type: Schema.Types.ObjectID,
-		ref: 'User',
+		ref: 'Company',
 	},
 	type: {
 		type: String,

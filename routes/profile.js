@@ -6,6 +6,5 @@ const router = express.Router();
 router.get("/", profileController.getProfile);
 router.put("/", profileController.updateProfile);
 router.delete("/", profileController.deleteProfile);
-router.delete("/rating", profileController.deleteRating);
 
 module.exports = router;

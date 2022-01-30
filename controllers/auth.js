@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const Company = require('../models/company');
 
 const getIdAndTypeFromAuth = (req, res, next) => {
 	if (req.headers && req.headers.authorization) {
@@ -9,6 +10,7 @@ const getIdAndTypeFromAuth = (req, res, next) => {
 		return {
 			id: decoded.id,
 			type: decoded.type,
+			selectedCompany: decoded.selectedCompany
 		};
 	}
 	return null;
@@ -27,7 +29,8 @@ exports.getCurrentUser = (req, res, next) => {
 
 		try {
 			const currentUser = await User.findById(id);
-
+			await currentUser.populate('selectedCompany', '_id name websiteURL ratings');
+			await currentUser.populate('companies', '_id name');
 			res.status(200).json({
 				data: currentUser,
 			});
@@ -68,6 +71,8 @@ exports.updateEmail = (req, res, next) => {
 			loginUser.email = newEmail;
 			const savedUser = await loginUser.save();
 
+			await savedUser.populate('selectedCompany', '_id name websiteURL ratings');
+			await savedUser.populate('companies', '_id name');
 			res.status(200).json({
 				data: savedUser,
 				message: 'Successful changed email!',
@@ -111,6 +116,8 @@ exports.updatePassword = (req, res, next) => {
 			loginUser.password = hashedPassword;
 			const savedUser = await loginUser.save();
 
+			await savedUser.populate('selectedCompany', '_id name websiteURL ratings');
+			await savedUser.populate('companies', '_id name');
 			res.status(200).json({
 				data: savedUser,
 				message: 'Successful changed password!',
@@ -124,7 +131,7 @@ exports.updatePassword = (req, res, next) => {
 exports.login = (req, res, next) => {
 	(async function () {
 		try {
-			const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || null;
+			// const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || null;
 
 			const { email, password } = req.body;
 			const loginUser = await User.findOne({ email });
@@ -143,10 +150,16 @@ exports.login = (req, res, next) => {
 				return next(error);
 			}
 
-			const token = jwt.sign({ id: loginUser._id, type: loginUser.type }, process.env.DECODE_KEY, {
-				// expiresIn: "1h",
-			});
+			const token = jwt.sign(
+				{ id: loginUser._id, type: loginUser.type, selectedCompany: loginUser.selectedCompany },
+				process.env.DECODE_KEY,
+				{
+					// expiresIn: "1h",
+				}
+			);
 
+			await loginUser.populate('selectedCompany', '_id name websiteURL ratings');
+			await loginUser.populate('companies', '_id name');
 			res.status(200).json({
 				token,
 				data: loginUser,
@@ -161,17 +174,32 @@ exports.login = (req, res, next) => {
 exports.register = (req, res, next) => {
 	(async function () {
 		try {
-			const { password } = req.body;
+			const { password, firstName, lastName, phone, email, companyName, websiteURL } = req.body;
 			const hashedPassword = await bcrypt.hash(password, 12);
 
 			const userObject = new User({
-				...req.body,
+				firstName,
+				lastName,
+				phone,
+				email,
 				password: hashedPassword,
+			});
+			const companyObject = new Company({
+				user: userObject._id,
+				name: companyName,
+				websiteURL,
 				ratings: [{ type: 'overall', rating: null, ratingCount: 0 }],
 			});
-			const userCreated = await userObject.save();
 
-			if (userCreated) {
+			userObject.selectedCompany = companyObject._id;
+			userObject.companies = [companyObject._id];
+
+			const userCreated = await userObject.save();
+			const companyCreated = await companyObject.save();
+
+			if (userCreated && companyCreated) {
+				await userObject.populate('selectedCompany', '_id name websiteURL ratings');
+				await userObject.populate('companies', '_id name');
 				res.status(200).json({
 					data: userObject,
 					message: 'User successfully registered!',

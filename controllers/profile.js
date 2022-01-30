@@ -1,32 +1,33 @@
 const { getIdAndTypeFromAuth } = require('./auth');
-const User = require('../models/user');
+const User = require('../models/user')
+const Company = require('../models/company');
 
 // HANDLES
 
-exports.updateRatingHandle = async (user, rating) => {
-	const ratings = user.ratings;
+exports.updateRatingHandle = async (company, rating) => {
+	const ratings = company.ratings;
 	const { type } = rating;
 
 	let updatedRatings = ratings.filter((single) => single.type !== type);
 	updatedRatings.push(rating);
 	updatedRatings = calculateOverallRating(updatedRatings);
 
-	user.ratings = updatedRatings;
+	company.ratings = updatedRatings;
 
-	await user.save();
-	return user;
+	await company.save();
+	return company;
 };
 
-const deleteRatingHandle = async (user, type) => {
-	const ratings = user.ratings;
+exports.deleteRatingHandle = async (company, type) => {
+	const ratings = company.ratings;
 
 	let updatedRatings = ratings.filter((single) => single.type !== type);
 	updatedRatings = calculateOverallRating(updatedRatings);
 
-	user.ratings = updatedRatings;
+	company.ratings = updatedRatings;
 
-	await user.save();
-	return user;
+	await company.save();
+	return company;
 };
 
 const calculateOverallRating = (ratings) => {
@@ -66,7 +67,8 @@ exports.getProfile = (req, res, next) => {
 			const { id } = auth;
 
 			const profile = await User.findById(id);
-
+			await profile.populate('selectedCompany', '_id name websiteURL ratings');
+			await profile.populate('companies', '_id name');
 			res.status(200).json({
 				data: profile,
 			});
@@ -95,6 +97,8 @@ exports.updateProfile = (req, res, next) => {
 				{ new: true }
 			);
 
+			await updatedUser.populate('selectedCompany', '_id name websiteURL ratings');
+			await updatedUser.populate('companies', '_id name');
 			res.status(200).json({
 				data: updatedUser,
 				message: 'Profile successfully updated!',
@@ -125,31 +129,6 @@ exports.deleteProfile = (req, res, next) => {
 
 			res.status(200).json({
 				message: 'Profile successfully deleted!',
-			});
-		} catch (err) {
-			next(err);
-		}
-	})();
-};
-
-exports.deleteRating = (req, res, next) => {
-	const { type } = req.query;
-	(async function () {
-		try {
-			const auth = getIdAndTypeFromAuth(req, res, next);
-			if (!auth) {
-				const error = new Error('Not Authorized!');
-				error.statusCode = 401;
-				next(error);
-			}
-			const { id } = auth;
-
-			const profile = await User.findById(id);
-
-			await deleteRatingHandle(profile, type);
-
-			res.status(200).json({
-				message: `Rating for ${type} successfully disconnected!`,
 			});
 		} catch (err) {
 			next(err);
