@@ -17,8 +17,8 @@ exports.getUsers = (req, res, next) => {
       const count = await User.find({ _id: { $ne: id } }).countDocuments();
 
       res.status(200).json({
-        data: users,
         total: count,
+        data: users
       });
     } catch (err) {
       next(err);
