@@ -1,8 +1,24 @@
 const { getIdAndTypeFromAuth } = require('./auth');
-const User = require('../models/user')
+const User = require('../models/user');
 const Company = require('../models/company');
 
 // HANDLES
+
+exports.changeDownloadingState = async (company, type, state) => {
+	const ratings = company.ratings;
+
+	let updatedRatings = ratings.map((single) => {
+		if (single.type === type) {
+			single.downloading = state;
+		}
+		return single;
+	});
+
+	company.ratings = updatedRatings;
+
+	await company.save();
+	return company;
+};
 
 exports.updateRatingHandle = async (company, rating) => {
 	const ratings = company.ratings;

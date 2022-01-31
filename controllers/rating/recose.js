@@ -5,7 +5,7 @@ const dayjs = require('dayjs');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 
 const { getIdAndTypeFromAuth } = require('../auth');
-const { updateRatingHandle } = require('../profile');
+const { updateRatingHandle, changeDownloadingState } = require('../profile');
 const Company = require('../../models/company');
 const Rating = require('../../models/rating');
 
@@ -121,6 +121,12 @@ exports.loadRecoseReviews = (req, res, next) => {
 };
 
 const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
+	const company = await Company.findById(selectedCompany);
+
+	if (!load) {
+		await changeDownloadingState(company, 'recose', true);
+	}
+
 	const page = await usePuppeteer(url);
 
 	const loadMore = async () => {
@@ -166,8 +172,10 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 
 		items.push(object);
 	});
+
 	if (!load) {
 		await Rating.insertMany(items);
+		await changeDownloadingState(company, 'recose', false);
 	}
 
 	return items;

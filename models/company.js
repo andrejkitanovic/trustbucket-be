@@ -32,6 +32,10 @@ const companySchema = new Schema(
 						}
 					},
 				},
+				downloading: {
+					type: Boolean,
+					default: false,
+				},
 				ratingCount: {
 					type: Number,
 					default: 0,

@@ -49,7 +49,7 @@ exports.searchBookingProfile = async (req, res, next) => {
 
 exports.saveBookingProfile = (req, res, next) => {
 	const oldUrl = req.body.url;
-	const removeLanguage = /\..{0,3}?\./;
+	const removeLanguage = /\..{0,5}?\./;
 
 	const url = oldUrl.replace(removeLanguage, '.');
 
@@ -92,7 +92,7 @@ exports.saveBookingProfile = (req, res, next) => {
 
 exports.loadBookingReviews = (req, res, next) => {
 	const oldUrl = req.body.url;
-	const removeLanguage = /\..{0,3}?\./;
+	const removeLanguage = /\..{0,5}?\./;
 
 	const url = oldUrl.replace(removeLanguage, '.');
 
