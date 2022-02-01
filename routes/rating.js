@@ -16,6 +16,7 @@ router.delete('/', ratingsController.deleteRating);
 //GOOGLE
 router.get('/google/search', googleRatingController.getGoogleProfile);
 router.post('/google', googleRatingController.saveGoogleRating);
+router.post('/google/load', googleRatingController.loadGoogleReviews);
 
 //TRUSTPILOT
 router.get('/trustpilot/search', trustpilotController.searchTrustpilotProfile);

@@ -5,7 +5,7 @@ const dayjs = require('dayjs');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 
 const { getIdAndTypeFromAuth } = require('../auth');
-const { updateRatingHandle } = require('../profile');
+const { updateRatingHandle, changeDownloadingState } = require('../profile');
 const Company = require('../../models/company');
 const Rating = require('../../models/rating');
 
@@ -114,6 +114,12 @@ exports.loadFreshaReviews = (req, res, next) => {
 };
 
 const downloadFreshaReviewsHandle = async (selectedCompany, url, load) => {
+	const company = await Company.findById(selectedCompany);
+
+	if (!load) {
+		await changeDownloadingState(company, 'fresha', true);
+	}
+
 	const page = await usePuppeteer(url + '/reviews');
 
 	const loadMore = async () => {
@@ -163,6 +169,7 @@ const downloadFreshaReviewsHandle = async (selectedCompany, url, load) => {
 
 	if (!load) {
 		await Rating.insertMany(items);
+		await changeDownloadingState(company, 'fresha', false);
 	}
 
 	return items;

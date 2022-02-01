@@ -6,7 +6,7 @@ const dayjs = require('dayjs');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 
 const { getIdAndTypeFromAuth } = require('../auth');
-const { updateRatingHandle } = require('../profile');
+const { updateRatingHandle, changeDownloadingState } = require('../profile');
 const Company = require('../../models/company');
 const Rating = require('../../models/rating');
 
@@ -125,6 +125,12 @@ exports.loadBokadirektReviews = (req, res, next) => {
 };
 
 const downloadBokadirektReviewsHandle = async (selectedCompany, url, load) => {
+	const company = await Company.findById(selectedCompany);
+
+	if (!load) {
+		await changeDownloadingState(company, 'bokadirekt', true);
+	}
+
 	const page = await usePuppeteer(url);
 	await page.click('button.view-all-reviews');
 	await page.waitForNetworkIdle();
@@ -167,6 +173,7 @@ const downloadBokadirektReviewsHandle = async (selectedCompany, url, load) => {
 
 	if (!load) {
 		await Rating.insertMany(items);
+		await changeDownloadingState(company, 'bokadirekt', false);
 	}
 
 	return items;
