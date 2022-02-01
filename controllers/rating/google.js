@@ -55,7 +55,7 @@ exports.saveGoogleRating = (req, res, next) => {
 			};
 			await updateRatingHandle(company, rating);
 
-			res.json(rating);
+			res.json(data);
 		} catch (err) {
 			next(err);
 		}
@@ -95,72 +95,62 @@ exports.loadGoogleReviews = (req, res, next) => {
 };
 
 const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
-	console.log('start');
-
 	const page = await usePuppeteer(url);
 	await page.waitForNetworkIdle();
 	await page.click('button[aria-label*=reviews]');
 
 	const scrollableDiv = 'div.section-scrollbox';
 
+	let previous = 0;
 
 	const loadMore = async () => {
 		await page.waitForNetworkIdle();
-		await page.evaluate((selector) => {
+		// page.on('console', (msg) => console.log(msg.text()));
+
+		const scrollHeight = await page.evaluate((selector) => {
 			const scrollableSection = document.querySelector(selector);
 
-
-			// scrollableSection.scrollTop = scrollableSection.offsetHeight;
-			scrollableSection.scrollTop = 1_000_000;
+			scrollableSection.scrollTop = scrollableSection.scrollHeight;
+			return scrollableSection.scrollHeight;
 		}, scrollableDiv);
 
-		loadMore();
+		if (previous !== scrollHeight) {
+			previous = scrollHeight;
+			await loadMore();
+		}
 	};
 
 	await loadMore();
-	console.log('finish');
 
-	// 	await page.waitForNetworkIdle();
+	const result = await page.content();
+	const $ = cheerio.load(result);
 
-	// 	const loadMore = async () => {
-	// 		await page.click('.modal-content button.view-all-reviews');
-	// 		await page.waitForNetworkIdle();
+	const items = [];
+	await $('div[data-review-id].gm2-body-2').map((index, el) => {
+		const $el = cheerio.load(el);
 
-	// 		if (await page.$('.modal-content button.view-all-reviews')) {
-	// 			await loadMore();
-	// 		}
-	// 	};
-	// 	if (await page.$('.modal-content button.view-all-reviews')) {
-	// 		await loadMore();
-	// 	}
+		// const imageSrc = $el('div.review-user img').attr('src');
+		// const image = isAbsoluteURL(imageSrc) ? imageSrc : 'https://www.bokadirekt.se' + imageSrc;
 
-	// 	const result = await page.content();
+		$el.prototype.count = function (selector) {
+			return this.find(selector).length;
+		};
+		const object = {
+			company: selectedCompany,
+			type: 'google',
+			name: $el('a[target=_blank]>div:first-child>span').text(),
+			// 	image: image,
+			rating: Number($el('span[aria-label*=stars]').count('img[class*=active]')),
+			description: $el('span[jsan*=-text]').text().trim(),
+			// 	date: dayjs($el('time[datetime]').attr('datetime'), 'YYYY-MM-DD'),
+		};
 
-	// 	const $ = cheerio.load(result);
+		items.push(object);
+	});
 
-	// 	const items = [];
-	// 	await $('.modal-content div[itemprop=review]').map((index, el) => {
-	// 		const $el = cheerio.load(el);
+	if (!load) {
+		await Rating.insertMany(items);
+	}
 
-	// 		const imageSrc = $el('div.review-user img').attr('src');
-	// 		const image = isAbsoluteURL(imageSrc) ? imageSrc : 'https://www.bokadirekt.se' + imageSrc;
-
-	// 		const object = {
-	// 			company: selectedCompany,
-	// 			type: 'bokadirekt',
-	// 			name: $el('span[itemprop=name]').text(),
-	// 			image: image,
-	// 			rating: Number($el('meta[itemprop=ratingValue]').attr('content')),
-	// 			description: $el('div.review-text').text(),
-	// 			date: dayjs($el('time[datetime]').attr('datetime'), 'YYYY-MM-DD'),
-	// 		};
-
-	// 		items.push(object);
-	// 	});
-
-	// 	if (!load) {
-	// 		await Rating.insertMany(items);
-	// 	}
-
-	// 	return items;
+	return items;
 };
