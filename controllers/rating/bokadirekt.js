@@ -1,7 +1,7 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
 const { isAbsoluteURL } = require('../../helpers/utils');
-const usePuppeteer = require('../../helpers/puppeteer');
+const usePuppeteer = require('../../utils/puppeteer');
 const dayjs = require('dayjs');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 
@@ -155,14 +155,10 @@ const downloadBokadirektReviewsHandle = async (selectedCompany, url, load) => {
 	await $('.modal-content div[itemprop=review]').map((index, el) => {
 		const $el = cheerio.load(el);
 
-		const imageSrc = $el('div.review-user img').attr('src');
-		const image = isAbsoluteURL(imageSrc) ? imageSrc : 'https://www.bokadirekt.se' + imageSrc;
-
 		const object = {
 			company: selectedCompany,
 			type: 'bokadirekt',
 			name: $el('span[itemprop=name]').text(),
-			image: image,
 			rating: Number($el('meta[itemprop=ratingValue]').attr('content')),
 			description: $el('div.review-text').text(),
 			date: dayjs($el('time[datetime]').attr('datetime'), 'YYYY-MM-DD'),

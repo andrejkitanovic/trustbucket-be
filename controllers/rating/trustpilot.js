@@ -1,5 +1,5 @@
 const cheerio = require('cheerio');
-const usePuppeteer = require('../../helpers/puppeteer');
+const usePuppeteer = require('../../utils/puppeteer');
 
 const { getIdAndTypeFromAuth } = require('../auth');
 const { updateRatingHandle } = require('../profile');

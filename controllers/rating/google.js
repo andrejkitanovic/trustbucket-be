@@ -1,11 +1,12 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
-const usePuppeteer = require('../../helpers/puppeteer');
-const dayjs = require('dayjs');
+const usePuppeteer = require('../../utils/puppeteer');
 
+const { reverseFromNow } = require('../../utils/dayjs');
 const { getIdAndTypeFromAuth } = require('../auth');
-const { updateRatingHandle } = require('../profile');
+const { updateRatingHandle, changeDownloadingState } = require('../profile');
 const Company = require('../../models/company');
+const Rating = require('../../models/rating');
 
 exports.getGoogleProfile = (req, res, next) => {
 	const fields = ['formatted_address', 'name', 'place_id', 'icon_background_color', 'rating', 'geometry'].join('%2C');
@@ -30,7 +31,7 @@ exports.getGoogleProfile = (req, res, next) => {
 };
 
 exports.saveGoogleRating = (req, res, next) => {
-	const fields = ['name', 'rating', 'review', 'user_ratings_total', 'url'].join('%2C');
+	const fields = ['name', 'rating', 'user_ratings_total', 'url'].join('%2C');
 	const placeId = req.body.placeId;
 	const url = `https://maps.googleapis.com/maps/api/place/details/json?fields=${fields}&place_id=${placeId}&key=${process.env.API_KEY_GOOGLE}`;
 
@@ -51,11 +52,11 @@ exports.saveGoogleRating = (req, res, next) => {
 				type: 'google',
 				rating: data.result.rating,
 				ratingCount: data.result.user_ratings_total,
-				url: data.url,
 			};
 			await updateRatingHandle(company, rating);
 
-			res.json(data);
+			downloadGoogleReviewsHandle(selectedCompany, data.result.url);
+			res.json(rating);
 		} catch (err) {
 			next(err);
 		}
@@ -64,7 +65,6 @@ exports.saveGoogleRating = (req, res, next) => {
 
 exports.loadGoogleReviews = (req, res, next) => {
 	const url = req.body.url;
-	// const url = 'https://maps.google.com/?cid=9335875924644060651'
 
 	(async function () {
 		try {
@@ -95,9 +95,15 @@ exports.loadGoogleReviews = (req, res, next) => {
 };
 
 const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
+	const company = await Company.findById(selectedCompany);
+
+	if (!load) {
+		await changeDownloadingState(company, 'google', true);
+	}
+
 	const page = await usePuppeteer(url);
 	await page.waitForNetworkIdle();
-	await page.click('button[aria-label*=reviews]');
+	await page.click('button[jsaction*=moreReviews]');
 
 	const scrollableDiv = 'div.section-scrollbox';
 
@@ -129,9 +135,6 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 	await $('div[data-review-id].gm2-body-2').map((index, el) => {
 		const $el = cheerio.load(el);
 
-		// const imageSrc = $el('div.review-user img').attr('src');
-		// const image = isAbsoluteURL(imageSrc) ? imageSrc : 'https://www.bokadirekt.se' + imageSrc;
-
 		$el.prototype.count = function (selector) {
 			return this.find(selector).length;
 		};
@@ -139,10 +142,9 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 			company: selectedCompany,
 			type: 'google',
 			name: $el('a[target=_blank]>div:first-child>span').text(),
-			// 	image: image,
-			rating: Number($el('span[aria-label*=stars]').count('img[class*=active]')),
+			rating: Number($el(el).count('img[class*=active]')),
 			description: $el('span[jsan*=-text]').text().trim(),
-			// 	date: dayjs($el('time[datetime]').attr('datetime'), 'YYYY-MM-DD'),
+			date: reverseFromNow($el('span[class*=-date]').text()),
 		};
 
 		items.push(object);
@@ -150,6 +152,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 
 	if (!load) {
 		await Rating.insertMany(items);
+		await changeDownloadingState(company, 'google', false);
 	}
 
 	return items;

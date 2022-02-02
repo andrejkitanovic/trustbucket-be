@@ -93,3 +93,35 @@ exports.deleteRating = (req, res, next) => {
 		}
 	})();
 };
+
+exports.stats = (req, res, next) => {
+	(async function () {
+		try {
+			const auth = getIdAndTypeFromAuth(req, res, next);
+			if (!auth) {
+				const error = new Error('Not Authorized!');
+				error.statusCode = 401;
+				next(error);
+			}
+			const { selectedCompany } = auth;
+
+			const stats = await Rating.aggregate([
+				{ $sort: { _id: -1 } },
+				{
+					$group: {
+						_id: {
+							year: { $year: '$date' },
+							month: { $month: '$date' },
+						},
+						total: { $sum: 1 },
+					},
+				},
+				
+			]);
+
+			res.status(200).json(stats);
+		} catch (err) {
+			next(err);
+		}
+	})();
+};

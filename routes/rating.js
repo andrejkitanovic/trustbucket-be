@@ -10,6 +10,7 @@ const bokadirektController = require('../controllers/rating/bokadirekt');
 const router = express.Router();
 
 router.get('/', ratingsController.getRatings);
+router.get('/stats',ratingsController.stats)
 router.post('/filter', ratingsController.filterRatings);
 router.delete('/', ratingsController.deleteRating);
 

@@ -1,6 +1,6 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
-const usePuppeteer = require('../../helpers/puppeteer');
+const usePuppeteer = require('../../utils/puppeteer');
 const dayjs = require('dayjs');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 
@@ -150,7 +150,6 @@ const downloadBokingReviewsHandle = async (selectedCompany, url, load) => {
 				company: selectedCompany,
 				type: 'booking',
 				name: $el('.bui-avatar-block__title').text(),
-				image: $el('.bui-avatar__image').attr('src'),
 				rating: Number($el('.bui-review-score__badge').text().trim().replace(',', '.')),
 				description: $el('.c-review__body').text().trim(),
 				date: dayjs(date, 'MMMM D, YYYY'),

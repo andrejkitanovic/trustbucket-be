@@ -1,6 +1,6 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
-const usePuppeteer = require('../../helpers/puppeteer');
+const usePuppeteer = require('../../utils/puppeteer');
 const dayjs = require('dayjs');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 
@@ -148,15 +148,6 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 	await $('.review-card').map((index, el) => {
 		const $el = cheerio.load(el);
 
-		let image = 'https://www.reco.se/assets/images/icons/default-user.svg';
-
-		$el.prototype.exists = function (selector) {
-			return this.find(selector).length > 0;
-		};
-		if ($el('.review-card--reviewer-person-image').exists('img')) {
-			image = $el('.review-card--reviewer-person-image img').attr('src').trim();
-		}
-
 		$el.prototype.count = function (selector) {
 			return this.find(selector).length;
 		};
@@ -164,7 +155,6 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 			company: selectedCompany,
 			type: 'recose',
 			name: $el('.review-card--reviewer-person-info a').text(),
-			image: image,
 			rating: Number($el('div.reco-rating.rxs.iblock').count('span')),
 			description: $el('div.text-clamp--inner').text().trim(),
 			date: dayjs($el('.submit-date').text(), 'YYYY-MM-DD'),

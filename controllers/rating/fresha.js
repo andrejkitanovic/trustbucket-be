@@ -1,6 +1,6 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
-const usePuppeteer = require('../../helpers/puppeteer');
+const usePuppeteer = require('../../utils/puppeteer');
 const dayjs = require('dayjs');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 
@@ -141,16 +141,6 @@ const downloadFreshaReviewsHandle = async (selectedCompany, url, load) => {
 	await $('div[data-qa=reviews-list] li').map((index, el) => {
 		const $el = cheerio.load(el);
 
-		// let image = null;
-
-		// $el.prototype.exists = function (selector) {
-		// 	return this.find(selector).length > 0;
-		// };
-		// if ($el(el).exists('div[data-qa=avatar-image]')) {
-		// 	// image = $el('div[data-qa=avatar-image]')
-		// 	console.log($el('div[data-qa=avatar-image]').css('background-image'))
-		// }
-
 		$el.prototype.count = function (selector) {
 			return this.find(selector).length;
 		};
@@ -158,7 +148,6 @@ const downloadFreshaReviewsHandle = async (selectedCompany, url, load) => {
 			company: selectedCompany,
 			type: 'fresha',
 			name: $el('p[data-qa=review-user-name]').text(),
-			image: null,
 			rating: Number($el('div[data-qa=review-rating]').count('div[type=selected]')),
 			description: $el('p[class*=StyledParagraph]').text(),
 			date: dayjs($el('p[data-qa=review-appt-date]').text(), 'MMM D, YYYY'),
@@ -175,4 +164,4 @@ const downloadFreshaReviewsHandle = async (selectedCompany, url, load) => {
 	return items;
 };
 
-// MISSING IMAGE LOGIC
+// ALL DONE
