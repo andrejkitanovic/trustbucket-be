@@ -15,6 +15,15 @@ const companySchema = new Schema(
 			type: String,
 			required: true,
 		},
+		email: String,
+		phone: String,
+		address: {
+			name: String,
+			position: {
+				lat: Number,
+				lng: Number,
+			},
+		},
 		ratings: [
 			{
 				type: {

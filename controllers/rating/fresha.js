@@ -99,6 +99,7 @@ exports.loadFreshaReviews = (req, res, next) => {
 				error.statusCode = 401;
 				next(error);
 			}
+			
 			const { selectedCompany } = auth;
 
 			const items = await downloadFreshaReviewsHandle(selectedCompany, url, true);

@@ -1,6 +1,5 @@
 const { getIdAndTypeFromAuth } = require('./auth');
 const User = require('../models/user');
-const Company = require('../models/company');
 
 // HANDLES
 
