@@ -104,6 +104,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 
 	const page = await usePuppeteer(url);
 	await page.waitForNetworkIdle();
+	await page.waitFor(300);
 	await page.click('button[aria-label*=review]');
 
 	const scrollableDiv = 'div.section-scrollbox';
