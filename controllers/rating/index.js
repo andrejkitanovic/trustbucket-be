@@ -2,6 +2,7 @@ const { getIdAndTypeFromAuth } = require('../auth');
 const { deleteRatingHandle } = require('../profile');
 const Company = require('../../models/company');
 const Rating = require('../../models/rating');
+const mongoose = require('mongoose')
 
 exports.getRatings = (req, res, next) => {
 	(async function () {
@@ -105,21 +106,64 @@ exports.stats = (req, res, next) => {
 			}
 			const { selectedCompany } = auth;
 
-			const stats = await Rating.aggregate([
-				{ $sort: { _id: -1 } },
-				{
-					$group: {
-						_id: {
-							year: { $year: '$date' },
-							month: { $month: '$date' },
-						},
-						total: { $sum: 1 },
-					},
-				},
-				
-			]);
+			const company = await Company.findById(selectedCompany);
+			const types = company.ratings.map((el) => !el.downloading && el.type);
 
-			res.status(200).json(stats);
+			const getStats = async (type) => {
+				let matchObject = {
+					company: mongoose.Types.ObjectId(selectedCompany),
+				};
+
+				if (type) {
+					matchObject = { ...matchObject, type: type };
+				}
+
+				return await Rating.aggregate([
+					{
+						$match: matchObject,
+					},
+					{
+						$group: {
+							_id: { $dateToString: { format: '%Y-%m', date: '$date' } },
+							total: { $sum: 1 },
+						},
+					},
+					{ $sort: { _id: 1 } },
+				]);
+			};
+			const overallStats = await getStats();
+
+			const labels = [];
+			overallStats.forEach((el) => labels.push(el._id));
+
+			const stats = {};
+
+			for (const type of types) {
+				const elements = [];
+				if (type === 'overall') {
+					overallStats.forEach((el) => elements.push(el.total));
+					stats[type] = elements;
+				} else {
+					let typeStats = await getStats(type);
+					labels.forEach((date) => {
+						let returned = false;
+						typeStats.forEach((el) => {
+							if (el._id === date) {
+								elements.push(el.total);
+								returned = true;
+							}
+						});
+
+						if (!returned) elements.push(0);
+					});
+					stats[type] = elements;
+				}
+			}
+
+			res.status(200).json({
+				labels,
+				...stats,
+			});
 		} catch (err) {
 			next(err);
 		}

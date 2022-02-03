@@ -52,3 +52,44 @@ exports.postCompany = (req, res, next) => {
 		}
 	})();
 };
+
+exports.selectCompany = (req, res, next) => {
+	(async function () {
+		try {
+			const auth = getIdAndTypeFromAuth(req, res, next);
+			if (!auth) {
+				const error = new Error('Not Authorized!');
+				error.statusCode = 401;
+				next(error);
+			}
+			const { id } = auth;
+			const { companyId } = req.body;
+
+			const profile = await User.findById(id);
+
+			profile.selectedCompany = companyId;
+
+			const userUpdated = await profile.save();
+
+			const token = jwt.sign(
+				{ id: profile._id, type: profile.type, selectedCompany: profile.selectedCompany },
+				process.env.DECODE_KEY,
+				{
+					// expiresIn: "1h",
+				}
+			);
+
+			if (userUpdated) {
+				await profile.populate('selectedCompany', '_id name websiteURL ratings');
+				await profile.populate('companies', '_id name');
+				res.status(200).json({
+					token,
+					data: profile,
+					message: `Selected company is now ${profile.selectedCompany.name}!`,
+				});
+			}
+		} catch (err) {
+			next(err);
+		}
+	})();
+};

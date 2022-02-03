@@ -51,7 +51,7 @@ exports.saveBookingProfile = (req, res, next) => {
 	const oldUrl = req.body.url;
 	const removeLanguage = /\..{0,5}?\./;
 
-	const url = oldUrl.replace(removeLanguage, '.');
+	const url = oldUrl.replace(removeLanguage, '.en-gb.');
 
 	(async function () {
 		try {
@@ -132,8 +132,6 @@ const downloadBokingReviewsHandle = async (selectedCompany, url, load) => {
 			await changeDownloadingState(company, 'booking', true);
 		}
 
-		console.log(url);
-
 		const page = await usePuppeteer(url);
 		await page.click('a.toggle_review');
 		await page.waitForNetworkIdle();
@@ -184,7 +182,6 @@ const downloadBokingReviewsHandle = async (selectedCompany, url, load) => {
 			await changeDownloadingState(company, 'booking', false);
 		}
 
-		console.log(items);
 		return items;
 	} catch (err) {
 		console.log(err);

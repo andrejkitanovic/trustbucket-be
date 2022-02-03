@@ -95,73 +95,65 @@ exports.loadGoogleReviews = (req, res, next) => {
 };
 
 const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
-	let company, page;
+	const company = await Company.findById(selectedCompany);
 
-	try {
-		const company = await Company.findById(selectedCompany);
+	if (!load) {
+		await changeDownloadingState(company, 'google', true);
+	}
 
-		if (!load) {
-			await changeDownloadingState(company, 'google', true);
-		}
+	const page = await usePuppeteer(url);
+	await page.waitForNetworkIdle();
+	await page.click('button[jsaction*=moreReviews]');
 
-		page = await usePuppeteer(url);
+	const scrollableDiv = 'div.section-scrollbox';
+
+	let previous = 0;
+
+	const loadMore = async () => {
 		await page.waitForNetworkIdle();
-		await page.click('button[jsaction*=moreReviews]');
+		// page.on('console', (msg) => console.log(msg.text()));
 
-		const scrollableDiv = 'div.section-scrollbox';
+		const scrollHeight = await page.evaluate((selector) => {
+			const scrollableSection = document.querySelector(selector);
 
-		let previous = 0;
+			scrollableSection.scrollTop = scrollableSection.scrollHeight;
+			return scrollableSection.scrollHeight;
+		}, scrollableDiv);
 
-		const loadMore = async () => {
-			await page.waitForNetworkIdle();
-			// page.on('console', (msg) => console.log(msg.text()));
+		if (previous !== scrollHeight) {
+			previous = scrollHeight;
+			await loadMore();
+		}
+	};
 
-			const scrollHeight = await page.evaluate((selector) => {
-				const scrollableSection = document.querySelector(selector);
+	await loadMore();
 
-				scrollableSection.scrollTop = scrollableSection.scrollHeight;
-				return scrollableSection.scrollHeight;
-			}, scrollableDiv);
+	const result = await page.content();
+	const $ = cheerio.load(result);
 
-			if (previous !== scrollHeight) {
-				previous = scrollHeight;
-				await loadMore();
-			}
+	const items = [];
+	await $('div[data-review-id].gm2-body-2').map((index, el) => {
+		const $el = cheerio.load(el);
+
+		$el.prototype.count = function (selector) {
+			return this.find(selector).length;
+		};
+		const object = {
+			company: selectedCompany,
+			type: 'google',
+			name: $el('a[target=_blank]>div:first-child>span').text(),
+			rating: Number($el(el).count('img[class*=active]')),
+			description: $el('span[jsan*=-text]').text().trim(),
+			date: reverseFromNow($el('span[class*=-date]').text()),
 		};
 
-		await loadMore();
+		items.push(object);
+	});
 
-		const result = await page.content();
-		const $ = cheerio.load(result);
-
-		const items = [];
-		await $('div[data-review-id].gm2-body-2').map((index, el) => {
-			const $el = cheerio.load(el);
-
-			$el.prototype.count = function (selector) {
-				return this.find(selector).length;
-			};
-			const object = {
-				company: selectedCompany,
-				type: 'google',
-				name: $el('a[target=_blank]>div:first-child>span').text(),
-				rating: Number($el(el).count('img[class*=active]')),
-				description: $el('span[jsan*=-text]').text().trim(),
-				date: reverseFromNow($el('span[class*=-date]').text()),
-			};
-
-			items.push(object);
-		});
-
-		if (!load) {
-			await Rating.insertMany(items);
-			await changeDownloadingState(company, 'google', false);
-		}
-
-		return items;
-	} catch (err) {
-		if (company) {
-			await changeDownloadingState(company, 'google', false);
-		}
+	if (!load) {
+		await Rating.insertMany(items);
+		await changeDownloadingState(company, 'google', false);
 	}
+
+	return items;
 };

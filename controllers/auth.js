@@ -10,7 +10,7 @@ const getIdAndTypeFromAuth = (req, res, next) => {
 		return {
 			id: decoded.id,
 			type: decoded.type,
-			selectedCompany: decoded.selectedCompany
+			selectedCompany: decoded.selectedCompany,
 		};
 	}
 	return null;

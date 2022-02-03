@@ -29,3 +29,11 @@ exports.reverseFromNow = (string) => {
 
 	return null;
 };
+
+
+exports.dayjsParser = () => {
+	const customParseFormat = require('dayjs/plugin/customParseFormat');
+	dayjs.extend(customParseFormat);
+
+	return dayjs
+}
