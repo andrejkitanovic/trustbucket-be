@@ -96,7 +96,6 @@ exports.loadGoogleReviews = (req, res, next) => {
 
 const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 	const company = await Company.findById(selectedCompany);
-	console.log(url)
 
 	if (!load) {
 		await changeDownloadingState(company, 'google', true);
@@ -104,7 +103,14 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 
 	const page = await usePuppeteer(url);
 	await page.waitForNetworkIdle();
-	await page.screenshot({path: 'google.png'})
+
+	// TESTING
+	const result = await page.content();
+	const $test = cheerio.load(result);
+
+	console.log($test('body').html());
+	// TESTING
+
 	await page.click('button[aria-label*=review]');
 
 	const scrollableDiv = 'div.section-scrollbox';
@@ -113,7 +119,6 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 
 	const loadMore = async () => {
 		await page.waitForNetworkIdle();
-		// page.on('console', (msg) => console.log(msg.text()));
 
 		const scrollHeight = await page.evaluate((selector) => {
 			const scrollableSection = document.querySelector(selector);
