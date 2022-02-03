@@ -96,6 +96,7 @@ exports.loadGoogleReviews = (req, res, next) => {
 
 const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 	const company = await Company.findById(selectedCompany);
+	console.log(url)
 
 	if (!load) {
 		await changeDownloadingState(company, 'google', true);
@@ -103,7 +104,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 
 	const page = await usePuppeteer(url);
 	await page.waitForNetworkIdle();
-	await page.click('button[jsaction*=moreReviews]');
+	await page.click('button[aria-label*=review]');
 
 	const scrollableDiv = 'div.section-scrollbox';
 
