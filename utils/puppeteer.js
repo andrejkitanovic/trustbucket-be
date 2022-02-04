@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 
-const blockedResourceTypes = ['google-analytics.com'];
+let blockedResourceTypes = ['image', 'stylesheet', 'font'];
+let blockedNetworks = ['analytics', 'hotjar'];
 
 const options = {
 	// headless: false,
@@ -44,19 +45,23 @@ const options = {
 	],
 };
 
-module.exports = async (url) => {
+module.exports = async (url, opts) => {
 	const browser = await puppeteer.launch(options);
 	const page = await browser.newPage();
+
+	if (opts && opts.enableResource && opts.enableResource.length) {
+		blockedResourceTypes = blockedResourceTypes.filter((resource) => !opts.enableResource.includes(resource));
+	}
 
 	page.setRequestInterception(true);
 	page.on('request', (req) => {
 		try {
-			if (req.resourceType() === 'image') {
+			if (blockedResourceTypes.some((type) => req.resourceType() === type)) {
 				req.abort();
 			} else {
 				const url = req.url();
 
-				if (blockedResourceTypes.some((domain) => url.includes(domain))) {
+				if (blockedNetworks.some((domain) => url.includes(domain))) {
 					req.abort();
 				} else req.continue();
 			}

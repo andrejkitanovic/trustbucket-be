@@ -132,7 +132,7 @@ const downloadBokingReviewsHandle = async (selectedCompany, url, load) => {
 			await changeDownloadingState(company, 'booking', true);
 		}
 
-		const page = await usePuppeteer(url);
+		const page = await usePuppeteer(url, { enableResource: ['stylesheet'] });
 		await page.click('a.toggle_review');
 		await page.waitForNetworkIdle();
 
@@ -146,14 +146,13 @@ const downloadBokingReviewsHandle = async (selectedCompany, url, load) => {
 				const $el = cheerio.load(el);
 
 				const date = $el('.c-review-block__right .c-review-block__date').text().replace('Reviewed:', '').trim();
-
 				const object = {
 					company: selectedCompany,
 					type: 'booking',
 					name: $el('.bui-avatar-block__title').text(),
 					rating: Number($el('.bui-review-score__badge').text().trim().replace(',', '.')),
 					description: $el('.c-review__body').text().trim(),
-					date: dayjs(date, 'D MMMM YYYY'),
+					date: dayjs(date, 'MMMM D, YYYY'),
 				};
 
 				items.push(object);
