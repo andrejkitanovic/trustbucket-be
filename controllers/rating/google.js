@@ -104,13 +104,6 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 	const page = await usePuppeteer(url);
 	await page.waitForNetworkIdle();
 
-	// TESTING
-	const tResult = await page.content();
-	const $test = cheerio.load(tResult);
-
-	console.log($test('button').html());
-	// TESTING
-
 	await page.click('button[aria-label*=review]');
 
 	const scrollableDiv = 'div.section-scrollbox';

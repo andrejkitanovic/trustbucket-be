@@ -17,6 +17,7 @@ module.exports = async (url) => {
 	const browser = await puppeteer.launch(options);
 	const page = await browser.newPage();
 	await page.goto(url);
+	await page.screenshot({path: 'test.png'});
 
 	return page;
 };
