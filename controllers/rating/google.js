@@ -108,7 +108,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 	const tResult = await page.content();
 	const $test = cheerio.load(tResult);
 
-	console.log($test('body').html());
+	console.log($test('button').html());
 	// TESTING
 
 	await page.click('button[aria-label*=review]');
