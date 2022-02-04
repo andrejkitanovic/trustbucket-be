@@ -55,7 +55,7 @@ exports.saveGoogleRating = (req, res, next) => {
 			};
 			await updateRatingHandle(company, rating);
 
-			downloadGoogleReviewsHandle(selectedCompany, `https://www.google.com/search?q=Belviso`);
+			downloadGoogleReviewsHandle(selectedCompany, `https://www.google.com/search?q=Belviso Srbija`);
 			res.json(rating);
 		} catch (err) {
 			next(err);
