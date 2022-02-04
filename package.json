@@ -21,6 +21,7 @@
 		"express": "^4.17.1",
 		"express-form-data": "^2.0.14",
 		"express-validator": "^6.6.1",
+		"fse": "^4.0.1",
 		"geoip-lite": "^1.4.2",
 		"jsonwebtoken": "^8.5.1",
 		"moment": "^2.29.1",

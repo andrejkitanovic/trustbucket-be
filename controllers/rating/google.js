@@ -1,6 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const usePuppeteer = require('../../utils/puppeteer');
+const fse = require('fs-extra');
 
 const { reverseFromNow } = require('../../utils/dayjs');
 const { getIdAndTypeFromAuth } = require('../auth');
@@ -97,12 +98,13 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 	}
 
 	const page = await usePuppeteer(url);
-	await page.screenshot({ path: './uploads/google.png' });
+	await page.screenshot({ path: './uploads/google.png', fullPage: true });
 	await page.waitForNetworkIdle();
 
 	let bodyHTML = await page.evaluate(() => document.body.innerHTML);
-	console.log(bodyHTML)
-
+	console.log('here')
+	await fse.outputFile('./uploads/index.html',bodyHTML);
+	
 	await page.click('a[data-async-trigger=reviewDialog]');
 
 	const scrollableDiv = 'div.review-dialog-list';
