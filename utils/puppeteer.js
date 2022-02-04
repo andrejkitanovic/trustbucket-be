@@ -6,6 +6,8 @@ const options = {
 		'--no-sandbox',
 		'--disable-setuid-sandbox',
 		'--disable-infobars',
+		'--disable-dev-shm-usage',
+        '--single-process',
 		'--window-position=0,0',
 		'--ignore-certifcate-errors',
 		'--ignore-certifcate-errors-spki-list',
