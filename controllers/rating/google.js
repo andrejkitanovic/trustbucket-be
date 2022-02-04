@@ -97,7 +97,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 	}
 
 	const page = await usePuppeteer(url);
-	await page.screenshot({ path: 'google.png' });
+	await page.screenshot({ path: './uploads/google.png' });
 	await page.waitForNetworkIdle();
 
 	await page.click('a[data-async-trigger=reviewDialog]');
