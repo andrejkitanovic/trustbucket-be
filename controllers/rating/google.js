@@ -55,7 +55,7 @@ exports.saveGoogleRating = (req, res, next) => {
 			};
 			await updateRatingHandle(company, rating);
 
-			downloadGoogleReviewsHandle(selectedCompany, data.name);
+			downloadGoogleReviewsHandle(selectedCompany, `https://www.google.com/search?q=${data.name}`);
 			res.json(rating);
 		} catch (err) {
 			next(err);
