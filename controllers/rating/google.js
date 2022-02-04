@@ -55,7 +55,7 @@ exports.saveGoogleRating = (req, res, next) => {
 			};
 			await updateRatingHandle(company, rating);
 
-			downloadGoogleReviewsHandle(selectedCompany, 'https://www.google.com/maps?q=Belviso%20Srbija');
+			downloadGoogleReviewsHandle(selectedCompany, data.name);
 			res.json(rating);
 		} catch (err) {
 			next(err);
@@ -64,15 +64,10 @@ exports.saveGoogleRating = (req, res, next) => {
 };
 
 exports.loadGoogleReviews = (req, res, next) => {
-	const url = req.body.url;
-
 	(async function () {
 		try {
-			if (!url || !url.includes('maps.google.com/')) {
-				const error = new Error('Not Valid URL!');
-				error.statusCode = 422;
-				next(error);
-			}
+			const name = req.body.name;
+			const url = `https://www.google.com/search?q=${name}`;
 
 			const auth = getIdAndTypeFromAuth(req, res, next);
 			if (!auth) {
@@ -85,8 +80,8 @@ exports.loadGoogleReviews = (req, res, next) => {
 			const items = await downloadGoogleReviewsHandle(selectedCompany, url, true);
 
 			res.json({
-				count: items.length,
-				data: items,
+					count: items.length,
+					data: items,
 			});
 		} catch (err) {
 			next(err);
@@ -104,9 +99,9 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 	const page = await usePuppeteer(url);
 	await page.waitForNetworkIdle();
 
-	await page.click('button[aria-label*=review]');
+	await page.click('a[data-async-trigger=reviewDialog]');
 
-	const scrollableDiv = 'div.section-scrollbox';
+	const scrollableDiv = 'div.review-dialog-list';
 
 	let previous = 0;
 
@@ -132,7 +127,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 	const $ = cheerio.load(result);
 
 	const items = [];
-	await $('div[data-review-id].gm2-body-2').map((index, el) => {
+	await $('div[class*=__google-review]').map((index, el) => {
 		const $el = cheerio.load(el);
 
 		$el.prototype.count = function (selector) {
@@ -141,10 +136,10 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 		const object = {
 			company: selectedCompany,
 			type: 'google',
-			name: $el('a[target=_blank]>div:first-child>span').text(),
-			rating: Number($el(el).count('img[class*=active]')),
-			description: $el('span[jsan*=-text]').text().trim(),
-			date: reverseFromNow($el('span[class*=-date]').text()),
+			name: $el('div>div>div>div>a').text(),
+			rating: Number($el('g-review-stars span').attr('aria-label').split(' ')[1]),
+			description: $el('.review-snippet').text().trim(),
+			date: reverseFromNow($el('span.dehysf').text()),
 		};
 
 		items.push(object);
