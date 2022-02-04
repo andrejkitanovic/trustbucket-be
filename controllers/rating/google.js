@@ -99,12 +99,8 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 
 	const page = await usePuppeteer(url);
 	await page.screenshot({ path: './uploads/google.png', fullPage: true });
-	await page.waitForNetworkIdle();
 
-	let bodyHTML = await page.evaluate(() => document.body.innerHTML);
-	console.log('here')
-	await fse.outputFile('./uploads/index.html',bodyHTML);
-	
+	await page.waitForSelector('a[data-async-trigger=reviewDialog]');
 	await page.click('a[data-async-trigger=reviewDialog]');
 
 	const scrollableDiv = 'div.review-dialog-list';
