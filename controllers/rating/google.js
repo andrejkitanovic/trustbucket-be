@@ -80,8 +80,8 @@ exports.loadGoogleReviews = (req, res, next) => {
 			const items = await downloadGoogleReviewsHandle(selectedCompany, url, true);
 
 			res.json({
-					count: items.length,
-					data: items,
+				count: items.length,
+				data: items,
 			});
 		} catch (err) {
 			next(err);
@@ -97,14 +97,14 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 	}
 
 	const page = await usePuppeteer(url);
-	await page.waitForNetworkIdle();
+	await page.waitForSelector('a[data-async-trigger=reviewDialog]');
 
 	await page.click('a[data-async-trigger=reviewDialog]');
 
 	const scrollableDiv = 'div.review-dialog-list';
-
+	await page.waitForSelector('div.review-dialog-list');
+	console.log('got selector')
 	let previous = 0;
-
 	const loadMore = async () => {
 		await page.waitForNetworkIdle();
 
