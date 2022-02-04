@@ -41,6 +41,7 @@ const options = {
 		'--no-pings',
 		'--no-sandbox',
 		'--no-zygote',
+		'--single-process',
 		'--password-store=basic',
 		'--use-gl=swiftshader',
 		'--use-mock-keychain',
