@@ -55,7 +55,7 @@ exports.saveGoogleRating = (req, res, next) => {
 			};
 			await updateRatingHandle(company, rating);
 
-			downloadGoogleReviewsHandle(selectedCompany, data.result.url);
+			downloadGoogleReviewsHandle(selectedCompany, 'https://www.google.com/maps?q=Belviso%20Srbija');
 			res.json(rating);
 		} catch (err) {
 			next(err);
