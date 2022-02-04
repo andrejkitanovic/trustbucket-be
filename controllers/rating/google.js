@@ -100,6 +100,9 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 	await page.screenshot({ path: './uploads/google.png' });
 	await page.waitForNetworkIdle();
 
+	let bodyHTML = await page.evaluate(() => document.body.innerHTML);
+	console.log(bodyHTML)
+
 	await page.click('a[data-async-trigger=reviewDialog]');
 
 	const scrollableDiv = 'div.review-dialog-list';
