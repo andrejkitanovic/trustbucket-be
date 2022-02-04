@@ -80,8 +80,8 @@ exports.loadGoogleReviews = (req, res, next) => {
 			const items = await downloadGoogleReviewsHandle(selectedCompany, url, true);
 
 			res.json({
-					count: items.length,
-					data: items,
+				count: items.length,
+				data: items,
 			});
 		} catch (err) {
 			next(err);
@@ -97,6 +97,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 	}
 
 	const page = await usePuppeteer(url);
+	await page.screenshot({ path: 'google.png' });
 	await page.waitForNetworkIdle();
 
 	await page.click('a[data-async-trigger=reviewDialog]');
