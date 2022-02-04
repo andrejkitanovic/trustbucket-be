@@ -1,7 +1,6 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const usePuppeteer = require('../../utils/puppeteer');
-const fse = require('fs-extra');
 
 const { reverseFromNow } = require('../../utils/dayjs');
 const { getIdAndTypeFromAuth } = require('../auth');
@@ -56,7 +55,7 @@ exports.saveGoogleRating = (req, res, next) => {
 			};
 			await updateRatingHandle(company, rating);
 
-			downloadGoogleReviewsHandle(selectedCompany, `https://www.google.com/search?q=Belviso Srbija`);
+			downloadGoogleReviewsHandle(selectedCompany, `https://www.google.com/search?q=${data.result.name}`);
 			res.json(rating);
 		} catch (err) {
 			next(err);
@@ -91,65 +90,70 @@ exports.loadGoogleReviews = (req, res, next) => {
 };
 
 const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
-	const company = await Company.findById(selectedCompany);
-
-	if (!load) {
-		await changeDownloadingState(company, 'google', true);
-	}
-
-	const page = await usePuppeteer(url);
-	await page.screenshot({ path: './uploads/google.png', fullPage: true });
-
-	await page.waitForSelector('a[data-async-trigger=reviewDialog]');
-	await page.click('a[data-async-trigger=reviewDialog]');
-
-	const scrollableDiv = 'div.review-dialog-list';
-
-	let previous = 0;
-	const loadMore = async () => {
-		await page.waitForNetworkIdle();
-
-		const scrollHeight = await page.evaluate((selector) => {
-			const scrollableSection = document.querySelector(selector);
-
-			scrollableSection.scrollTop = scrollableSection.scrollHeight;
-			return scrollableSection.scrollHeight;
-		}, scrollableDiv);
-
-		if (previous !== scrollHeight) {
-			previous = scrollHeight;
-			await loadMore();
+	let company;
+	try {
+	
+		if (!load) {
+			company = await Company.findById(selectedCompany);
+			await changeDownloadingState(company, 'google', true);
 		}
-	};
 
-	await loadMore();
+		const page = await usePuppeteer(url);
 
-	const result = await page.content();
-	const $ = cheerio.load(result);
+		await page.waitForSelector('a[data-async-trigger=reviewDialog]');
+		await page.click('a[data-async-trigger=reviewDialog]');
 
-	const items = [];
-	await $('div[class*=__google-review]').map((index, el) => {
-		const $el = cheerio.load(el);
+		const scrollableDiv = 'div.review-dialog-list';
 
-		$el.prototype.count = function (selector) {
-			return this.find(selector).length;
+		let previous = 0;
+		const loadMore = async () => {
+			await page.waitForNetworkIdle();
+
+			const scrollHeight = await page.evaluate((selector) => {
+				const scrollableSection = document.querySelector(selector);
+
+				scrollableSection.scrollTop = scrollableSection.scrollHeight;
+				return scrollableSection.scrollHeight;
+			}, scrollableDiv);
+
+			if (previous !== scrollHeight) {
+				previous = scrollHeight;
+				await loadMore();
+			}
 		};
-		const object = {
-			company: selectedCompany,
-			type: 'google',
-			name: $el('div>div>div>div>a').text(),
-			rating: Number($el('g-review-stars span').attr('aria-label').split(' ')[1]),
-			description: $el('.review-snippet').text().trim(),
-			date: reverseFromNow($el('span.dehysf').text()),
-		};
 
-		items.push(object);
-	});
+		await loadMore();
 
-	if (!load) {
-		await Rating.insertMany(items);
-		await changeDownloadingState(company, 'google', false);
+		const result = await page.content();
+		const $ = cheerio.load(result);
+
+		const items = [];
+		await $('div[class*=__google-review]').map((index, el) => {
+			const $el = cheerio.load(el);
+
+			const object = {
+				company: selectedCompany,
+				type: 'google',
+				name: $el('div>div>div>div>a').text(),
+				rating: Number($el('g-review-stars span').attr('aria-label').split(' ')[1]),
+				description: $el('.review-snippet').text().trim(),
+				date: reverseFromNow($el('span.dehysf').text()),
+			};
+
+			items.push(object);
+		});
+
+		if (!load) {
+			await Rating.insertMany(items);
+		}
+
+		return items;
+	} catch (err) {
+		console.log(err);
+	} finally {
+		if (!load && company) {
+			company = await Company.findById(selectedCompany);
+			await changeDownloadingState(company, 'google', false);
+		}
 	}
-
-	return items;
 };

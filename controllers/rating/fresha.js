@@ -99,7 +99,7 @@ exports.loadFreshaReviews = (req, res, next) => {
 				error.statusCode = 401;
 				next(error);
 			}
-			
+
 			const { selectedCompany } = auth;
 
 			const items = await downloadFreshaReviewsHandle(selectedCompany, url, true);
@@ -115,54 +115,62 @@ exports.loadFreshaReviews = (req, res, next) => {
 };
 
 const downloadFreshaReviewsHandle = async (selectedCompany, url, load) => {
-	const company = await Company.findById(selectedCompany);
+	let company;
+	try {
+		if (!load) {
+			company = await Company.findById(selectedCompany);
+			await changeDownloadingState(company, 'fresha', true);
+		}
 
-	if (!load) {
-		await changeDownloadingState(company, 'fresha', true);
-	}
+		const page = await usePuppeteer(url + '/reviews');
 
-	const page = await usePuppeteer(url + '/reviews');
+		const loadMore = async () => {
+			await page.click('div[data-qa=reviews-list] button');
+			await page.waitForNetworkIdle();
 
-	const loadMore = async () => {
-		await page.click('div[data-qa=reviews-list] button');
-		await page.waitForNetworkIdle();
-
+			if (await page.$('div[data-qa=reviews-list] button')) {
+				await loadMore();
+			}
+		};
 		if (await page.$('div[data-qa=reviews-list] button')) {
 			await loadMore();
 		}
-	};
-	if (await page.$('div[data-qa=reviews-list] button')) {
-		await loadMore();
+
+		const result = await page.content();
+		const $ = cheerio.load(result);
+
+		const items = [];
+		await $('div[data-qa=reviews-list] li').map((index, el) => {
+			const $el = cheerio.load(el);
+
+			$el.prototype.count = function (selector) {
+				return this.find(selector).length;
+			};
+			const object = {
+				company: selectedCompany,
+				type: 'fresha',
+				name: $el('p[data-qa=review-user-name]').text(),
+				rating: Number($el('div[data-qa=review-rating]').count('div[type=selected]')),
+				description: $el('p[class*=StyledParagraph]').text(),
+				date: dayjs($el('p[data-qa=review-appt-date]').text(), 'MMM D, YYYY'),
+			};
+
+			items.push(object);
+		});
+
+		if (!load) {
+			await Rating.insertMany(items);
+		}
+
+		return items;
+	} catch (err) {
+		console.log(err);
+	} finally {
+		if (!load && company) {
+			company = await Company.findById(selectedCompany);
+			await changeDownloadingState(company, 'fresha', false);
+		}
 	}
-
-	const result = await page.content();
-	const $ = cheerio.load(result);
-
-	const items = [];
-	await $('div[data-qa=reviews-list] li').map((index, el) => {
-		const $el = cheerio.load(el);
-
-		$el.prototype.count = function (selector) {
-			return this.find(selector).length;
-		};
-		const object = {
-			company: selectedCompany,
-			type: 'fresha',
-			name: $el('p[data-qa=review-user-name]').text(),
-			rating: Number($el('div[data-qa=review-rating]').count('div[type=selected]')),
-			description: $el('p[class*=StyledParagraph]').text(),
-			date: dayjs($el('p[data-qa=review-appt-date]').text(), 'MMM D, YYYY'),
-		};
-
-		items.push(object);
-	});
-
-	if (!load) {
-		await Rating.insertMany(items);
-		await changeDownloadingState(company, 'fresha', false);
-	}
-
-	return items;
 };
 
 // ALL DONE

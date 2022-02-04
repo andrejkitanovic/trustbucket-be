@@ -4,45 +4,57 @@ const User = require('../models/user');
 // HANDLES
 
 exports.changeDownloadingState = async (company, type, state) => {
-	const ratings = company.ratings;
+	try {
+		const ratings = company.ratings;
 
-	let updatedRatings = ratings.map((single) => {
-		if (single.type === type) {
-			single.downloading = state;
-		}
-		return single;
-	});
+		let updatedRatings = ratings.map((single) => {
+			if (single.type === type) {
+				single.downloading = state;
+			}
+			return single;
+		});
 
-	company.ratings = updatedRatings;
+		company.ratings = updatedRatings;
 
-	await company.save();
-	return company;
+		await company.save();
+		return company;
+	} catch (err) {
+		console.log('DOWNLOADING ERROR', err);
+	}
 };
 
 exports.updateRatingHandle = async (company, rating) => {
-	const ratings = company.ratings;
-	const { type } = rating;
+	try {
+		const ratings = company.ratings;
+		const { type } = rating;
 
-	let updatedRatings = ratings.filter((single) => single.type !== type);
-	updatedRatings.push(rating);
-	updatedRatings = calculateOverallRating(updatedRatings);
+		let updatedRatings = ratings.filter((single) => single.type !== type);
+		updatedRatings.push(rating);
+		updatedRatings = calculateOverallRating(updatedRatings);
 
-	company.ratings = updatedRatings;
+		company.ratings = updatedRatings;
 
-	await company.save();
-	return company;
+		await company.save();
+		return company;
+	} catch (err) {
+		console.log('UPDATING ERROR', err);
+	}
 };
 
 exports.deleteRatingHandle = async (company, type) => {
-	const ratings = company.ratings;
+	try {
+		const ratings = company.ratings;
 
-	let updatedRatings = ratings.filter((single) => single.type !== type);
-	updatedRatings = calculateOverallRating(updatedRatings);
+		let updatedRatings = ratings.filter((single) => single.type !== type);
+		updatedRatings = calculateOverallRating(updatedRatings);
 
-	company.ratings = updatedRatings;
+		company.ratings = updatedRatings;
 
-	await company.save();
-	return company;
+		await company.save();
+		return company;
+	} catch (err) {
+		console.log('DELETING ERROR', err);
+	}
 };
 
 const calculateOverallRating = (ratings) => {

@@ -16,7 +16,7 @@ exports.searchBookingProfile = async (req, res, next) => {
 
 	(async function () {
 		try {
-			if (!url || !url.includes('www.booking.com/hotel/')) {
+			if (!url || !url.includes('booking.com/hotel/')) {
 				const error = new Error('Not Valid URL!');
 				error.statusCode = 422;
 				next(error);
@@ -55,7 +55,7 @@ exports.saveBookingProfile = (req, res, next) => {
 
 	(async function () {
 		try {
-			if (!url || !url.includes('www.booking.com/hotel/')) {
+			if (!url || !url.includes('booking.com/hotel/')) {
 				const error = new Error('Not Valid URL!');
 				error.statusCode = 422;
 				next(error);
@@ -125,10 +125,10 @@ exports.loadBookingReviews = (req, res, next) => {
 };
 
 const downloadBokingReviewsHandle = async (selectedCompany, url, load) => {
+	let company;
 	try {
-		const company = await Company.findById(selectedCompany);
-
 		if (!load) {
+			company = await Company.findById(selectedCompany);
 			await changeDownloadingState(company, 'booking', true);
 		}
 
@@ -146,13 +146,23 @@ const downloadBokingReviewsHandle = async (selectedCompany, url, load) => {
 				const $el = cheerio.load(el);
 
 				const date = $el('.c-review-block__right .c-review-block__date').text().replace('Reviewed:', '').trim();
+
+				let format = '';
+				if (dayjs(date, 'MMMM D, YYYY').isValid()) {
+					format = 'MMMM D, YYYY';
+				} else if (dayjs(date, 'D MMMM YYYY').isValid()) {
+					format = 'D MMMM YYYY';
+				} else if (dayjs(date, 'D. MMMM YYYY.').isValid()) {
+					format = 'D. MMMM YYYY.';
+				}
+
 				const object = {
 					company: selectedCompany,
 					type: 'booking',
 					name: $el('.bui-avatar-block__title').text(),
 					rating: Number($el('.bui-review-score__badge').text().trim().replace(',', '.')),
 					description: $el('.c-review__body').text().trim(),
-					date: dayjs(date, 'MMMM D, YYYY'),
+					date: dayjs(date, format),
 				};
 
 				items.push(object);
@@ -178,11 +188,15 @@ const downloadBokingReviewsHandle = async (selectedCompany, url, load) => {
 
 		if (!load) {
 			await Rating.insertMany(items);
-			await changeDownloadingState(company, 'booking', false);
 		}
 
 		return items;
 	} catch (err) {
 		console.log(err);
+	} finally {
+		if (!load && company) {
+			company = await Company.findById(selectedCompany);
+			await changeDownloadingState(company, 'booking', false);
+		}
 	}
 };

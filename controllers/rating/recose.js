@@ -121,54 +121,62 @@ exports.loadRecoseReviews = (req, res, next) => {
 };
 
 const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
-	const company = await Company.findById(selectedCompany);
+	let company;
+	try {
+		if (!load) {
+			company = await Company.findById(selectedCompany);
+			await changeDownloadingState(company, 'recose', true);
+		}
 
-	if (!load) {
-		await changeDownloadingState(company, 'recose', true);
-	}
+		const page = await usePuppeteer(url, { enableNetwork: ['analytics'] });
 
-	const page = await usePuppeteer(url);
+		const loadMore = async () => {
+			await page.click('a.more-reviews-button');
+			await page.waitForNetworkIdle();
 
-	const loadMore = async () => {
-		await page.click('a.more-reviews-button');
-		await page.waitForNetworkIdle();
-
+			if (await page.$('a.more-reviews-button')) {
+				await loadMore();
+			}
+		};
 		if (await page.$('a.more-reviews-button')) {
 			await loadMore();
 		}
-	};
-	if (await page.$('a.more-reviews-button')) {
-		await loadMore();
+
+		const result = await page.content();
+		const $ = cheerio.load(result);
+
+		const items = [];
+		await $('.review-card').map((index, el) => {
+			const $el = cheerio.load(el);
+
+			$el.prototype.count = function (selector) {
+				return this.find(selector).length;
+			};
+			const object = {
+				company: selectedCompany,
+				type: 'recose',
+				name: $el('.review-card--reviewer-person-info a').text(),
+				rating: Number($el('div.reco-rating.rxs.iblock').count('span')),
+				description: $el('div.text-clamp--inner').text().trim(),
+				date: dayjs($el('.submit-date').text(), 'YYYY-MM-DD'),
+			};
+
+			items.push(object);
+		});
+
+		if (!load) {
+			await Rating.insertMany(items);
+		}
+
+		return items;
+	} catch (err) {
+		console.log(err);
+	} finally {
+		if (!load && company) {
+			company = await Company.findById(selectedCompany);
+			await changeDownloadingState(company, 'recose', false);
+		}
 	}
-
-	const result = await page.content();
-	const $ = cheerio.load(result);
-
-	const items = [];
-	await $('.review-card').map((index, el) => {
-		const $el = cheerio.load(el);
-
-		$el.prototype.count = function (selector) {
-			return this.find(selector).length;
-		};
-		const object = {
-			company: selectedCompany,
-			type: 'recose',
-			name: $el('.review-card--reviewer-person-info a').text(),
-			rating: Number($el('div.reco-rating.rxs.iblock').count('span')),
-			description: $el('div.text-clamp--inner').text().trim(),
-			date: dayjs($el('.submit-date').text(), 'YYYY-MM-DD'),
-		};
-
-		items.push(object);
-	});
-
-	if (!load) {
-		await Rating.insertMany(items);
-		await changeDownloadingState(company, 'recose', false);
-	}
-
-	return items;
 };
 
 // ALL DONE

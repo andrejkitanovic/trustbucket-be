@@ -125,54 +125,65 @@ exports.loadBokadirektReviews = (req, res, next) => {
 };
 
 const downloadBokadirektReviewsHandle = async (selectedCompany, url, load) => {
-	const company = await Company.findById(selectedCompany);
+	let company;
 
-	if (!load) {
-		await changeDownloadingState(company, 'bokadirekt', true);
-	}
+	try {
 
-	const page = await usePuppeteer(url);
-	await page.click('button.view-all-reviews');
-	await page.waitForNetworkIdle();
+		if (!load) {
+			company = await Company.findById(selectedCompany);
+			await changeDownloadingState(company, 'bokadirekt', true);
+		}
 
-	const loadMore = async () => {
-		await page.click('.modal-content button.view-all-reviews');
+		const page = await usePuppeteer(url, { enableResource: ['image'] });
+		await page.click('button.view-all-reviews');
 		await page.waitForNetworkIdle();
 
+		const loadMore = async () => {
+			await page.click('.modal-content button.view-all-reviews');
+			await page.waitForNetworkIdle();
+
+			if (await page.$('.modal-content button.view-all-reviews')) {
+				await loadMore();
+			}
+		};
 		if (await page.$('.modal-content button.view-all-reviews')) {
 			await loadMore();
 		}
-	};
-	if (await page.$('.modal-content button.view-all-reviews')) {
-		await loadMore();
+
+		const result = await page.content();
+
+		const $ = cheerio.load(result);
+
+		const items = [];
+		await $('.modal-content div[itemprop=review]').map((index, el) => {
+			const $el = cheerio.load(el);
+
+			const object = {
+				company: selectedCompany,
+				type: 'bokadirekt',
+				name: $el('span[itemprop=name]').text(),
+				rating: Number($el('meta[itemprop=ratingValue]').attr('content')),
+				description: $el('div.review-text').text(),
+				date: dayjs($el('time[datetime]').attr('datetime'), 'YYYY-MM-DD'),
+			};
+
+			items.push(object);
+		});
+
+		if (!load) {
+			await Rating.insertMany(items);
+			await changeDownloadingState(company, 'bokadirekt', false);
+		}
+
+		return items;
+	} catch (err) {
+		console.log(err);
+	} finally {
+		if (!load && company) {
+			company = await Company.findById(selectedCompany);
+			await changeDownloadingState(company, 'bokadirekt', false);
+		}
 	}
-
-	const result = await page.content();
-
-	const $ = cheerio.load(result);
-
-	const items = [];
-	await $('.modal-content div[itemprop=review]').map((index, el) => {
-		const $el = cheerio.load(el);
-
-		const object = {
-			company: selectedCompany,
-			type: 'bokadirekt',
-			name: $el('span[itemprop=name]').text(),
-			rating: Number($el('meta[itemprop=ratingValue]').attr('content')),
-			description: $el('div.review-text').text(),
-			date: dayjs($el('time[datetime]').attr('datetime'), 'YYYY-MM-DD'),
-		};
-
-		items.push(object);
-	});
-
-	if (!load) {
-		await Rating.insertMany(items);
-		await changeDownloadingState(company, 'bokadirekt', false);
-	}
-
-	return items;
 };
 
 // ALL DONE

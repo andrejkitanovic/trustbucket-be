@@ -3,6 +3,9 @@ const puppeteer = require('puppeteer');
 let blockedResourceTypes = ['image', 'stylesheet', 'font'];
 let blockedNetworks = ['analytics', 'hotjar'];
 
+// let blockedResourceTypes = [];
+// let blockedNetworks = [];
+
 const options = {
 	// headless: false,
 	args: [
@@ -49,8 +52,13 @@ module.exports = async (url, opts) => {
 	const browser = await puppeteer.launch(options);
 	const page = await browser.newPage();
 
-	if (opts && opts.enableResource && opts.enableResource.length) {
-		blockedResourceTypes = blockedResourceTypes.filter((resource) => !opts.enableResource.includes(resource));
+	if (opts) {
+		if (opts.enableResource && opts.enableResource.length) {
+			blockedResourceTypes = blockedResourceTypes.filter((resource) => !opts.enableResource.includes(resource));
+		}
+		if (opts.enableNetwork && opts.enableNetwork.length) {
+			blockedNetworks = blockedNetworks.filter((network) => !opts.enableNetwork.includes(network));
+		}
 	}
 
 	page.setRequestInterception(true);
@@ -68,6 +76,16 @@ module.exports = async (url, opts) => {
 		} catch (err) {
 			console.log(err);
 		}
+	});
+
+	page.on('pageerror', function (err) {
+		theTempValue = err.toString();
+		console.log('Page error: ' + theTempValue);
+	});
+
+	page.on('error', function (err) {
+		theTempValue = err.toString();
+		console.log('Error: ' + theTempValue);
 	});
 
 	await page.goto(url);
