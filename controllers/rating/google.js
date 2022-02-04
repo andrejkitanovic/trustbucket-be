@@ -105,8 +105,8 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 	await page.waitForNetworkIdle();
 
 	// TESTING
-	const result = await page.content();
-	const $test = cheerio.load(result);
+	const tResult = await page.content();
+	const $test = cheerio.load(tResult);
 
 	console.log($test('body').html());
 	// TESTING
