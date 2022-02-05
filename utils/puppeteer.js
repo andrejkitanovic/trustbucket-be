@@ -3,9 +3,6 @@ const puppeteer = require('puppeteer');
 let blockedResourceTypes = ['image', 'stylesheet', 'font'];
 let blockedNetworks = ['analytics', 'hotjar'];
 
-// let blockedResourceTypes = [];
-// let blockedNetworks = [];
-
 const options = {
 	// headless: false,
 	args: [
@@ -32,6 +29,7 @@ const options = {
 		'--disable-setuid-sandbox',
 		'--disable-speech-api',
 		'--disable-sync',
+		'--disable-gpu',
 		'--hide-scrollbars',
 		'--ignore-gpu-blacklist',
 		'--metrics-recording-only',
@@ -49,19 +47,10 @@ const options = {
 	],
 };
 
-module.exports = async (url, opts) => {
-	const browser = await puppeteer.launch(options);
-	const page = await browser.newPage();
+let browser;
+let process;
 
-	if (opts) {
-		if (opts.enableResource && opts.enableResource.length) {
-			blockedResourceTypes = blockedResourceTypes.filter((resource) => !opts.enableResource.includes(resource));
-		}
-		if (opts.enableNetwork && opts.enableNetwork.length) {
-			blockedNetworks = blockedNetworks.filter((network) => !opts.enableNetwork.includes(network));
-		}
-	}
-
+const setupInterceptors = (page) => {
 	page.setRequestInterception(true);
 	page.on('request', (req) => {
 		try {
@@ -88,8 +77,27 @@ module.exports = async (url, opts) => {
 		theTempValue = err.toString();
 		console.log('Error: ' + theTempValue);
 	});
+};
+
+module.exports = async (url, opts) => {
+	if (!browser) {
+		browser = await puppeteer.launch(options);
+	}
+	const page = await browser.newPage();
+
+	if (opts) {
+		if (opts.enableResource && opts.enableResource.length) {
+			blockedResourceTypes = blockedResourceTypes.filter((resource) => !opts.enableResource.includes(resource));
+		}
+		if (opts.enableNetwork && opts.enableNetwork.length) {
+			blockedNetworks = blockedNetworks.filter((network) => !opts.enableNetwork.includes(network));
+		}
+	}
+	
+	setupInterceptors(page);
 
 	await page.goto(url);
+	process++;
 
 	return page;
 };

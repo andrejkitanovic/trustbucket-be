@@ -90,15 +90,14 @@ exports.loadGoogleReviews = (req, res, next) => {
 };
 
 const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
-	let company;
+	let company, page;
 	try {
-	
 		if (!load) {
 			company = await Company.findById(selectedCompany);
 			await changeDownloadingState(company, 'google', true);
 		}
 
-		const page = await usePuppeteer(url);
+		page = await usePuppeteer(url, { enableNetwork: ['analytics'] });
 
 		await page.waitForSelector('a[data-async-trigger=reviewDialog]');
 		await page.click('a[data-async-trigger=reviewDialog]');
@@ -154,6 +153,9 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 		if (!load && company) {
 			company = await Company.findById(selectedCompany);
 			await changeDownloadingState(company, 'google', false);
+		}
+		if (page) {
+			await page.close();
 		}
 	}
 };

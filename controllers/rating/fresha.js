@@ -115,14 +115,14 @@ exports.loadFreshaReviews = (req, res, next) => {
 };
 
 const downloadFreshaReviewsHandle = async (selectedCompany, url, load) => {
-	let company;
+	let company, page;
 	try {
 		if (!load) {
 			company = await Company.findById(selectedCompany);
 			await changeDownloadingState(company, 'fresha', true);
 		}
 
-		const page = await usePuppeteer(url + '/reviews');
+		page = await usePuppeteer(url + '/reviews');
 
 		const loadMore = async () => {
 			await page.click('div[data-qa=reviews-list] button');
@@ -169,6 +169,9 @@ const downloadFreshaReviewsHandle = async (selectedCompany, url, load) => {
 		if (!load && company) {
 			company = await Company.findById(selectedCompany);
 			await changeDownloadingState(company, 'fresha', false);
+		}
+		if (page) {
+			await page.close();
 		}
 	}
 };

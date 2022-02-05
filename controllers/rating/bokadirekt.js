@@ -125,16 +125,15 @@ exports.loadBokadirektReviews = (req, res, next) => {
 };
 
 const downloadBokadirektReviewsHandle = async (selectedCompany, url, load) => {
-	let company;
+	let company, page;
 
 	try {
-
 		if (!load) {
 			company = await Company.findById(selectedCompany);
 			await changeDownloadingState(company, 'bokadirekt', true);
 		}
 
-		const page = await usePuppeteer(url, { enableResource: ['image'] });
+		page = await usePuppeteer(url, { enableResource: ['image'] });
 		await page.click('button.view-all-reviews');
 		await page.waitForNetworkIdle();
 
@@ -172,7 +171,6 @@ const downloadBokadirektReviewsHandle = async (selectedCompany, url, load) => {
 
 		if (!load) {
 			await Rating.insertMany(items);
-			await changeDownloadingState(company, 'bokadirekt', false);
 		}
 
 		return items;
@@ -182,6 +180,9 @@ const downloadBokadirektReviewsHandle = async (selectedCompany, url, load) => {
 		if (!load && company) {
 			company = await Company.findById(selectedCompany);
 			await changeDownloadingState(company, 'bokadirekt', false);
+		}
+		if (page) {
+			await page.close();
 		}
 	}
 };

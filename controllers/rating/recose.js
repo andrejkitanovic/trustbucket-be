@@ -121,14 +121,14 @@ exports.loadRecoseReviews = (req, res, next) => {
 };
 
 const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
-	let company;
+	let company, page;
 	try {
 		if (!load) {
 			company = await Company.findById(selectedCompany);
 			await changeDownloadingState(company, 'recose', true);
 		}
 
-		const page = await usePuppeteer(url, { enableNetwork: ['analytics'] });
+		page = await usePuppeteer(url, { enableNetwork: ['analytics'] });
 
 		const loadMore = async () => {
 			await page.click('a.more-reviews-button');
@@ -175,6 +175,9 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 		if (!load && company) {
 			company = await Company.findById(selectedCompany);
 			await changeDownloadingState(company, 'recose', false);
+		}
+		if (page) {
+			await page.close();
 		}
 	}
 };

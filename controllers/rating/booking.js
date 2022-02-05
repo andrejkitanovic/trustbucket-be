@@ -125,14 +125,14 @@ exports.loadBookingReviews = (req, res, next) => {
 };
 
 const downloadBokingReviewsHandle = async (selectedCompany, url, load) => {
-	let company;
+	let company, page;
 	try {
 		if (!load) {
 			company = await Company.findById(selectedCompany);
 			await changeDownloadingState(company, 'booking', true);
 		}
 
-		const page = await usePuppeteer(url, { enableResource: ['stylesheet'] });
+		page = await usePuppeteer(url, { enableResource: ['stylesheet'] });
 		await page.click('a.toggle_review');
 		await page.waitForNetworkIdle();
 
@@ -197,6 +197,9 @@ const downloadBokingReviewsHandle = async (selectedCompany, url, load) => {
 		if (!load && company) {
 			company = await Company.findById(selectedCompany);
 			await changeDownloadingState(company, 'booking', false);
+		}
+		if (page) {
+			await page.close();
 		}
 	}
 };
