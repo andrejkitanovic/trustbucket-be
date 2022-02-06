@@ -55,7 +55,7 @@ exports.saveGoogleRating = (req, res, next) => {
 			};
 			await updateRatingHandle(company, rating);
 
-			downloadGoogleReviewsHandle(selectedCompany, `https://www.google.com/search?q=${data.result.name}`);
+			downloadGoogleReviewsHandle(selectedCompany, data.result.url);
 			res.json(rating);
 		} catch (err) {
 			next(err);
@@ -66,8 +66,7 @@ exports.saveGoogleRating = (req, res, next) => {
 exports.loadGoogleReviews = (req, res, next) => {
 	(async function () {
 		try {
-			const name = req.body.name;
-			const url = `https://www.google.com/search?q=${name}`;
+			const url = req.body.url;
 
 			const auth = getIdAndTypeFromAuth(req, res, next);
 			if (!auth) {
@@ -97,14 +96,15 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 			await changeDownloadingState(company, 'google', true);
 		}
 
-		page = await usePuppeteer(url, { enableNetwork: ['analytics'] });
+		page = await usePuppeteer(url, { disableInterceptors: true });
 
-		await page.waitForSelector('a[data-async-trigger=reviewDialog]');
-		await page.click('a[data-async-trigger=reviewDialog]');
+		await page.waitForNetworkIdle();
+		await page.click('button[aria-label*=review]');
 
-		const scrollableDiv = 'div.review-dialog-list';
+		const scrollableDiv = 'div.section-scrollbox';
 
 		let previous = 0;
+
 		const loadMore = async () => {
 			await page.waitForNetworkIdle();
 
@@ -127,16 +127,19 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 		const $ = cheerio.load(result);
 
 		const items = [];
-		await $('div[class*=__google-review]').map((index, el) => {
+		await $('div[data-review-id].gm2-body-2').map((index, el) => {
 			const $el = cheerio.load(el);
 
+			$el.prototype.count = function (selector) {
+				return this.find(selector).length;
+			};
 			const object = {
 				company: selectedCompany,
 				type: 'google',
-				name: $el('div>div>div>div>a').text(),
-				rating: Number($el('g-review-stars span').attr('aria-label').split(' ')[1]),
-				description: $el('.review-snippet').text().trim(),
-				date: reverseFromNow($el('span.dehysf').text()),
+				name: $el('a[target=_blank]>div:first-child>span').text(),
+				rating: Number($el(el).count('img[class*=active]')),
+				description: $el('span[jsan*=-text]').text().trim(),
+				date: reverseFromNow($el('span[class*=-date]').text()),
 			};
 
 			items.push(object);

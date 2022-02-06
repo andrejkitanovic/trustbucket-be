@@ -4,7 +4,7 @@ let blockedResourceTypes = ['image', 'stylesheet', 'font'];
 let blockedNetworks = ['analytics', 'hotjar'];
 
 const options = {
-	// headless: false,
+	headless: false,
 	args: [
 		'--autoplay-policy=user-gesture-required',
 		'--disable-background-networking',
@@ -48,7 +48,7 @@ const options = {
 };
 
 let browser;
-let process;
+let process = 0;
 
 const setupInterceptors = (page) => {
 	page.setRequestInterception(true);
@@ -77,12 +77,25 @@ const setupInterceptors = (page) => {
 		theTempValue = err.toString();
 		console.log('Error: ' + theTempValue);
 	});
+
+	page.on('close', function (err) {
+		process--;
+		console.log('Process: ' + process);
+		if (process === 0) {
+			browser.close();
+			browser = null;
+		}
+	});
 };
 
 module.exports = async (url, opts) => {
 	if (!browser) {
 		browser = await puppeteer.launch(options);
 	}
+
+	process++;
+	console.log('Process: ' + process);
+
 	const page = await browser.newPage();
 
 	if (opts) {
@@ -93,11 +106,12 @@ module.exports = async (url, opts) => {
 			blockedNetworks = blockedNetworks.filter((network) => !opts.enableNetwork.includes(network));
 		}
 	}
-	
-	setupInterceptors(page);
+
+	if (!opts || !opts.disableInterceptors) {
+		setupInterceptors(page);
+	}
 
 	await page.goto(url);
-	process++;
 
 	return page;
 };
