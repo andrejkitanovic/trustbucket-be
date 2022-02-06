@@ -1,7 +1,6 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
-const { isAbsoluteURL } = require('../../helpers/utils');
-const usePuppeteer = require('../../utils/puppeteer');
+const { usePuppeteer } = require('../../utils/puppeteer');
 const dayjs = require('dayjs');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 

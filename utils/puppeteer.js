@@ -45,10 +45,26 @@ const options = {
 		'--use-mock-keychain',
 		'--user-agent="Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"',
 	],
+	ignoreHTTPSErrors: true,
 };
 
 let browser;
-let process = 0;
+let cluster = 0;
+
+const increaseCluster = async () => {
+	cluster = (await browser.pages()).length - 1;
+	console.log('Cluster: ' + cluster);
+};
+
+const decreaseCluster = async () => {
+	cluster = (await browser.pages()).length - 1;
+	console.log('Cluster: ' + cluster);
+
+	if (cluster === 0) {
+		browser.close();
+		browser = null;
+	}
+};
 
 const setupInterceptors = (page) => {
 	page.setRequestInterception(true);
@@ -79,24 +95,17 @@ const setupInterceptors = (page) => {
 	});
 
 	page.on('close', function (err) {
-		process--;
-		console.log('Process: ' + process);
-		if (process === 0) {
-			browser.close();
-			browser = null;
-		}
+		decreaseCluster();
 	});
 };
 
-module.exports = async (url, opts) => {
+exports.usePuppeteer = async (url, opts) => {
 	if (!browser) {
 		browser = await puppeteer.launch(options);
 	}
-
-	process++;
-	console.log('Process: ' + process);
-
+	
 	const page = await browser.newPage();
+	increaseCluster();
 
 	if (opts) {
 		if (opts.enableResource && opts.enableResource.length) {
@@ -115,3 +124,5 @@ module.exports = async (url, opts) => {
 
 	return page;
 };
+
+exports.decreaseCluster = decreaseCluster;

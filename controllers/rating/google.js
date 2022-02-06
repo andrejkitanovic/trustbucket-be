@@ -1,6 +1,6 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
-const usePuppeteer = require('../../utils/puppeteer');
+const { usePuppeteer, decreaseCluster } = require('../../utils/puppeteer');
 
 const { reverseFromNow } = require('../../utils/dayjs');
 const { getIdAndTypeFromAuth } = require('../auth');
@@ -99,7 +99,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 		page = await usePuppeteer(url, { disableInterceptors: true });
 
 		await page.waitForNetworkIdle();
-		await page.click('button[aria-label*=review]');
+		await page.click('button[jsaction*=moreReviews]');
 
 		const scrollableDiv = 'div.section-scrollbox';
 
@@ -159,6 +159,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 		}
 		if (page) {
 			await page.close();
+			await decreaseCluster();
 		}
 	}
 };
