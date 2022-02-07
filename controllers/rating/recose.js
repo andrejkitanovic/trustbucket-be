@@ -75,6 +75,7 @@ exports.saveRecoseProfile = (req, res, next) => {
 
 			const rating = {
 				type: 'recose',
+				name: json.name,
 				rating: json.aggregateRating.ratingValue,
 				ratingCount: json.aggregateRating.ratingCount,
 				url,

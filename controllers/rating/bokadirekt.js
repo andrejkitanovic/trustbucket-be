@@ -73,11 +73,13 @@ exports.saveBokadirektProfile = (req, res, next) => {
 			const result = await rp(url);
 			const $ = cheerio.load(result);
 
+			const name = $('h1[itemprop=name]').first().text().trim();
 			const ratingText = $('span[itemprop=ratingValue]').first().text();
 			const ratingCountText = $('span[itemprop=ratingCount]').text();
 
 			const rating = {
 				type: 'bokadirekt',
+				name: name,
 				rating: ratingText ? Number(ratingText.trim()) : null,
 				ratingCount: ratingCountText ? Number(ratingCountText.trim()) : 0,
 				url,

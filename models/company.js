@@ -41,6 +41,9 @@ const companySchema = new Schema(
 						}
 					},
 				},
+				name: {
+					type: String,
+				},
 				downloading: {
 					type: Boolean,
 					default: false,

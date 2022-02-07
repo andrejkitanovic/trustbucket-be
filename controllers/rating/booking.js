@@ -67,15 +67,17 @@ exports.saveBookingProfile = (req, res, next) => {
 				error.statusCode = 401;
 				next(error);
 			}
+
 			const { selectedCompany } = auth;
 			const company = await Company.findById(selectedCompany);
 
 			const result = await rp(url);
 			const $ = cheerio.load(result);
 			const json = await JSON.parse($('script[type="application/ld+json"]').html());
-
+			
 			const rating = {
 				type: 'booking',
+				name: $('#hp_hotel_name_reviews').text().trim(),
 				rating: json.aggregateRating.ratingValue,
 				ratingCount: json.aggregateRating.reviewCount,
 				url,

@@ -50,6 +50,7 @@ exports.saveGoogleRating = (req, res, next) => {
 
 			const rating = {
 				type: 'google',
+				name: data.result.name,
 				rating: data.result.rating,
 				ratingCount: data.result.user_ratings_total,
 			};
