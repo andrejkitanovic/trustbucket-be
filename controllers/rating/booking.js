@@ -78,7 +78,7 @@ exports.saveBookingProfile = (req, res, next) => {
 			const rating = {
 				type: 'booking',
 				name: $('#hp_hotel_name_reviews').text().trim(),
-				rating: json.aggregateRating.ratingValue,
+				rating: json.aggregateRating.ratingValue / 2,
 				ratingCount: json.aggregateRating.reviewCount,
 				url,
 			};
