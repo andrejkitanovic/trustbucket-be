@@ -1,6 +1,6 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
-const {usePuppeteer} = require('../../utils/puppeteer');
+const { usePuppeteer } = require('../../utils/puppeteer');
 const dayjs = require('dayjs');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 
@@ -173,6 +173,9 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 		return items;
 	} catch (err) {
 		console.log(err);
+		if (page) {
+			page.screenshot({ path: './uploads/debug.png' });
+		}
 	} finally {
 		if (!load && company) {
 			company = await Company.findById(selectedCompany);
