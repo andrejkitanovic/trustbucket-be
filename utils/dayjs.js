@@ -1,15 +1,15 @@
 const dayjs = require('dayjs');
 
 exports.reverseFromNow = (string) => {
-	if (string === 'an hour ago') {
+	if (string.includes('an hour ago')) {
 		return dayjs().subtract(1, 'hour');
-	} else if (string === 'a day ago') {
+	} else if (string.includes('a day ago')) {
 		return dayjs().subtract(1, 'day');
-	} else if (string === 'a week ago') {
+	} else if (string.includes('a week ago')) {
 		return dayjs().subtract(1, 'week');
-	} else if (string === 'a month ago') {
+	} else if (string.includes('a month ago')) {
 		return dayjs().subtract(1, 'month');
-	} else if (string === 'a year ago') {
+	} else if (string.includes('a year ago')) {
 		return dayjs().subtract(1, 'year');
 	}
 
@@ -30,10 +30,9 @@ exports.reverseFromNow = (string) => {
 	return null;
 };
 
-
 exports.dayjsParser = () => {
 	const customParseFormat = require('dayjs/plugin/customParseFormat');
 	dayjs.extend(customParseFormat);
 
-	return dayjs
-}
+	return dayjs;
+};

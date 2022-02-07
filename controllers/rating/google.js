@@ -142,7 +142,6 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 				description: $el('span[jsan*=-text]').text().trim(),
 				date: reverseFromNow($el('span[class*=-date]').text()),
 			};
-
 			items.push(object);
 		});
 
