@@ -49,7 +49,7 @@ exports.filterRatings = (req, res, next) => {
 				filterObject.type = req.body.type;
 			}
 			if (req.body.rating) {
-				filterObject.rating = JSON.parse(req.body.rating);
+				filterObject.rating = req.body.rating;
 			}
 
 			const ratings = await Rating.find(filterObject)

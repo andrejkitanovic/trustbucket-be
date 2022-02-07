@@ -74,7 +74,7 @@ exports.saveBookingProfile = (req, res, next) => {
 			const result = await rp(url);
 			const $ = cheerio.load(result);
 			const json = await JSON.parse($('script[type="application/ld+json"]').html());
-			
+
 			const rating = {
 				type: 'booking',
 				name: $('#hp_hotel_name_reviews').text().trim(),
@@ -162,7 +162,7 @@ const downloadBokingReviewsHandle = async (selectedCompany, url, load) => {
 					company: selectedCompany,
 					type: 'booking',
 					name: $el('.bui-avatar-block__title').text(),
-					rating: Number($el('.bui-review-score__badge').text().trim().replace(',', '.')),
+					rating: Number($el('.bui-review-score__badge').text().trim().replace(',', '.')) / 2,
 					description: $el('.c-review__body').text().trim(),
 					date: dayjs(date, format),
 				};
