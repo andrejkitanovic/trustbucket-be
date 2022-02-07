@@ -53,13 +53,19 @@ const increaseCluster = async () => {
 	console.log('Cluster: ' + cluster);
 };
 
+let clusterDestroy = null;
 const decreaseCluster = async () => {
 	cluster = (await browser.pages()).length - 1;
 	console.log('Cluster: ' + cluster);
 
 	if (cluster === 0) {
-		browser.close();
-		browser = null;
+		clearTimeout(clusterDestroy);
+		clusterDestroy = setTimeout(() => {
+			if (cluster === 0) {
+				browser.close();
+				browser = null;
+			}
+		}, 3000);
 	}
 };
 
