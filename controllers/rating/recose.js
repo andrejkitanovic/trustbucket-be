@@ -131,10 +131,12 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 		page = await usePuppeteer(url, { enableNetwork: ['analytics', 'hotjar'], enableResource: ['stylesheet'] });
 
 		const loadMore = async () => {
-			await page.waitFor(300)
 			console.log('RECO Load More');
 			await page.click('a.more-reviews-button');
-			await page.waitForNetworkIdle();
+			await page.waitForNavigation({
+				waitUntil: 'networkidle2',
+			  });
+			  
 
 			if (await page.$('a.more-reviews-button')) {
 				await loadMore();
