@@ -130,11 +130,14 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 
 		page = await usePuppeteer(url, { enableNetwork: ['analytics'] });
 
+		let processNum = 1;
+
 		const loadMore = async () => {
-			console.log('RECO Load More');
+			processNum++;
+			console.log('RECO Load More' + processNum);
 			await page.click('a.more-reviews-button');
 			try {
-				await page.waitForSelector('a.more-reviews-button', { timeout: 5000 });
+				await page.waitForSelector('a.more-reviews-button', { timeout: Math.ceil(processNum / 15) * 3000 });
 				await loadMore();
 			} catch (err) {}
 		};
@@ -173,9 +176,9 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 		return items;
 	} catch (err) {
 		console.log(err);
-		if (page) {
-			await page.screenshot({ path: './uploads/debug.png' });
-		}
+		// if (page) {
+		// 	await page.screenshot({ path: './uploads/debug.png' });
+		// }
 	} finally {
 		if (!load && company) {
 			company = await Company.findById(selectedCompany);
