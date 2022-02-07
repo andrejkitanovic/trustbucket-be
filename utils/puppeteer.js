@@ -31,7 +31,6 @@ const options = {
 		'--disable-sync',
 		'--disable-gpu',
 		'--hide-scrollbars',
-		'--ignore-gpu-blacklist',
 		'--metrics-recording-only',
 		'--mute-audio',
 		'--no-default-browser-check',
@@ -39,13 +38,11 @@ const options = {
 		'--no-pings',
 		'--no-sandbox',
 		'--no-zygote',
-		'--single-process',
 		'--password-store=basic',
 		'--use-gl=swiftshader',
 		'--use-mock-keychain',
 		'--user-agent="Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"',
 	],
-	ignoreHTTPSErrors: true,
 };
 
 let browser;
