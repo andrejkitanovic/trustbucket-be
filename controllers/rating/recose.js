@@ -131,6 +131,7 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 		page = await usePuppeteer(url, { enableNetwork: ['analytics', 'hotjar'], enableResource: ['stylesheet'] });
 
 		const loadMore = async () => {
+			await page.waitFor(300)
 			console.log('RECO Load More');
 			await page.click('a.more-reviews-button');
 			await page.waitForNetworkIdle();
@@ -174,7 +175,7 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 	} catch (err) {
 		console.log(err);
 		if (page) {
-			page.screenshot({ path: './uploads/debug.png' });
+			await page.screenshot({ path: './uploads/debug.png' });
 		}
 	} finally {
 		if (!load && company) {
