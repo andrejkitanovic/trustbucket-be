@@ -133,15 +133,11 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 		const loadMore = async () => {
 			console.log('RECO Load More');
 			await page.click('a.more-reviews-button');
-
-			let button = null;
-			setTimeout(() => {
-				button = false;
-			}, 3000);
-			let button = await page.waitForSelector('a.more-reviews-button');
-
-			if (button) {
-				loadMore();
+			try {
+				await page.waitForSelector('a.more-reviews-button');
+				await loadMore();
+			} catch (err) {
+				console.log(err);
 			}
 		};
 		if (await page.$('a.more-reviews-button')) {
