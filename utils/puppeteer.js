@@ -84,11 +84,13 @@ const setupInterceptors = (page) => {
 	page.on('pageerror', function (err) {
 		theTempValue = err.toString();
 		console.log('Page error: ' + theTempValue);
+		page.screenshot({ path: './uploads/debug.png' });
 	});
 
 	page.on('error', function (err) {
 		theTempValue = err.toString();
 		console.log('Error: ' + theTempValue);
+		page.screenshot({ path: './uploads/debug.png' });
 	});
 
 	page.on('close', function (err) {
@@ -100,7 +102,7 @@ exports.usePuppeteer = async (url, opts) => {
 	if (!browser) {
 		browser = await puppeteer.launch(options);
 	}
-	
+
 	const page = await browser.newPage();
 	increaseCluster();
 
