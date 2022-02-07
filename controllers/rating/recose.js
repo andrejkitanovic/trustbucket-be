@@ -128,19 +128,22 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 			await changeDownloadingState(company, 'recose', true);
 		}
 
-		page = await usePuppeteer(url, { enableNetwork: ['analytics', 'hotjar'], enableResource: ['stylesheet'] });
+		page = await usePuppeteer(url, { enableNetwork: ['analytics'] });
 
 		const loadMore = async () => {
 			console.log('RECO Load More');
-			await page.click('a.more-reviews-button');
-			await page.waitForNavigation({
-				waitUntil: 'networkidle2',
-			  });
-			  
+			// await page.click('a.more-reviews-button');
+			// await page.waitForNetworkIdle();
 
-			if (await page.$('a.more-reviews-button')) {
-				await loadMore();
-			}
+			setTimeout(() => {
+				await page.waitForSelector('a.more-reviews-button');
+				await page.click('a.more-reviews-button');
+				loadMore();
+			}, 3000);
+
+			// if (await page.$('a.more-reviews-button')) {
+			// 	await loadMore();
+			// }
 		};
 		if (await page.$('a.more-reviews-button')) {
 			await loadMore();
