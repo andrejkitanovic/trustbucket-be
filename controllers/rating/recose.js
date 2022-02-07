@@ -128,7 +128,7 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 			await changeDownloadingState(company, 'recose', true);
 		}
 
-		page = await usePuppeteer(url, { enableNetwork: ['analytics'] });
+		page = await usePuppeteer(url, { enableNetwork: ['analytics', 'hotjar'], enableResource: ['stylesheet'] });
 
 		const loadMore = async () => {
 			console.log('RECO Load More');
