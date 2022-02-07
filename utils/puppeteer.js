@@ -36,7 +36,6 @@ const options = {
 		'--no-default-browser-check',
 		'--no-first-run',
 		'--no-pings',
-		'--no-sandbox',
 		'--no-zygote',
 		'--password-store=basic',
 		'--use-gl=swiftshader',

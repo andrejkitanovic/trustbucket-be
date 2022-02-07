@@ -131,6 +131,7 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 		page = await usePuppeteer(url, { enableNetwork: ['analytics'] });
 
 		const loadMore = async () => {
+			console.log('RECO Load More');
 			await page.click('a.more-reviews-button');
 			await page.waitForNetworkIdle();
 
@@ -147,6 +148,7 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 
 		const items = [];
 		await $('.review-card').map((index, el) => {
+			console.log('RECO Review Cards');
 			const $el = cheerio.load(el);
 
 			$el.prototype.count = function (selector) {
