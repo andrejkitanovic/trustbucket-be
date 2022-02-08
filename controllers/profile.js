@@ -65,10 +65,7 @@ const calculateOverallRating = (ratings) => {
 	const rating =
 		updatedRatings.reduce((prev, current) => {
 			if (!current.rating) return prev;
-			if (current.type !== 'booking') {
-				return prev + current.rating * current.ratingCount;
-			}
-			return prev + (current.rating / 2) * current.ratingCount;
+			return prev + current.rating * current.ratingCount;
 		}, 0) / ratingCount;
 
 	const overall = {
