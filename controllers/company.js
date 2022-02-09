@@ -1,7 +1,23 @@
+const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Company = require('../models/company');
 const { getIdAndTypeFromAuth } = require('./auth');
+const { isAbsoluteURL } = require('../helpers/utils');
+
+const addAddress = async (address, selectedCompany) => {
+	try {
+		const company = await Company.findById(selectedCompany);
+
+		company.address = address;
+		await company.save();
+		return true;
+	} catch (err) {
+		return false;
+	}
+};
+
+exports.addAddress = addAddress;
 
 exports.postCompany = (req, res, next) => {
 	(async function () {
@@ -39,7 +55,7 @@ exports.postCompany = (req, res, next) => {
 			);
 
 			if (userCreated && companyCreated) {
-				await profile.populate('selectedCompany', '_id name websiteURL ratings');
+				await profile.populate('selectedCompany');
 				await profile.populate('companies', '_id name');
 				res.status(200).json({
 					token,
@@ -80,12 +96,82 @@ exports.selectCompany = (req, res, next) => {
 			);
 
 			if (userUpdated) {
-				await profile.populate('selectedCompany', '_id name websiteURL ratings');
+				await profile.populate('selectedCompany');
 				await profile.populate('companies', '_id name');
 				res.status(200).json({
 					token,
 					data: profile,
 					message: `Selected company is now ${profile.selectedCompany.name}!`,
+				});
+			}
+		} catch (err) {
+			next(err);
+		}
+	})();
+};
+
+exports.putAddress = (req, res, next) => {
+	(async function () {
+		try {
+			const fields = ['formatted_address', 'geometry'].join('%2C');
+			const textquery = req.query.q;
+
+			let search = textquery;
+			if (isAbsoluteURL(textquery) && textquery.includes('place/')) {
+				search = textquery.split('place/').pop().split('/')[0];
+			}
+			const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?fields=${fields}&input=${search}&inputtype=textquery&key=${process.env.API_KEY_GOOGLE}`;
+
+			const auth = getIdAndTypeFromAuth(req, res, next);
+			if (!auth) {
+				const error = new Error('Not Authorized!');
+				error.statusCode = 401;
+				next(error);
+			}
+			const { selectedCompany } = auth;
+
+			const { data } = await axios.get(url);
+			if (data.results.length) {
+				const result = data.results[0];
+				await addAddress({ name: result.formatted_address, position: result.geometry.location }, selectedCompany);
+				res.json(result);
+			} else {
+				const error = new Error('Not Found!');
+				error.statusCode = 404;
+				next(error);
+			}
+		} catch (err) {
+			next(err);
+		}
+	})();
+};
+
+exports.updateCompany = (req, res, next) => {
+	(async function () {
+		try {
+			const auth = getIdAndTypeFromAuth(req, res, next);
+			if (!auth) {
+				const error = new Error('Not Authorized!');
+				error.statusCode = 401;
+				next(error);
+			}
+			const { id, selectedCompany } = auth;
+
+			const companyUpdated = await Company.findOneAndUpdate(
+				{ _id: selectedCompany },
+				{
+					...req.body,
+				},
+				{ new: true }
+			);
+
+			const profile = await User.findById(id);
+			if (companyUpdated) {
+				await profile.populate('selectedCompany');
+				await profile.populate('companies', '_id name');
+				res.status(200).json({
+					data: profile,
+					message: `Updated company!`,
 				});
 			}
 		} catch (err) {

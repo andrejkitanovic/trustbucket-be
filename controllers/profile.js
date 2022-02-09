@@ -91,7 +91,7 @@ exports.getProfile = (req, res, next) => {
 			const { id } = auth;
 
 			const profile = await User.findById(id);
-			await profile.populate('selectedCompany', '_id name websiteURL ratings');
+			await profile.populate('selectedCompany');
 			await profile.populate('companies', '_id name');
 			res.status(200).json({
 				data: profile,

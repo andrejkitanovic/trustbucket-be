@@ -4,17 +4,20 @@ const { usePuppeteer, decreaseCluster } = require('../../utils/puppeteer');
 
 const { reverseFromNow } = require('../../utils/dayjs');
 const { getIdAndTypeFromAuth } = require('../auth');
+const { addAddress } = require('../company');
 const { updateRatingHandle, changeDownloadingState } = require('../profile');
 const Company = require('../../models/company');
 const Rating = require('../../models/rating');
 
 exports.getGoogleProfile = (req, res, next) => {
-	const fields = ['formatted_address', 'name', 'place_id', 'icon_background_color', 'rating', 'geometry'].join('%2C');
-	const textquery = req.query.q;
-	const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=${fields}&input=${textquery}&inputtype=textquery&key=${process.env.API_KEY_GOOGLE}`;
-
 	(async function () {
 		try {
+			const fields = ['formatted_address', 'name', 'place_id', 'icon_background_color', 'rating', 'geometry'].join(
+				'%2C'
+			);
+			const textquery = req.query.q;
+			const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=${fields}&input=${textquery}&inputtype=textquery&key=${process.env.API_KEY_GOOGLE}`;
+
 			const auth = getIdAndTypeFromAuth(req, res, next);
 			if (!auth) {
 				const error = new Error('Not Authorized!');
@@ -31,12 +34,12 @@ exports.getGoogleProfile = (req, res, next) => {
 };
 
 exports.saveGoogleRating = (req, res, next) => {
-	const fields = ['name', 'rating', 'user_ratings_total', 'url'].join('%2C');
-	const placeId = req.body.placeId;
-	const url = `https://maps.googleapis.com/maps/api/place/details/json?fields=${fields}&place_id=${placeId}&key=${process.env.API_KEY_GOOGLE}`;
-
 	(async function () {
 		try {
+			const fields = ['name', 'rating', 'user_ratings_total', 'url', 'formatted_address', 'geometry'].join('%2C');
+			const placeId = req.body.placeId;
+			const url = `https://maps.googleapis.com/maps/api/place/details/json?fields=${fields}&place_id=${placeId}&key=${process.env.API_KEY_GOOGLE}`;
+
 			const auth = getIdAndTypeFromAuth(req, res, next);
 			if (!auth) {
 				const error = new Error('Not Authorized!');
@@ -55,6 +58,10 @@ exports.saveGoogleRating = (req, res, next) => {
 				ratingCount: data.result.user_ratings_total,
 			};
 			await updateRatingHandle(company, rating);
+			await addAddress(
+				{ name: data.result.formatted_address, position: data.result.geometry.location },
+				selectedCompany
+			);
 
 			downloadGoogleReviewsHandle(selectedCompany, data.result.url);
 			res.json(rating);
