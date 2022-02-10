@@ -43,7 +43,7 @@ const options = {
 		'--use-mock-keychain',
 		'--user-agent="Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"',
 	],
-	devtools:true
+	// devtools:true
 };
 
 let browser;
