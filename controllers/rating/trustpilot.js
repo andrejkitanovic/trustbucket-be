@@ -151,7 +151,7 @@ const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
 					company: selectedCompany,
 					type: 'trustpilot',
 					name: $el('div[data-consumer-name-typography]').text(),
-					// rating: Number($el('.bui-review-score__badge').text().trim().replace(',', '.')) / 2,
+					rating: Number($el('div[data-service-review-rating]').attr('data-service-review-rating')),
 					// description: $el('.c-review__body').text().trim(),
 					// date: dayjs(date, format),
 				};

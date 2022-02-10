@@ -135,7 +135,7 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 
 		const loadMore = async () => {
 			processNum++;
-			console.log('RECO Load More ' + processNum + ' Timeout: ' + 15000);
+			console.log('RECO Load More ' + processNum);
 
 			await page.click('a.more-reviews-button');
 			await page.waitForTimeout(1000);
