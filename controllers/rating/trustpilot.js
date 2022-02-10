@@ -136,9 +136,9 @@ const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
 			const $ = cheerio.load(result);
 
 			await $('article[class*=reviewCard]').map((index, el) => {
-				items.push('a')
-				// const $el = cheerio.load(el);
+				const $el = cheerio.load(el);
 				// const date = $el('.c-review-block__right .c-review-block__date').text().replace('Reviewed:', '').trim();
+
 				// let format = '';
 				// if (dayjs(date, 'MMMM D, YYYY').isValid()) {
 				// 	format = 'MMMM D, YYYY';
@@ -147,15 +147,15 @@ const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
 				// } else if (dayjs(date, 'D. MMMM YYYY.').isValid()) {
 				// 	format = 'D. MMMM YYYY.';
 				// }
-				// const object = {
-				// 	company: selectedCompany,
-				// 	type: 'booking',
-				// 	name: $el('.bui-avatar-block__title').text(),
-				// 	rating: Number($el('.bui-review-score__badge').text().trim().replace(',', '.')) / 2,
-				// 	description: $el('.c-review__body').text().trim(),
-				// 	date: dayjs(date, format),
-				// };
-				// items.push(object);
+				const object = {
+					company: selectedCompany,
+					type: 'trustpilot',
+					name: $el('.bui-avatar-block__title').text(),
+					rating: Number($el('.bui-review-score__badge').text().trim().replace(',', '.')) / 2,
+					description: $el('.c-review__body').text().trim(),
+					date: dayjs(date, format),
+				};
+				items.push(object);
 			});
 		};
 
