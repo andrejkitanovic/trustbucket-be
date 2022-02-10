@@ -135,7 +135,8 @@ const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
 		const loadReviews = async (items, result) => {
 			const $ = cheerio.load(result);
 
-			await $('article[class*=reviewCart]').map((index, el) => {
+			await $('article[class*=reviewCard]').map((index, el) => {
+				items.push('a')
 				// const $el = cheerio.load(el);
 				// const date = $el('.c-review-block__right .c-review-block__date').text().replace('Reviewed:', '').trim();
 				// let format = '';
@@ -161,7 +162,7 @@ const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
 		await loadReviews(items, result);
 
 		const loadMore = async () => {
-			console.log('load more');
+			console.log('TRUSTPILOT Load More');
 			await page.click('a[name=pagination-button-next]');
 			await page.waitForNetworkIdle();
 
@@ -179,7 +180,7 @@ const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
 		if (!load) {
 			await Rating.insertMany(items);
 		}
-
+		console.log('TRUSTPILOT Review Cards', items.length);
 		return items;
 	} catch (err) {
 		console.log(err);
