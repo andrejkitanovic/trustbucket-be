@@ -22,6 +22,7 @@ router.post('/google/load', googleRatingController.loadGoogleReviews);
 //TRUSTPILOT
 router.get('/trustpilot/search', trustpilotController.searchTrustpilotProfile);
 router.post('/trustpilot', trustpilotController.saveTrustpilotProfile);
+router.post('/trustpilot/load', trustpilotController.loadTrustpilotReviews);
 
 //FRESHA
 router.get('/fresha/search', freshaRatingController.searchFreshaProfile);

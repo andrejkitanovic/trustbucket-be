@@ -2,7 +2,7 @@ const { getIdAndTypeFromAuth } = require('../auth');
 const { deleteRatingHandle } = require('../profile');
 const Company = require('../../models/company');
 const Rating = require('../../models/rating');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 exports.getRatings = (req, res, next) => {
 	(async function () {
@@ -99,6 +99,7 @@ exports.stats = (req, res, next) => {
 	(async function () {
 		try {
 			const auth = getIdAndTypeFromAuth(req, res, next);
+			const { from, to } = req.query;
 			if (!auth) {
 				const error = new Error('Not Authorized!');
 				error.statusCode = 401;
@@ -116,6 +117,16 @@ exports.stats = (req, res, next) => {
 
 				if (type) {
 					matchObject = { ...matchObject, type: type };
+				}
+
+				if (from && to) {
+					matchObject = {
+						...matchObject,
+						date: {
+							$gte: new Date(from),
+							$lte: new Date(to),
+						},
+					};
 				}
 
 				return await Rating.aggregate([

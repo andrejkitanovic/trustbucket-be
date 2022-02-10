@@ -138,6 +138,7 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 			console.log('RECO Load More ' + processNum + ' Timeout: ' + Math.ceil(processNum / 30) * 5000);
 
 			await page.click('a.more-reviews-button');
+			await page.waitForTimeout(500);
 			try {
 				await page.waitForSelector('a.more-reviews-button', { timeout: Math.ceil(processNum / 30) * 5000 });
 				await loadMore();
@@ -154,7 +155,6 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 
 		const items = [];
 		await $('.review-card').map((index, el) => {
-			console.log('RECO Review Cards');
 			const $el = cheerio.load(el);
 
 			$el.prototype.count = function (selector) {
@@ -171,6 +171,7 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 
 			items.push(object);
 		});
+		console.log('RECO Review Cards', items.length);
 
 		if (!load) {
 			await Rating.insertMany(items);
