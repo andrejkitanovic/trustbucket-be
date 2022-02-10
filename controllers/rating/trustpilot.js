@@ -137,22 +137,13 @@ const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
 
 			await $('article[class*=reviewCard]').map((index, el) => {
 				const $el = cheerio.load(el);
-				// const date = $el('.c-review-block__right .c-review-block__date').text().replace('Reviewed:', '').trim();
-
-				// let format = '';
-				// if (dayjs(date, 'MMMM D, YYYY').isValid()) {
-				// 	format = 'MMMM D, YYYY';
-				// } else if (dayjs(date, 'D MMMM YYYY').isValid()) {
-				// 	format = 'D MMMM YYYY';
-				// } else if (dayjs(date, 'D. MMMM YYYY.').isValid()) {
-				// 	format = 'D. MMMM YYYY.';
-				// }
+				
 				const object = {
 					company: selectedCompany,
 					type: 'trustpilot',
 					name: $el('div[data-consumer-name-typography]').text(),
 					rating: Number($el('div[data-service-review-rating]').attr('data-service-review-rating')),
-					// description: $el('time[datetime]').text().trim(),
+					description: $el('p[data-service-review-text-typography]').text().trim(),
 					date: $el('time[datetime]').attr('datetime'),
 				};
 				items.push(object);

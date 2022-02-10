@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 
-let blockedResourceTypes = ['image', 'stylesheet', 'font'];
-let blockedNetworks = ['analytics', 'hotjar'];
+let blockedResourceTypes = [];
+let blockedNetworks = [];
 
 const options = {
 	// headless: false,
@@ -124,7 +124,7 @@ exports.usePuppeteer = async (url, opts) => {
 	}
 
 	if (!opts || !opts.disableInterceptors) {
-		setupInterceptors(page);
+		// setupInterceptors(page);
 	}
 
 	await page.goto(url);
