@@ -150,10 +150,10 @@ const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
 				const object = {
 					company: selectedCompany,
 					type: 'trustpilot',
-					name: $el('.bui-avatar-block__title').text(),
-					rating: Number($el('.bui-review-score__badge').text().trim().replace(',', '.')) / 2,
-					description: $el('.c-review__body').text().trim(),
-					date: dayjs(date, format),
+					name: $el('div[data-consumer-name-typography]').text(),
+					// rating: Number($el('.bui-review-score__badge').text().trim().replace(',', '.')) / 2,
+					// description: $el('.c-review__body').text().trim(),
+					// date: dayjs(date, format),
 				};
 				items.push(object);
 			});

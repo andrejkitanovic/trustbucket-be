@@ -140,8 +140,9 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 			await page.click('a.more-reviews-button');
 			await page.waitForTimeout(1000);
 			try {
-				await page.waitForSelector('a.more-reviews-button', { timeout: 15000 });
-				await loadMore();
+				if (await page.$('a.more-reviews-button')) {
+					await loadMore();
+				}
 			} catch (err) {}
 		};
 		if (await page.$('a.more-reviews-button')) {

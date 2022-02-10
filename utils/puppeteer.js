@@ -110,7 +110,6 @@ exports.usePuppeteer = async (url, opts) => {
 	}
 
 	const page = await browser.newPage();
-	page.setDefaultTimeout(0);
 	increaseCluster();
 
 	if (opts) {
