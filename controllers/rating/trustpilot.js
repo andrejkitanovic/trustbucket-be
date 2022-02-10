@@ -135,13 +135,9 @@ const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
 		const loadReviews = async (items, result) => {
 			const $ = cheerio.load(result);
 
-			return
-
-			// await $('div[itemprop=review]').map((index, el) => {
+			await $('article[class*=reviewCart]').map((index, el) => {
 				// const $el = cheerio.load(el);
-
 				// const date = $el('.c-review-block__right .c-review-block__date').text().replace('Reviewed:', '').trim();
-
 				// let format = '';
 				// if (dayjs(date, 'MMMM D, YYYY').isValid()) {
 				// 	format = 'MMMM D, YYYY';
@@ -150,7 +146,6 @@ const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
 				// } else if (dayjs(date, 'D. MMMM YYYY.').isValid()) {
 				// 	format = 'D. MMMM YYYY.';
 				// }
-
 				// const object = {
 				// 	company: selectedCompany,
 				// 	type: 'booking',
@@ -159,14 +154,14 @@ const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
 				// 	description: $el('.c-review__body').text().trim(),
 				// 	date: dayjs(date, format),
 				// };
-
 				// items.push(object);
-			// });
+			});
 		};
 
 		await loadReviews(items, result);
 
 		const loadMore = async () => {
+			console.log('load more');
 			await page.click('a[name=pagination-button-next]');
 			await page.waitForNetworkIdle();
 
@@ -194,7 +189,7 @@ const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
 	} finally {
 		if (!load && company) {
 			company = await Company.findById(selectedCompany);
-			await changeDownloadingState(company, 'recose', false);
+			await changeDownloadingState(company, 'trustpilot', false);
 		}
 		if (page) {
 			await page.close();
