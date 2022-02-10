@@ -22,7 +22,6 @@ const options = {
 		'--disable-ipc-flooding-protection',
 		'--disable-notifications',
 		'--disable-offer-store-unmasked-wallet-cards',
-		'--disable-popup-blocking',
 		'--disable-print-preview',
 		'--disable-prompt-on-repost',
 		'--disable-renderer-backgrounding',
@@ -41,6 +40,8 @@ const options = {
 		'--password-store=basic',
 		'--use-gl=swiftshader',
 		'--use-mock-keychain',
+		'--single-process',
+		"--disable-accelerated-2d-canvas",
 		'--user-agent="Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"',
 	],
 	// devtools:true

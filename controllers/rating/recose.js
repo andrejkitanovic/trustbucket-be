@@ -129,7 +129,7 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 			await changeDownloadingState(company, 'recose', true);
 		}
 
-		page = await usePuppeteer(url, { enableNetwork: ['analytics', 'hotjar'], enableResource: ['image', 'stylesheet', 'font'] });
+		page = await usePuppeteer(url, { enableNetwork: ['analytics'] });
 
 		let processNum = 1;
 
@@ -139,7 +139,6 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 			await page.click('a.more-reviews-button');
 			await page.waitForNetworkIdle();
 
-			
 			if (await page.$('a.more-reviews-button')) {
 				await loadMore();
 			}
