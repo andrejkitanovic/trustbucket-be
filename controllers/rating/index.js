@@ -127,23 +127,24 @@ exports.stats = (req, res, next) => {
 			const company = await Company.findById(selectedCompany);
 			const types = company.ratings.map((el) => !el.downloading && el.type);
 
-			const getStats = async (type) => {
-				let matchObject = {
-					company: mongoose.Types.ObjectId(selectedCompany),
-				};
+			let matchObjectCore = {
+				company: mongoose.Types.ObjectId(selectedCompany),
+			};
 
+			if (from && to) {
+				matchObjectCore = {
+					...matchObjectCore,
+					date: {
+						$gte: new Date(from),
+						$lte: new Date(to),
+					},
+				};
+			}
+
+			const getStats = async (type) => {
+				let matchObject = { ...matchObjectCore };
 				if (type) {
 					matchObject = { ...matchObject, type: type };
-				}
-
-				if (from && to) {
-					matchObject = {
-						...matchObject,
-						date: {
-							$gte: new Date(from),
-							$lte: new Date(to),
-						},
-					};
 				}
 
 				return await Rating.aggregate([
@@ -166,15 +167,18 @@ exports.stats = (req, res, next) => {
 			overallStats.forEach((el) => labels.push(el._id));
 
 			const stats = {
+				countNoReply: 0,
 				count: {},
 				rating: {},
 			};
+			stats.countNoReply = await Rating.countDocuments({ ...matchObjectCore, reply: undefined });
 
 			for (const type of types) {
 				const elements = [];
 				if (type === 'overall') {
 					overallStats.forEach((el) => elements.push(el.total));
 					stats[type] = elements;
+
 					stats.count[type] = overallStats.reduce((sum, el) => sum + el.total, 0);
 					stats.rating[type] = _.meanBy(overallStats, (el) => el.rating) || 0;
 				} else {
