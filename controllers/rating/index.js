@@ -53,7 +53,7 @@ exports.filterRatings = (req, res, next) => {
 				const rating = req.body.rating;
 
 				filterObject.rating = {
-					$gte: _.min(rating) - 1,
+					$gt: _.min(rating) - 1,
 					$lte: _.max(rating),
 				};
 			}
