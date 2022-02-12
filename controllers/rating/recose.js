@@ -132,6 +132,7 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 		page = await usePuppeteer(url, { enableNetwork: ['analytics'] });
 
 		await page.evaluate(async () => {
+			await setTimeout(500)
 			let buttonClickInterval = await setInterval(() => {
 				const button = document.querySelector('a.more-reviews-button');
 
