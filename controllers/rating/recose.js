@@ -159,6 +159,9 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 			$el.prototype.count = function (selector) {
 				return this.find(selector).length;
 			};
+			$el.prototype.exists = function (selector) {
+				return this.find(selector).length > 0;
+			};
 			const object = {
 				company: selectedCompany,
 				type: 'recose',
@@ -167,6 +170,10 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 				description: $el('div.text-clamp--inner').text().trim(),
 				date: dayjs($el('.submit-date').text(), 'YYYY-MM-DD'),
 			};
+
+			if ($el(el).exists('.review-card--response')) {
+				object.reply = $el('.review-card--response q').text();
+			}
 
 			items.push(object);
 		});

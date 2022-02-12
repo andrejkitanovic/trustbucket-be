@@ -24,6 +24,12 @@ const ratingSchema = new Schema({
 	},
 	date: {
 		type: Date,
+		required: true,
+	},
+	reply: {
+		text: {
+			type: String,
+		},
 	},
 });
 
