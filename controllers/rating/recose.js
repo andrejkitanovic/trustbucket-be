@@ -141,7 +141,7 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 					clearInterval(buttonClickInterval);
 					buttonClickInterval = null;
 				}
-			}, 250);
+			}, 300);
 		});
 
 		console.log('Start with awaiting');
