@@ -67,7 +67,7 @@ exports.filterRatings = (req, res, next) => {
 				additionalObject.reply = undefined;
 			}
 
-			const ratings = await Rating.find({ filterObject, ...additionalObject })
+			const ratings = await Rating.find({ ...filterObject, ...additionalObject })
 				.sort([[sortField, sortOrder === 'asc' ? 1 : -1]])
 				.skip(Number((pageNumber - 1) * pageSize))
 				.limit(Number(pageSize));
