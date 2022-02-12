@@ -166,6 +166,7 @@ const downloadBokingReviewsHandle = async (selectedCompany, url, load) => {
 					type: 'booking',
 					name: $el('.bui-avatar-block__title').text(),
 					rating: Number($el('.bui-review-score__badge').text().trim().replace(',', '.')) / 2,
+					title: $el('.c-review-block__title').text().trim(),
 					description: $el('.c-review__body').text().trim(),
 					date: dayjs(date, format),
 				};

@@ -19,17 +19,14 @@ const ratingSchema = new Schema({
 		type: Number,
 		required: true,
 	},
-	description: {
-		type: String,
-	},
+	title: String,
+	description: String,
 	date: {
 		type: Date,
 		required: true,
 	},
 	reply: {
-		text: {
-			type: String,
-		},
+		text: String,
 	},
 });
 

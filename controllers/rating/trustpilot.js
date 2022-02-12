@@ -161,12 +161,13 @@ const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
 					type: 'trustpilot',
 					name: $el('div[data-consumer-name-typography]').text(),
 					rating: Number($el('div[data-service-review-rating]').attr('data-service-review-rating')),
-					description: $el('p[data-service-review-text-typography]').text().trim(),
+					title: $el('h2[data-service-review-title-typography]').text(),
+					description: $el('p[data-service-review-text-typography]').html(),
 					date: $el('time[datetime]').attr('datetime'),
 				};
 
 				if ($el(el).exists('div[class*=replyInfo]')) {
-					object.reply = { text: $el('div[class*=replyInfo] ~ p').text() };
+					object.reply = { text: $el('div[class*=replyInfo] ~ p').html() };
 				}
 
 				items.push(object);
