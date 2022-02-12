@@ -135,18 +135,16 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 
 		const loadMore = async () => {
 			processNum++;
-			console.log('RECO Load More ' + processNum);
 			await page.click('a.more-reviews-button');
-			await page.waitForNetworkIdle();
 
-			if (await page.$('a.more-reviews-button')) {
+			if (await page.$('a.more-reviews-button', { timeout: 3000 })) {
 				await loadMore();
 			}
 		};
 		if (await page.$('a.more-reviews-button')) {
 			await loadMore();
 		}
-		await page.waitForTimeout(2000);
+		await page.waitForNetworkIdle();
 		console.log('Done with awaiting');
 
 		const result = await page.content();
