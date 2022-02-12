@@ -169,7 +169,7 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 				type: 'recose',
 				name: $el('.review-card--reviewer-person-info a').text(),
 				rating: Number($el('div.reco-rating.rxs.iblock').count('span')),
-				description: $el('div.text-clamp--inner').text().trim(),
+				description: $el('div.text-clamp--inner q').html(),
 				date: dayjs($el('.submit-date').text(), 'YYYY-MM-DD'),
 			};
 
