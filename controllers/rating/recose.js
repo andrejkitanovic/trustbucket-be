@@ -146,7 +146,7 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 		if (await page.$('a.more-reviews-button')) {
 			await loadMore();
 		}
-		await page.waitForNetworkIdle();
+		await page.waitForTimeout(2000);
 		console.log('Done with awaiting');
 
 		const result = await page.content();
