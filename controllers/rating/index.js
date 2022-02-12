@@ -17,10 +17,13 @@ exports.getRatings = (req, res, next) => {
 			const { selectedCompany } = auth;
 
 			const ratings = await Rating.find({ company: selectedCompany });
-			const count = await Rating.find({ company: selectedCompany }).countDocuments();
+			const count = await Rating.countDocuments({ company: selectedCompany });
+
+			const notRepliedCount = await Rating.countDocuments({ company: selectedCompany, reply: undefined });
 
 			res.status(200).json({
 				total: count,
+				totalNoReply: notRepliedCount,
 				data: ratings,
 			});
 		} catch (err) {
@@ -58,14 +61,22 @@ exports.filterRatings = (req, res, next) => {
 				};
 			}
 
-			const ratings = await Rating.find(filterObject)
+			const additionalObject = {};
+
+			if (req.body.reply === false) {
+				additionalObject.reply = undefined;
+			}
+
+			const ratings = await Rating.find({ filterObject, ...additionalObject })
 				.sort([[sortField, sortOrder === 'asc' ? 1 : -1]])
 				.skip(Number((pageNumber - 1) * pageSize))
 				.limit(Number(pageSize));
-			const count = await Rating.find(filterObject).countDocuments();
+			const count = await Rating.countDocuments(filterObject);
+			const notRepliedCount = await Rating.countDocuments({ ...filterObject, reply: undefined });
 
 			res.status(200).json({
 				total: count,
+				totalNoReply: notRepliedCount,
 				data: ratings,
 			});
 		} catch (err) {
