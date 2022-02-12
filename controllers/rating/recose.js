@@ -174,7 +174,7 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 			};
 
 			if ($el(el).exists('.review-card--response')) {
-				object.reply = { text: $el('.review-card--response q').text() };
+				object.reply = { text: $el('.review-card--response q').html() };
 			}
 
 			items.push(object);
