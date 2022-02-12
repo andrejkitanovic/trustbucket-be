@@ -132,21 +132,23 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 		page = await usePuppeteer(url, { enableNetwork: ['analytics'] });
 
 		await page.evaluate(async () => {
-			await setTimeout(500)
-			let buttonClickInterval = await setInterval(() => {
-				const button = document.querySelector('a.more-reviews-button');
-
-				if (button) {
-					button.click();
-				} else {
-					clearInterval(buttonClickInterval);
-					buttonClickInterval = null;
-				}
-			}, 500);
+			async function waitUntil() {
+				return await new Promise((resolve) => {
+					let interval = setInterval(() => {
+						const button = document.querySelector('a.more-reviews-button');
+						if (button) {
+							button.click();
+						} else {
+							resolve();
+							clearInterval(interval);
+							interval = null;
+						}
+					}, 50);
+				});
+			}
+			await waitUntil();
 		});
 
-		console.log('Start with awaiting');
-		await page.waitForNetworkIdle();
 		console.log('Done with awaiting');
 
 		const result = await page.content();
@@ -172,7 +174,7 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 			};
 
 			if ($el(el).exists('.review-card--response')) {
-				object.reply = $el('.review-card--response q').text();
+				object.reply = { text: $el('.review-card--response q').text() };
 			}
 
 			items.push(object);
