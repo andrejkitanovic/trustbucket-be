@@ -2,10 +2,12 @@ const cheerio = require('cheerio');
 const { usePuppeteer } = require('../../utils/puppeteer');
 
 const { getIdAndTypeFromAuth } = require('../auth');
-const { updateRatingHandle } = require('../profile');
+const { updateRatingHandle, changeDownloadingState } = require('../profile');
 const Company = require('../../models/company');
+const Rating = require('../../models/rating');
 
 exports.searchTrustpilotProfile = (req, res, next) => {
+	let page;
 	const { q } = req.query;
 	const url = `https://www.trustpilot.com/search?query=${q}`;
 
@@ -18,7 +20,7 @@ exports.searchTrustpilotProfile = (req, res, next) => {
 				next(error);
 			}
 
-			const page = await usePuppeteer(url);
+			page = await usePuppeteer(url);
 
 			const result = await page.content();
 			const $ = cheerio.load(result);
@@ -40,11 +42,16 @@ exports.searchTrustpilotProfile = (req, res, next) => {
 			res.json(items[0]);
 		} catch (err) {
 			next(err);
+		} finally {
+			if (page) {
+				await page.close();
+			}
 		}
 	})();
 };
 
 exports.saveTrustpilotProfile = (req, res, next) => {
+	let page;
 	const url = req.body.url;
 
 	(async function () {
@@ -64,7 +71,7 @@ exports.saveTrustpilotProfile = (req, res, next) => {
 			const { selectedCompany } = auth;
 			const company = await Company.findById(selectedCompany);
 
-			const page = await usePuppeteer(url);
+			page = await usePuppeteer(url);
 
 			const result = await page.content();
 			const $ = cheerio.load(result);
@@ -78,9 +85,14 @@ exports.saveTrustpilotProfile = (req, res, next) => {
 			};
 			await updateRatingHandle(company, rating);
 
+			downloadTrustpilotReviewsHandle(selectedCompany, url);
 			res.json(rating);
 		} catch (err) {
 			next(err);
+		} finally {
+			if (page) {
+				await page.close();
+			}
 		}
 	})();
 };
@@ -117,6 +129,7 @@ exports.loadTrustpilotReviews = (req, res, next) => {
 };
 
 const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
+	console.log('URL:', url);
 	let company, page;
 	try {
 		if (!load) {
@@ -126,8 +139,10 @@ const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
 
 		page = await usePuppeteer(url);
 
-		await page.click('a[name=show-all-reviews]');
-		await page.waitForNetworkIdle();
+		if (await page.$('a[name=show-all-reviews]')) {
+			await page.click('a[name=show-all-reviews]');
+			await page.waitForNetworkIdle();
+		}
 
 		const items = [];
 		let result = await page.content();
@@ -137,7 +152,7 @@ const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
 
 			await $('article[class*=reviewCard]').map((index, el) => {
 				const $el = cheerio.load(el);
-				
+
 				const object = {
 					company: selectedCompany,
 					type: 'trustpilot',

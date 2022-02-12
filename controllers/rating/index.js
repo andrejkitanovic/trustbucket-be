@@ -3,6 +3,7 @@ const { deleteRatingHandle } = require('../profile');
 const Company = require('../../models/company');
 const Rating = require('../../models/rating');
 const mongoose = require('mongoose');
+const _ = require('lodash');
 
 exports.getRatings = (req, res, next) => {
 	(async function () {
@@ -49,7 +50,12 @@ exports.filterRatings = (req, res, next) => {
 				filterObject.type = req.body.type;
 			}
 			if (req.body.rating) {
-				filterObject.rating = req.body.rating;
+				const rating = req.body.rating;
+
+				filterObject.rating = {
+					$gte: _.min(rating) - 1,
+					$lte: _.max(rating),
+				};
 			}
 
 			const ratings = await Rating.find(filterObject)
@@ -137,6 +143,7 @@ exports.stats = (req, res, next) => {
 						$group: {
 							_id: { $dateToString: { format: '%Y-%m', date: '$date' } },
 							total: { $sum: 1 },
+							rating: { $avg: '$rating' },
 						},
 					},
 					{ $sort: { _id: 1 } },
@@ -147,15 +154,23 @@ exports.stats = (req, res, next) => {
 			const labels = [];
 			overallStats.forEach((el) => labels.push(el._id));
 
-			const stats = {};
+			const stats = {
+				count: {},
+				rating: {},
+			};
 
 			for (const type of types) {
 				const elements = [];
 				if (type === 'overall') {
 					overallStats.forEach((el) => elements.push(el.total));
 					stats[type] = elements;
+					stats.count[type] = overallStats.reduce((sum, el) => sum + el.total, 0);
+					stats.rating[type] = _.meanBy(overallStats, (el) => el.rating) || 0;
 				} else {
 					let typeStats = await getStats(type);
+					stats.count[type] = typeStats.reduce((sum, el) => sum + el.total, 0);
+					stats.rating[type] = _.meanBy(typeStats, (el) => el.rating) || 0;
+
 					labels.forEach((date) => {
 						let returned = false;
 						typeStats.forEach((el) => {

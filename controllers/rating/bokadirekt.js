@@ -188,4 +188,4 @@ const downloadBokadirektReviewsHandle = async (selectedCompany, url, load) => {
 	}
 };
 
-// ALL DONE
+// REPLY MISSING

@@ -66,7 +66,6 @@ exports.saveFreshaProfile = (req, res, next) => {
 			const $ = cheerio.load(result);
 			const json = await JSON.parse($('script[type="application/ld+json"]').html());
 
-			console.log(json)
 			const rating = {
 				type: 'fresha',
 				name: json.name,
