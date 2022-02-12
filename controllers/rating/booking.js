@@ -158,6 +158,9 @@ const downloadBokingReviewsHandle = async (selectedCompany, url, load) => {
 					format = 'D. MMMM YYYY.';
 				}
 
+				$el.prototype.exists = function (selector) {
+					return this.find(selector).length > 0;
+				};
 				const object = {
 					company: selectedCompany,
 					type: 'booking',
@@ -166,6 +169,10 @@ const downloadBokingReviewsHandle = async (selectedCompany, url, load) => {
 					description: $el('.c-review__body').text().trim(),
 					date: dayjs(date, format),
 				};
+
+				if ($el(el).exists('.c-review-block__response')) {
+					object.reply = { text: $el('.c-review-block__response__inner').text() };
+				}
 
 				items.push(object);
 			});

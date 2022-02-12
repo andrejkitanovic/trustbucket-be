@@ -153,6 +153,9 @@ const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
 			await $('article[class*=reviewCard]').map((index, el) => {
 				const $el = cheerio.load(el);
 
+				$el.prototype.exists = function (selector) {
+					return this.find(selector).length > 0;
+				};
 				const object = {
 					company: selectedCompany,
 					type: 'trustpilot',
@@ -161,6 +164,11 @@ const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
 					description: $el('p[data-service-review-text-typography]').text().trim(),
 					date: $el('time[datetime]').attr('datetime'),
 				};
+
+				if ($el(el).exists('div[class*=replyInfo]')) {
+					object.reply = { text: $el('div[class*=replyInfo] ~ p').text() };
+				}
+
 				items.push(object);
 			});
 		};
