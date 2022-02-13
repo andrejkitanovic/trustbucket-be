@@ -116,16 +116,15 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 
 		const loadMore = async () => {
 			await page.waitForNetworkIdle();
-			await page.waitForTimeout(2000);
 
 			const scrollHeight = await page.evaluate((selector) => {
-		
 				const scrollableSection = document.querySelector(selector);
 
 				scrollableSection.scrollTop = scrollableSection.scrollHeight;
 				return scrollableSection.scrollHeight;
 			}, scrollableDiv);
 
+			console.log('Google scrolling previous:' + previous + 'current: ' + scrollHeight);
 			if (previous !== scrollHeight) {
 				previous = scrollHeight;
 				await loadMore();
