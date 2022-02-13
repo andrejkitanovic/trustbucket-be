@@ -170,8 +170,8 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 				object.rating = Number($el('span[class*=RGxYjb]').text().charAt(0));
 			}
 
-			if ($el(el).exists('span[class*=-header] span[class*=-text]') && $el('span[class*=-header] span[class*=-text]').text().trim()) {
-				object.reply = { text: removeAfter($el('span[class*=-header] span[class*=-text]').text().trim(), '(Original)') };
+			if ($el(el).exists('div[class*=-text]') && $el('div[class*=-text]').text().trim()) {
+				object.reply = { text: removeAfter($el('div[class*=-text]').text().trim(), '(Original)') };
 			}
 
 			if (object.date) {
