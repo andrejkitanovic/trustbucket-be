@@ -116,8 +116,8 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 
 		const loadMore = async () => {
 			await page.waitForNetworkIdle();
-			await page.waitForTimeout(500);
-			
+			await page.waitForTimeout(2000);
+
 			const scrollHeight = await page.evaluate((selector) => {
 		
 				const scrollableSection = document.querySelector(selector);
