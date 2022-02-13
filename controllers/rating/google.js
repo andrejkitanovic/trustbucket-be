@@ -103,7 +103,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 			company = await Company.findById(selectedCompany);
 			await changeDownloadingState(company, 'google', true);
 		}
-		console.log('Google fetching URL:' + url);
+		console.log('Google fetching URL: ' + url);
 
 		page = await usePuppeteer(url, { disableInterceptors: true });
 
@@ -143,7 +143,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 		const $ = cheerio.load(result);
 
 		const items = [];
-		await $('div[data-review-id].gm2-body-2').map((index, el) => {
+		await $('div[data-review-id]').map((index, el) => {
 			const $el = cheerio.load(el);
 
 			$el.prototype.count = function (selector) {
