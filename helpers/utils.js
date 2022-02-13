@@ -11,6 +11,7 @@ exports.removeAfter = (string, word) => {
 	if (string.includes(word)) {
 		return string.split(word)[1];
 	}
+	return string;
 };
 
 exports.isAbsoluteURL = (string) => absolutURLRegex.test(string);
