@@ -7,5 +7,11 @@ const throwError = (condition, { message, statusCode }, next) => {
 	return next(newError);
 };
 
+exports.removeAfter = (string, word) => {
+	if (string.includes(word)) {
+		return string.split(word)[1];
+	}
+};
+
 exports.isAbsoluteURL = (string) => absolutURLRegex.test(string);
 exports.throwError = throwError;

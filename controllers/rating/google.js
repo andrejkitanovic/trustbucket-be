@@ -2,6 +2,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const { usePuppeteer, decreaseCluster } = require('../../utils/puppeteer');
 
+const { removeAfter } = require('../../helpers/utils');
 const { reverseFromNow } = require('../../utils/dayjs');
 const { getIdAndTypeFromAuth } = require('../auth');
 const { addAddress } = require('../company');
@@ -159,7 +160,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 				company: selectedCompany,
 				type: 'google',
 				name: $el('a[target=_blank]>div:first-child>span').text(),
-				description: $el('span[jsan*=-text]').text().trim(),
+				description: removeAfter($el('span[jsan*=-text]').text().trim(), '(Original)'),
 				date: reverseFromNow($el('span[class*=-date]').text().trim()),
 			};
 
@@ -170,7 +171,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 			}
 
 			if ($el(el).exists('span[class*=-text]') && $el('span[class*=-text]').text().trim()) {
-				object.reply = { text: $el('span[class*=-text]').text().trim() };
+				object.reply = { text: removeAfter($el('span[class*=-text]').text().trim(), '(Original)') };
 			}
 
 			if (object.date) {
