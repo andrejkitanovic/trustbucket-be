@@ -125,7 +125,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 				return scrollableSection.scrollHeight;
 			}, scrollableDiv);
 
-			console.log('Google scrolling previous:' + previous + ' current: ' + scrollHeight);
+			console.log('Google scrolling previous: ' + previous + ' current: ' + scrollHeight);
 
 			if (previous !== scrollHeight) {
 				check = 0;
@@ -165,6 +165,8 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 
 			if (object.date) {
 				items.push(object);
+			}else {
+				console.log($el('span[class*=-date]').text().trim())
 			}
 		});
 
