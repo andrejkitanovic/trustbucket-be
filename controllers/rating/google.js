@@ -165,8 +165,6 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 
 			if (object.date) {
 				items.push(object);
-			}else {
-				console.log($el('span[class*=-date]').text().trim())
 			}
 		});
 
