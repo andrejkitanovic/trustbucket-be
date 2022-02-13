@@ -138,7 +138,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 		const $ = cheerio.load(result);
 
 		const items = [];
-		await $('div[data-review-id]').map((index, el) => {
+		await $('div[data-review-id].gm2-body-2').map((index, el) => {
 			const $el = cheerio.load(el);
 
 			$el.prototype.count = function (selector) {
@@ -161,8 +161,8 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 				object.rating = Number($el('span[class*=RGxYjb]').text().charAt(0));
 			}
 
-			if ($el(el).exists('span[class*=-text]') && $el('span[class*=-text]').html()) {
-				object.reply = { text: $el('span[class*=-text]').html() };
+			if ($el(el).exists('span[class*=-text]') && $el('span[class*=-text]').text().trim()) {
+				object.reply = { text: $el('span[class*=-text]').text().trim()};
 			}
 		
 
