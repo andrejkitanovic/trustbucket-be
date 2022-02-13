@@ -131,7 +131,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 				await loadMore();
 			} else {
 				await page.screenshot({
-					path: 'screenshot.png',
+					path: './uploads/screenshot.png',
 					fullPage: true,
 				});
 			}
