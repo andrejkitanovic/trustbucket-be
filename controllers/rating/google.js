@@ -134,6 +134,14 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 
 		await loadMore();
 
+		await page.evaluate(() => {
+			const expand = document.querySelectorAll('button[jsaction=pane.review.expandReview]');
+
+			if (expand.length) {
+				expand.forEach((el) => el.click());
+			}
+		});
+
 		const result = await page.content();
 		const $ = cheerio.load(result);
 
@@ -162,9 +170,8 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 			}
 
 			if ($el(el).exists('span[class*=-text]') && $el('span[class*=-text]').text().trim()) {
-				object.reply = { text: $el('span[class*=-text]').text().trim()};
+				object.reply = { text: $el('span[class*=-text]').text().trim() };
 			}
-		
 
 			if (object.date) {
 				items.push(object);
