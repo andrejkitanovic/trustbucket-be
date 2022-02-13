@@ -149,6 +149,9 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 			$el.prototype.count = function (selector) {
 				return this.find(selector).length;
 			};
+			$el.prototype.exists = function (selector) {
+				return this.find(selector).length > 0;
+			};
 			const object = {
 				company: selectedCompany,
 				type: 'google',
@@ -162,6 +165,11 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 			} else {
 				object.rating = Number($el('span[class*=RGxYjb]').text().charAt(0));
 			}
+
+			if ($el(el).exists('span[class*=-text]')) {
+				object.reply = { text: $el('span[class*=-text]').html() };
+			}
+		
 
 			if (object.date) {
 				items.push(object);
