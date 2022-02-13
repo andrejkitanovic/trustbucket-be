@@ -128,6 +128,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 			console.log('Google scrolling previous:' + previous + ' current: ' + scrollHeight);
 
 			if (previous !== scrollHeight) {
+				check = 0;
 				previous = scrollHeight;
 				await loadMore();
 			} else if (check < 3) {
