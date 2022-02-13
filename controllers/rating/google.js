@@ -103,6 +103,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 			company = await Company.findById(selectedCompany);
 			await changeDownloadingState(company, 'google', true);
 		}
+		console.log('Google fetching URL:' + url);
 
 		page = await usePuppeteer(url, { disableInterceptors: true });
 
@@ -145,11 +146,19 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 				company: selectedCompany,
 				type: 'google',
 				name: $el('a[target=_blank]>div:first-child>span').text(),
-				rating: Number($el(el).count('img[class*=active]')),
 				description: $el('span[jsan*=-text]').text().trim(),
-				date: reverseFromNow($el('span[class*=-date]').text()),
+				date: reverseFromNow($el('span[class*=-date]').text().trim()),
 			};
-			items.push(object);
+
+			if (Number($el(el).count('img[class*=active]'))) {
+				object.rating = Number($el(el).count('img[class*=active]'));
+			} else {
+				object.rating = Number($el('span[class*=RGxYjb]').text().charAt(0));
+			}
+
+			if (object.date) {
+				items.push(object);
+			}
 		});
 
 		if (!load) {
