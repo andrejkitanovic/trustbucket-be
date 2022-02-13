@@ -4,7 +4,7 @@ let blockedResourceTypes = ['image', 'stylesheet', 'font'];
 let blockedNetworks = ['analytics', 'hotjar'];
 
 const options = {
-	headless: false,
+	// headless: false,
 	args: [
 		'--autoplay-policy=user-gesture-required',
 		'--disable-background-networking',
