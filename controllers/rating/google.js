@@ -124,10 +124,16 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 				return scrollableSection.scrollHeight;
 			}, scrollableDiv);
 
-			console.log('Google scrolling previous:' + previous + 'current: ' + scrollHeight);
+			console.log('Google scrolling previous:' + previous + ' current: ' + scrollHeight);
+
 			if (previous !== scrollHeight) {
 				previous = scrollHeight;
 				await loadMore();
+			} else {
+				await page.screenshot({
+					path: './uploads/screenshot.png',
+					fullPage: true,
+				});
 			}
 		};
 
