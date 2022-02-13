@@ -113,6 +113,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 		const scrollableDiv = 'div.section-scrollbox';
 
 		let previous = 0;
+		let check = 0;
 
 		const loadMore = async () => {
 			await page.waitForNetworkIdle();
@@ -129,11 +130,9 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 			if (previous !== scrollHeight) {
 				previous = scrollHeight;
 				await loadMore();
-			} else {
-				await page.screenshot({
-					path: './uploads/screenshot.png',
-					fullPage: true,
-				});
+			} else if (check < 3) {
+				check++;
+				await loadMore();
 			}
 		};
 
