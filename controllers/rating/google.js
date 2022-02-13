@@ -135,7 +135,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 		await loadMore();
 
 		await page.evaluate(() => {
-			const expand = document.querySelectorAll('button[jsaction=pane.review.expandReview]');
+			const expand = document.querySelectorAll('button[jsaction="pane.review.expandReview"]');
 
 			if (expand.length) {
 				expand.forEach((el) => el.click());
