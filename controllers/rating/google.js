@@ -113,7 +113,6 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 		const scrollableDiv = 'div.section-scrollbox';
 
 		let previous = 0;
-		let check = 0;
 
 		const loadMore = async () => {
 			await page.waitForNetworkIdle();
@@ -128,11 +127,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 			console.log('Google scrolling previous: ' + previous + ' current: ' + scrollHeight);
 
 			if (previous !== scrollHeight) {
-				check = 0;
 				previous = scrollHeight;
-				await loadMore();
-			} else if (check < 3) {
-				check++;
 				await loadMore();
 			}
 		};
@@ -166,7 +161,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 				object.rating = Number($el('span[class*=RGxYjb]').text().charAt(0));
 			}
 
-			if ($el(el).exists('span[class*=-text]')) {
+			if ($el(el).exists('span[class*=-text]') && $el('span[class*=-text]').html()) {
 				object.reply = { text: $el('span[class*=-text]').html() };
 			}
 		
