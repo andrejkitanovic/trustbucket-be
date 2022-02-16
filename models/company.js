@@ -24,6 +24,17 @@ const companySchema = new Schema(
 				lng: Number,
 			},
 		},
+		socialLinks: [
+			{
+				media: {
+					type: String,
+					enum: ['facebook', 'instagram', 'twitter', 'youtube'],
+				},
+				url: {
+					type: String,
+				},
+			},
+		],
 		ratings: [
 			{
 				type: {

@@ -58,11 +58,15 @@ exports.updateEmailTemplate = (req, res, next) => {
 			}
 			const { selectedCompany } = auth;
 
-			const emailUpdated = await EmailTemplate.findOneAndUpdate({
-				company: selectedCompany,
-				_id: req.query.id,
-				...req.body,
-			});
+			const emailUpdated = await EmailTemplate.findOneAndUpdate(
+				{
+					company: selectedCompany,
+					_id: req.query.id,
+				},
+				{
+					...req.body,
+				}
+			);
 
 			if (!emailUpdated) {
 				const error = new Error('Not Found!');

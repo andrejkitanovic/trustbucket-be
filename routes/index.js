@@ -6,6 +6,7 @@ module.exports = (app) => {
 	const ratingRoutes = require('./rating');
 	const companyRoutes = require('./company');
 	const emailTemplateRoutes = require('./emailTemplate');
+	const campaignRoutes = require('./campaign');
 
 	// API routes
 	app.use('/api/auth', authRoutes);
@@ -15,4 +16,5 @@ module.exports = (app) => {
 	app.use('/api/rating', ratingRoutes);
 	app.use('/api/company', companyRoutes);
 	app.use('/api/email-template', emailTemplateRoutes);
+	app.use('/api/campaign', campaignRoutes);
 };
