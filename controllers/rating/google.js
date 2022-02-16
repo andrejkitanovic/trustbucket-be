@@ -158,6 +158,7 @@ const downloadGoogleReviewsHandle = async (selectedCompany, url, load) => {
 			};
 			const object = {
 				company: selectedCompany,
+				url,
 				type: 'google',
 				name: $el('a[target=_blank]>div:first-child>span').text(),
 				description: removeAfter($el('span[jsan*=-text]').text().trim(), '(Original)'),

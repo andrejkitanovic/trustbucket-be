@@ -150,6 +150,7 @@ const downloadFreshaReviewsHandle = async (selectedCompany, url, load) => {
 			const object = {
 				company: selectedCompany,
 				type: 'fresha',
+				url,
 				name: $el('p[data-qa=review-user-name]').text(),
 				rating: Number($el('div[data-qa=review-rating]').count('div[type=selected]')),
 				description: $el('p[class*=StyledParagraph]').text(),

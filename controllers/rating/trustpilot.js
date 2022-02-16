@@ -159,6 +159,7 @@ const downloadTrustpilotReviewsHandle = async (selectedCompany, url, load) => {
 				const object = {
 					company: selectedCompany,
 					type: 'trustpilot',
+					url,
 					name: $el('div[data-consumer-name-typography]').text(),
 					rating: Number($el('div[data-service-review-rating]').attr('data-service-review-rating')),
 					title: $el('h2[data-service-review-title-typography]').text(),

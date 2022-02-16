@@ -161,6 +161,7 @@ const downloadBokadirektReviewsHandle = async (selectedCompany, url, load) => {
 			const object = {
 				company: selectedCompany,
 				type: 'bokadirekt',
+				url,
 				name: $el('span[itemprop=name]').text(),
 				rating: Number($el('meta[itemprop=ratingValue]').attr('content')),
 				description: $el('div.review-text').text(),
@@ -187,5 +188,3 @@ const downloadBokadirektReviewsHandle = async (selectedCompany, url, load) => {
 		}
 	}
 };
-
-// REPLY MISSING

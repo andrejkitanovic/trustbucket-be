@@ -164,9 +164,11 @@ const downloadRecoseReviewsHandle = async (selectedCompany, url, load) => {
 			$el.prototype.exists = function (selector) {
 				return this.find(selector).length > 0;
 			};
+
 			const object = {
 				company: selectedCompany,
 				type: 'recose',
+				url,
 				name: $el('.review-card--reviewer-person-info a').text(),
 				rating: Number($el('div.reco-rating.rxs.iblock').count('span')),
 				description: $el('div.text-clamp--inner q').html(),

@@ -11,6 +11,7 @@ const ratingSchema = new Schema({
 		enum: ['trustbucket', 'google', 'booking', 'fresha', 'recose', 'bokadirekt', 'trustpilot'],
 		default: 'trustbucket',
 	},
+	url: String,
 	name: {
 		type: String,
 		required: true,
@@ -27,6 +28,10 @@ const ratingSchema = new Schema({
 	},
 	reply: {
 		text: String,
+	},
+	verified: {
+		type: Boolean,
+		default: false,
 	},
 });
 
