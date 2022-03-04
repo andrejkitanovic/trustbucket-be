@@ -1,15 +1,10 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
-const { usePuppeteer } = require('../../utils/puppeteer');
-const dayjs = require('dayjs');
-const customParseFormat = require('dayjs/plugin/customParseFormat');
 
 const { getIdAndTypeFromAuth } = require('../auth');
-const { updateRatingHandle, changeDownloadingState } = require('../profile');
+const { updateRatingHandle } = require('../profile');
 const Company = require('../../models/company');
-const Rating = require('../../models/rating');
-
-dayjs.extend(customParseFormat);
+const { getCluster } = require('../../utils/puppeteer');
 
 exports.searchBokadirektProfile = async (req, res, next) => {
 	const { q } = req.query;
@@ -84,107 +79,19 @@ exports.saveBokadirektProfile = (req, res, next) => {
 				ratingCount: ratingCountText ? Number(ratingCountText.trim()) : 0,
 				url,
 			};
+			const cluster = await getCluster();
+			await cluster.queue({
+				url: url,
+				type: 'bokadirekt',
+				selectedCompany,
+			});
 			await updateRatingHandle(company, rating);
 
-			downloadBokadirektReviewsHandle(selectedCompany, url);
+			// downloadBokadirektReviewsHandle(selectedCompany, url);
+
 			res.json(rating);
 		} catch (err) {
 			next(err);
 		}
 	})();
-};
-
-exports.loadBokadirektReviews = (req, res, next) => {
-	const url = req.body.url;
-
-	(async function () {
-		try {
-			if (!url || !url.includes('www.bokadirekt.se/places/')) {
-				const error = new Error('Not Valid URL!');
-				error.statusCode = 422;
-				next(error);
-			}
-
-			const auth = getIdAndTypeFromAuth(req, res, next);
-			if (!auth) {
-				const error = new Error('Not Authorized!');
-				error.statusCode = 401;
-				next(error);
-			}
-			const { selectedCompany } = auth;
-
-			const items = await downloadBokadirektReviewsHandle(selectedCompany, url, true);
-
-			res.json({
-				count: items.length,
-				data: items,
-			});
-		} catch (err) {
-			next(err);
-		}
-	})();
-};
-
-const downloadBokadirektReviewsHandle = async (selectedCompany, url, load) => {
-	let company, page;
-
-	try {
-		if (!load) {
-			company = await Company.findById(selectedCompany);
-			await changeDownloadingState(company, 'bokadirekt', true);
-		}
-
-		page = await usePuppeteer(url, { enableResource: ['image'] });
-		await page.click('button.view-all-reviews');
-		await page.waitForNetworkIdle();
-
-		const loadMore = async () => {
-			await page.click('.modal-content button.view-all-reviews');
-			await page.waitForNetworkIdle();
-
-			if (await page.$('.modal-content button.view-all-reviews')) {
-				await loadMore();
-			}
-		};
-		if (await page.$('.modal-content button.view-all-reviews')) {
-			await loadMore();
-		}
-
-		const result = await page.content();
-
-		const $ = cheerio.load(result);
-
-		const items = [];
-		await $('.modal-content div[itemprop=review]').map((index, el) => {
-			const $el = cheerio.load(el);
-
-			const object = {
-				company: selectedCompany,
-				type: 'bokadirekt',
-				url,
-				name: $el('span[itemprop=name]').text(),
-				rating: Number($el('meta[itemprop=ratingValue]').attr('content')),
-				description: $el('div.review-text').text(),
-				date: dayjs($el('time[datetime]').attr('datetime'), 'YYYY-MM-DD'),
-			};
-
-			items.push(object);
-		});
-
-		if (!load) {
-			await Rating.insertMany(items);
-		}
-
-		return items;
-	} catch (err) {
-		console.log(err);
-	} finally {
-		if (!load && company) {
-			company = await Company.findById(selectedCompany);
-			await changeDownloadingState(company, 'bokadirekt', false);
-		}
-		if (page) {
-			await page.close();
-		}
-	}
 };

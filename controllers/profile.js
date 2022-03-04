@@ -5,6 +5,7 @@ const User = require('../models/user');
 
 exports.changeDownloadingState = async (company, type, state) => {
 	try {
+		console.log('change downloading state', type, state);
 		const ratings = company.ratings;
 
 		let updatedRatings = ratings.map((single) => {
