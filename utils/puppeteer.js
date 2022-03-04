@@ -14,7 +14,7 @@ const Rating = require('../models/rating');
 // let blockedResourceTypes = ['image', 'stylesheet', 'font'];
 // let blockedNetworks = ['analytics', 'hotjar'];
 const options = {
-	// headless: false,
+	headless: false,
 	args: [
 		'--autoplay-policy=user-gesture-required',
 		'--disable-background-networking',
@@ -86,6 +86,13 @@ exports.getCluster = async () => {
 				break;
 			case 'bokadirekt':
 				items = await getBokadirektReviews({
+					page,
+					url,
+					selectedCompany,
+				});
+				break;
+			case 'fresha':
+				items = await getFreshaReviews({
 					page,
 					url,
 					selectedCompany,
@@ -217,6 +224,50 @@ const getBokadirektReviews = async ({ page, url, selectedCompany }) => {
 				rating: Number($el('meta[itemprop=ratingValue]').attr('content')),
 				description: $el('div.review-text').text(),
 				date: dayjs($el('time[datetime]').attr('datetime'), 'YYYY-MM-DD'),
+			};
+
+			items.push(object);
+		});
+
+		return items;
+	} catch (err) {
+		console.log(err);
+		return [];
+	}
+};
+
+const getFreshaReviews = async ({ page, url, selectedCompany }) => {
+	try {
+		const loadMore = async () => {
+			await page.click('div[data-qa=reviews-list] button');
+			await page.waitForNetworkIdle();
+
+			if (await page.$('div[data-qa=reviews-list] button')) {
+				await loadMore();
+			}
+		};
+		if (await page.$('div[data-qa=reviews-list] button')) {
+			await loadMore();
+		}
+
+		const result = await page.content();
+		const $ = cheerio.load(result);
+
+		const items = [];
+		await $('div[data-qa=reviews-list] li').map((index, el) => {
+			const $el = cheerio.load(el);
+
+			$el.prototype.count = function (selector) {
+				return this.find(selector).length;
+			};
+			const object = {
+				company: selectedCompany,
+				type: 'fresha',
+				url,
+				name: $el('p[data-qa=review-user-name]').text(),
+				rating: Number($el('div[data-qa=review-rating]').count('div[type=selected]')),
+				description: $el('p[class*=StyledParagraph]').text(),
+				date: dayjs($el('p[data-qa=review-appt-date]').text(), 'MMM D, YYYY'),
 			};
 
 			items.push(object);

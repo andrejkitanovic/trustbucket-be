@@ -14,7 +14,7 @@ router.get('/stats', ratingsController.stats);
 router.post('/filter', ratingsController.filterRatings);
 router.delete('/', ratingsController.deleteRating);
 
-//GOOGLE
+//GOOGLE - DONE
 router.get('/google/search', googleRatingController.getGoogleProfile);
 router.post('/google', googleRatingController.saveGoogleRating);
 
@@ -22,7 +22,7 @@ router.post('/google', googleRatingController.saveGoogleRating);
 router.get('/trustpilot/search', trustpilotController.searchTrustpilotProfile);
 router.post('/trustpilot', trustpilotController.saveTrustpilotProfile);
 
-//FRESHA
+//FRESHA - DONE
 router.get('/fresha/search', freshaRatingController.searchFreshaProfile);
 router.post('/fresha', freshaRatingController.saveFreshaProfile);
 
@@ -34,7 +34,7 @@ router.post('/booking', bookingRatingController.saveBookingProfile);
 router.get('/recose/search', recoseRatingController.searchRecoseProfile);
 router.post('/recose', recoseRatingController.saveRecoseProfile);
 
-//BOKADIREKT
+//BOKADIREKT - DONE
 router.get('/bokadirekt/search', bokadirektController.searchBokadirektProfile);
 router.post('/bokadirekt', bokadirektController.saveBokadirektProfile);
 
