@@ -59,11 +59,15 @@ const options = {
 let cluster;
 exports.getCluster = async () => {
 	if (!cluster) {
-		console.log('[Cluster] Launch');
 		cluster = await Cluster.launch({
 			concurrency: Cluster.CONCURRENCY_CONTEXT,
 			maxConcurrency: 1,
 			puppeteerOptions: options,
+			timeout: 10 * 60 * 1000,
+			retryLimit: 2,
+			retryDelay: 1000,
+			sameDomainDelay: 3000,
+			workerCreationDelay: 100,
 			monitor: true,
 		});
 	}
@@ -77,6 +81,7 @@ exports.getCluster = async () => {
 		await page.goto(url);
 
 		let items;
+
 		switch (type) {
 			case 'google':
 				items = await getGoogleReviews({

@@ -84,10 +84,6 @@ exports.saveTrustpilotProfile = (req, res, next) => {
 			res.json(rating);
 		} catch (err) {
 			next(err);
-		} finally {
-			if (page) {
-				await page.close();
-			}
 		}
 	})();
 };
