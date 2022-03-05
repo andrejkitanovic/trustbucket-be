@@ -1,6 +1,6 @@
-const rp = require('request-promise');
 const cheerio = require('cheerio');
 
+const { useRp } = require('../../utils/request-promise');
 const { getIdAndTypeFromAuth } = require('../auth');
 const { updateRatingHandle } = require('../profile');
 const Company = require('../../models/company');
@@ -18,7 +18,7 @@ exports.searchFreshaProfile = (req, res, next) => {
 				next(error);
 			}
 
-			const result = await rp(url);
+			const result = await useRp(url);
 			const $ = cheerio.load(result);
 			const json = await JSON.parse($('script[type="application/ld+json"]').html());
 
@@ -57,7 +57,7 @@ exports.saveFreshaProfile = (req, res, next) => {
 			const { selectedCompany } = auth;
 			const company = await Company.findById(selectedCompany);
 
-			const result = await rp(url);
+			const result = await useRp(url);
 			const $ = cheerio.load(result);
 			const json = await JSON.parse($('script[type="application/ld+json"]').html());
 

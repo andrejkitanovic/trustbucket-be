@@ -18,7 +18,7 @@ router.delete('/', ratingsController.deleteRating);
 router.get('/google/search', googleRatingController.getGoogleProfile);
 router.post('/google', googleRatingController.saveGoogleRating);
 
-//TRUSTPILOT
+//TRUSTPILOT - DONE
 router.get('/trustpilot/search', trustpilotController.searchTrustpilotProfile);
 router.post('/trustpilot', trustpilotController.saveTrustpilotProfile);
 
@@ -30,7 +30,7 @@ router.post('/fresha', freshaRatingController.saveFreshaProfile);
 router.get('/booking/search', bookingRatingController.searchBookingProfile);
 router.post('/booking', bookingRatingController.saveBookingProfile);
 
-//RECOSE
+//RECOSE - DONE
 router.get('/recose/search', recoseRatingController.searchRecoseProfile);
 router.post('/recose', recoseRatingController.saveRecoseProfile);
 
