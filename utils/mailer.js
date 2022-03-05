@@ -1,27 +1,37 @@
-const nodemailer = require('nodemailer');
+const mailjet = require('node-mailjet').connect(process.env.MJ_APIKEY_PUBLIC, process.env.MJ_APIKEY_PRIVATE);
 
-exports.sendEmail = async (data) => {
-	const testAccount = await nodemailer.createTestAccount();
+exports.sendEmail = async (template, recievers, campaignId) => {
+	try {
+		const { subject, content } = template;
+		const { body: result } = await mailjet.post('send', { version: 'v3.1' }).request({
+			Messages: recievers.map((reciever) => {
+				let personalizedContent = content;
+				personalizedContent = personalizedContent.replace('{firstName}', reciever.firstName);
+				personalizedContent = personalizedContent.replace('{lastName}', reciever.lastName);
+				personalizedContent = personalizedContent.replace('{email}', reciever.email);
+				return {
+					From: {
+						// Email: 'noreply.invitations@trustbucket.io',
+						Email: 'kitanovicandrej213@gmail.com',
+						Name: 'Trustbucket IO',
+					},
+					To: [
+						{
+							Email: reciever.email,
+							Name: `${reciever.firstname} ${reciever.lastname}`,
+						},
+					],
+					Subject: subject,
+					HTMLPart: personalizedContent,
+					CustomCampaign: campaignId,
+				};
+			}),
+		});
 
-	const transporter = nodemailer.createTransport({
-		host: 'smtp.ethereal.email',
-		port: 587,
-		secure: false, // true for 465, false for other ports
-		auth: {
-			user: testAccount.user, // generated ethereal user
-			pass: testAccount.pass, // generated ethereal password
-		},
-	});
+		return 'Successfully sent!';
+	} catch (err) {
+		console.log(err);
 
-	const info = await transporter.sendMail({
-		from: '"Fred Foo 👻" <foo@example.com>', // sender address
-		to: 'kitanovicandrej213@gmail.com', // list of receivers
-		subject: 'Hello ✔', // Subject line
-		text: 'Hello world?', // plain text body
-		html: '<b>Hello world?</b>', // html body
-	});
-
-	console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-
-	return true;
+		return 'Error while sending!';
+	}
 };

@@ -14,9 +14,9 @@ const campaignSchema = new Schema({
 		type: Boolean,
 		default: false,
 	},
-	users: [
+	recievers: [
 		{
-			firstname: {
+			firstName: {
 				type: String,
 				required: true,
 			},
