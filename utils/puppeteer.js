@@ -61,14 +61,13 @@ exports.getCluster = async () => {
 	if (!cluster) {
 		cluster = await Cluster.launch({
 			concurrency: Cluster.CONCURRENCY_CONTEXT,
-			maxConcurrency: 1,
+			maxConcurrency: 5,
 			puppeteerOptions: options,
 			timeout: 10 * 60 * 1000,
 			retryLimit: 2,
 			retryDelay: 1000,
 			sameDomainDelay: 3000,
 			workerCreationDelay: 100,
-			monitor: true,
 		});
 	}
 
