@@ -1,9 +1,9 @@
 const { Cluster } = require('puppeteer-cluster');
 const cheerio = require('cheerio');
-const dayjs = require('dayjs');
 
 // HELPERS:
 const { removeAfter } = require('../helpers/utils');
+const dayjs = require('./dayjs').dayjsParser();
 const { reverseFromNow } = require('./dayjs');
 
 // CONTROLLERS:

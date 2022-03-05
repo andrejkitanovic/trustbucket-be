@@ -17,7 +17,7 @@ exports.reverseFromNow = (string) => {
 
 	if (string.includes('minutes ago')) {
 		return dayjs().subtract(value, 'minute');
-	} else if(string.includes('hours ago')) {
+	} else if (string.includes('hours ago')) {
 		return dayjs().subtract(value, 'hour');
 	} else if (string.includes('days ago')) {
 		return dayjs().subtract(value, 'day');

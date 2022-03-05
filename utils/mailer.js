@@ -12,9 +12,9 @@ exports.sendEmail = async (template, recievers, campaignId) => {
 		const { body: result } = await mailjet.post('send', { version: 'v3.1' }).request({
 			Messages: recievers.map((reciever) => {
 				let personalizedContent = content;
-				personalizedContent = personalizedContent.replace('{firstName}', reciever.firstName);
-				personalizedContent = personalizedContent.replace('{lastName}', reciever.lastName);
-				personalizedContent = personalizedContent.replace('{email}', reciever.email);
+				personalizedContent = personalizedContent.replace(/{firstName}/g, reciever.firstName);
+				personalizedContent = personalizedContent.replace(/{lastName}/g, reciever.lastName);
+				personalizedContent = personalizedContent.replace(/{email}/g, reciever.email);
 				return {
 					From: {
 						// Email: 'noreply.invitations@trustbucket.io',
