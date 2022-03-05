@@ -3,9 +3,8 @@ const campaignController = require('../controllers/campaign');
 
 const router = express.Router();
 
-// router.get('/', emailTemplateController.getEmailTemplates);
+router.get('/', campaignController.getCampaigns);
+router.get('/stats', campaignController.getCampaignStats);
 router.post('/', campaignController.postCampaign);
-// router.put('/', emailTemplateController.updateEmailTemplate);
-// router.delete('/', emailTemplateController.deleteEmailTemplate);
 
 module.exports = router;

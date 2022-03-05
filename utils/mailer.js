@@ -1,5 +1,11 @@
 const mailjet = require('node-mailjet').connect(process.env.MJ_APIKEY_PUBLIC, process.env.MJ_APIKEY_PRIVATE);
 
+exports.getCampaignOverview = async () => {
+	const { body: result } = await mailjet.get('campaignoverview').request();
+
+	return result.Data;
+};
+
 exports.sendEmail = async (template, recievers, campaignId) => {
 	try {
 		const { subject, content } = template;
@@ -21,6 +27,9 @@ exports.sendEmail = async (template, recievers, campaignId) => {
 							Name: `${reciever.firstname} ${reciever.lastname}`,
 						},
 					],
+					ReplyTo: {
+						Email: 'kitanovicandrej213@gmail.com',
+					},
 					Subject: subject,
 					HTMLPart: personalizedContent,
 					CustomCampaign: campaignId,
@@ -28,10 +37,9 @@ exports.sendEmail = async (template, recievers, campaignId) => {
 			}),
 		});
 
-		return 'Successfully sent!';
+		return result.Data;
 	} catch (err) {
 		console.log(err);
-
 		return 'Error while sending!';
 	}
 };
