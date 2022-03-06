@@ -66,14 +66,13 @@ exports.saveFreshaProfile = (req, res, next) => {
 				ratingCount: json.aggregateRating.reviewCount,
 				url,
 			};
+			await updateRatingHandle(selectedCompany, rating);
 			const cluster = await getCluster();
 			await cluster.queue({
 				url: url + '/reviews',
 				type: 'fresha',
 				selectedCompany,
 			});
-
-			await updateRatingHandle(selectedCompany, rating);
 
 			res.json(rating);
 		} catch (err) {

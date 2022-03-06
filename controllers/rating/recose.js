@@ -74,13 +74,14 @@ exports.saveRecoseProfile = (req, res, next) => {
 				ratingCount: json.aggregateRating.ratingCount,
 				url,
 			};
+			await updateRatingHandle(selectedCompany, rating);
 			const cluster = await getCluster();
 			await cluster.queue({
 				url: url,
 				type: 'recose',
 				selectedCompany,
 			});
-			await updateRatingHandle(selectedCompany, rating);
+		
 
 			// downloadRecoseReviewsHandle(selectedCompany, url);
 			res.json(rating);

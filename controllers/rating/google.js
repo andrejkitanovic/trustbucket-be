@@ -54,6 +54,7 @@ exports.saveGoogleRating = (req, res, next) => {
 				ratingCount: data.result.user_ratings_total,
 				url: data.result.url,
 			};
+			await updateRatingHandle(selectedCompany, rating);
 			const cluster = await getCluster();
 			await cluster.queue({
 				url: data.result.url,
@@ -61,7 +62,7 @@ exports.saveGoogleRating = (req, res, next) => {
 				selectedCompany,
 			});
 
-			await updateRatingHandle(selectedCompany, rating);
+	
 			await addAddress(
 				{ name: data.result.formatted_address, position: data.result.geometry.location },
 				selectedCompany

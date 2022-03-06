@@ -78,13 +78,13 @@ exports.saveBokadirektProfile = (req, res, next) => {
 				ratingCount: ratingCountText ? Number(ratingCountText.trim()) : 0,
 				url,
 			};
+			await updateRatingHandle(selectedCompany, rating);
 			const cluster = await getCluster();
 			await cluster.queue({
 				url: url,
 				type: 'bokadirekt',
 				selectedCompany,
 			});
-			await updateRatingHandle(selectedCompany, rating);
 
 			// downloadBokadirektReviewsHandle(selectedCompany, url);
 

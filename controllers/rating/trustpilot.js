@@ -71,13 +71,14 @@ exports.saveTrustpilotProfile = (req, res, next) => {
 				ratingCount: Number(json[0].aggregateRating.reviewCount),
 				url,
 			};
+			await updateRatingHandle(selectedCompany, rating);
 			const cluster = await getCluster();
 			await cluster.queue({
 				url: url,
 				type: 'trustpilot',
 				selectedCompany,
 			});
-			await updateRatingHandle(selectedCompany, rating);
+
 
 			// downloadTrustpilotReviewsHandle(selectedCompany, url);
 			res.json(rating);
