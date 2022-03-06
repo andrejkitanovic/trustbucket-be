@@ -36,6 +36,8 @@ exports.searchAirbnbProfile = (req, res, next) => {
 			const $ = cheerio.load(result);
 			await browser.close();
 
+			console.log($('div[data-plugin-in-point-id=TITLE_DEFAULT]').html());
+
 			const object = {
 				title: $('h1').text(),
 				image: $('img#FMP-target').attr('src'),
