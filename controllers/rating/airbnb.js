@@ -14,7 +14,7 @@ exports.searchAirbnbProfile = (req, res, next) => {
 
 	(async function () {
 		try {
-			if (!url || !url.includes('airbnb')) {
+			if (!url || !url.includes('www.airbnb.com/rooms')) {
 				const error = new Error('Not Valid URL!');
 				error.statusCode = 422;
 				next(error);
@@ -45,6 +45,12 @@ exports.searchAirbnbProfile = (req, res, next) => {
 				link: url,
 			};
 
+			const button = $('button[aria-label*=Rated]').attr('aria-label');
+			if (button) {
+				console.log('rating', button.split(' ')[1]);
+				console.log('total', button.split(' ')[6]);
+			}
+
 			res.json(object);
 		} catch (err) {
 			next(err);
@@ -57,7 +63,7 @@ exports.saveAirbnbProfile = (req, res, next) => {
 
 	(async function () {
 		try {
-			if (!url || !url.includes('airbnb')) {
+			if (!url || !url.includes('www.airbnb.com/')) {
 				const error = new Error('Not Valid URL!');
 				error.statusCode = 422;
 				next(error);
