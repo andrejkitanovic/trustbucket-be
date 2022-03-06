@@ -5,12 +5,16 @@ const { getIdAndTypeFromAuth } = require('../auth');
 const { updateRatingHandle } = require('../profile');
 const { getCluster } = require('../../utils/puppeteer');
 
-exports.searchTrustpilotProfile = (req, res, next) => {
+const puppeteer = require('puppeteer-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+puppeteer.use(StealthPlugin());
+
+exports.searchAirbnbProfile = (req, res, next) => {
 	const { q: url } = req.query;
 
 	(async function () {
 		try {
-			if (!url || !url.includes('trustpilot.com/review/')) {
+			if (!url || !url.includes('airbnb')) {
 				const error = new Error('Not Valid URL!');
 				error.statusCode = 422;
 				next(error);
@@ -23,14 +27,19 @@ exports.searchTrustpilotProfile = (req, res, next) => {
 				next(error);
 			}
 
-			const result = await useRp(url);
+			const browser = await puppeteer.launch();
+			const page = await browser.newPage();
+			await page.goto(url);
+			await page.waitForNetworkIdle();
+			const result = await page.content();
+
 			const $ = cheerio.load(result);
-			const json = await JSON.parse($('script[type="application/ld+json"]').html());
+			await browser.close();
 
 			const object = {
-				title: json[1].name,
-				// image: json.image,
-				address: json[0].address && json[0].address.streetAddress,
+				title: $('h1').text(),
+				image: $('img#FMP-target').attr('src'),
+				address: $('div[data-plugin-in-point-id=TITLE_DEFAULT] button[type=button] span').text(),
 				link: url,
 			};
 
@@ -41,12 +50,12 @@ exports.searchTrustpilotProfile = (req, res, next) => {
 	})();
 };
 
-exports.saveTrustpilotProfile = (req, res, next) => {
+exports.saveAirbnbProfile = (req, res, next) => {
 	const url = req.body.url;
 
 	(async function () {
 		try {
-			if (!url || !url.includes('trustpilot.com/review/')) {
+			if (!url || !url.includes('airbnb')) {
 				const error = new Error('Not Valid URL!');
 				error.statusCode = 422;
 				next(error);
@@ -60,26 +69,24 @@ exports.saveTrustpilotProfile = (req, res, next) => {
 			}
 			const { selectedCompany } = auth;
 
-			const result = await useRp(url);
-			const $ = cheerio.load(result);
-			const json = await JSON.parse($('script[type="application/ld+json"]').html());
+			// const result = await useRp(url);
+			// const $ = cheerio.load(result);
+			// const json = await JSON.parse($('script[type="application/ld+json"]').html());
 
 			const rating = {
-				type: 'trustpilot',
-				rating: Number(json[0].aggregateRating.ratingValue),
-				ratingCount: Number(json[0].aggregateRating.reviewCount),
+				type: 'airbnb',
+				// rating: Number(json[0].aggregateRating.ratingValue),
+				// ratingCount: Number(json[0].aggregateRating.reviewCount),
 				url,
 			};
-			await updateRatingHandle(selectedCompany, rating);
+			// await updateRatingHandle(selectedCompany, rating);
 			const cluster = await getCluster();
 			await cluster.queue({
 				url: url,
-				type: 'trustpilot',
+				type: 'airbnb',
 				selectedCompany,
 			});
 
-
-			// downloadTrustpilotReviewsHandle(selectedCompany, url);
 			res.json(rating);
 		} catch (err) {
 			next(err);

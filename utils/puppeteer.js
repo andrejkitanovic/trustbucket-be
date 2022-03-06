@@ -1,3 +1,6 @@
+const vanillaPuppeteer = require('puppeteer');
+const { addExtra } = require('puppeteer-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const { Cluster } = require('puppeteer-cluster');
 const cheerio = require('cheerio');
 
@@ -51,7 +54,7 @@ const options = {
 		'--use-gl=swiftshader',
 		'--use-mock-keychain',
 		'--disable-accelerated-2d-canvas',
-		'--user-agent="Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"',
+		// '--user-agent="Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"',
 	],
 	// devtools:true
 };
@@ -59,7 +62,11 @@ const options = {
 let cluster;
 exports.getCluster = async () => {
 	if (!cluster) {
+		const puppeteer = addExtra(vanillaPuppeteer);
+		puppeteer.use(StealthPlugin());
+
 		cluster = await Cluster.launch({
+			puppeteer,
 			concurrency: Cluster.CONCURRENCY_CONTEXT,
 			maxConcurrency: 4,
 			puppeteerOptions: options,
@@ -119,6 +126,13 @@ exports.getCluster = async () => {
 				break;
 			case 'booking':
 				items = await getBookingReviews({
+					page,
+					url,
+					selectedCompany,
+				});
+				break;
+			case 'airbnb':
+				items = await getAirbnbReviews({
 					page,
 					url,
 					selectedCompany,
@@ -503,5 +517,77 @@ const getBookingReviews = async ({ page, url, selectedCompany }) => {
 	} catch (err) {
 		console.log(err);
 		return [];
+	}
+};
+
+const getAirbnbReviews = async ({ page, url, selectedCompany }) => {
+	try {
+		await page.waitForTimeout(5000);
+		// await page.click('a.toggle_review');
+		// await page.waitForNetworkIdle();
+
+		// const items = [];
+		// let result = await page.content();
+
+		// const loadReviews = async (items, result) => {
+		// 	const $ = cheerio.load(result);
+
+		// 	await $('div[itemprop=review]').map((index, el) => {
+		// 		const $el = cheerio.load(el);
+
+		// 		const date = $el('.c-review-block__right .c-review-block__date').text().replace('Reviewed:', '').trim();
+
+		// 		let format = '';
+		// 		if (dayjs(date, 'MMMM D, YYYY').isValid()) {
+		// 			format = 'MMMM D, YYYY';
+		// 		} else if (dayjs(date, 'D MMMM YYYY').isValid()) {
+		// 			format = 'D MMMM YYYY';
+		// 		} else if (dayjs(date, 'D. MMMM YYYY.').isValid()) {
+		// 			format = 'D. MMMM YYYY.';
+		// 		}
+
+		// 		$el.prototype.exists = function (selector) {
+		// 			return this.find(selector).length > 0;
+		// 		};
+		// 		const object = {
+		// 			company: selectedCompany,
+		// 			type: 'booking',
+		// 			url,
+		// 			name: $el('.bui-avatar-block__title').text(),
+		// 			rating: Number($el('.bui-review-score__badge').text().trim().replace(',', '.')) / 2,
+		// 			title: $el('.c-review-block__title').text().trim(),
+		// 			description: $el('.c-review__body').text().trim(),
+		// 			date: dayjs(date, format),
+		// 		};
+
+		// 		if ($el(el).exists('.c-review-block__response')) {
+		// 			object.reply = { text: $el('.c-review-block__response__inner').text() };
+		// 		}
+
+		// 		items.push(object);
+		// 	});
+		// };
+
+		// await loadReviews(items, result);
+
+		// const loadMore = async () => {
+		// 	await page.click('.bui-pagination__next-arrow');
+		// 	await page.waitForNetworkIdle();
+
+		// 	result = await page.content();
+		// 	await loadReviews(items, result);
+
+		// 	if (await page.$('.bui-pagination__next-arrow:not(.bui-pagination__item--disabled)')) {
+		// 		await loadMore();
+		// 	}
+		// };
+		// if (await page.$('.bui-pagination__next-arrow:not(.bui-pagination__item--disabled)')) {
+		// 	await loadMore();
+		// }
+
+		// return items;
+	} catch (err) {
+		// console.log(err);
+		// return [];
 	}
 };

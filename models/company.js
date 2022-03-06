@@ -39,7 +39,7 @@ const companySchema = new Schema(
 			{
 				type: {
 					type: String,
-					enum: ['overall', 'google', 'booking', 'fresha', 'recose', 'bokadirekt', 'trustpilot'],
+					enum: ['overall', 'google', 'airbnb', 'booking', 'fresha', 'recose', 'bokadirekt', 'trustpilot'],
 					default: 'overall',
 				},
 				rating: {

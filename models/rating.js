@@ -8,7 +8,7 @@ const ratingSchema = new Schema({
 	},
 	type: {
 		type: String,
-		enum: ['trustbucket', 'google', 'booking', 'fresha', 'recose', 'bokadirekt', 'trustpilot'],
+		enum: ['trustbucket', 'google', 'airbnb', 'booking', 'fresha', 'recose', 'bokadirekt', 'trustpilot'],
 		default: 'trustbucket',
 	},
 	url: String,

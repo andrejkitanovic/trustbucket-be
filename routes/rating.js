@@ -6,6 +6,7 @@ const recoseRatingController = require('../controllers/rating/recose');
 const bookingRatingController = require('../controllers/rating/booking');
 const trustpilotController = require('../controllers/rating/trustpilot');
 const bokadirektController = require('../controllers/rating/bokadirekt');
+const airbnbController = require('../controllers/rating/airbnb')
 
 const router = express.Router();
 
@@ -37,5 +38,9 @@ router.post('/recose', recoseRatingController.saveRecoseProfile);
 //BOKADIREKT - DONE
 router.get('/bokadirekt/search', bokadirektController.searchBokadirektProfile);
 router.post('/bokadirekt', bokadirektController.saveBokadirektProfile);
+
+//AIRBNB
+router.get('/airbnb/search', airbnbController.searchAirbnbProfile);
+router.post('/airbnb', airbnbController.saveAirbnbProfile);
 
 module.exports = router;
