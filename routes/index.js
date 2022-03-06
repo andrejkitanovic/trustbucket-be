@@ -7,6 +7,7 @@ module.exports = (app) => {
 	const companyRoutes = require('./company');
 	const emailTemplateRoutes = require('./emailTemplate');
 	const campaignRoutes = require('./campaign');
+	const invitationSettingsRoutes = require('./invitationSettings');
 
 	// API routes
 	app.use('/api/auth', authRoutes);
@@ -17,4 +18,5 @@ module.exports = (app) => {
 	app.use('/api/company', companyRoutes);
 	app.use('/api/email-template', emailTemplateRoutes);
 	app.use('/api/campaign', campaignRoutes);
+	app.use('/api/invitation-settings', invitationSettingsRoutes)
 };

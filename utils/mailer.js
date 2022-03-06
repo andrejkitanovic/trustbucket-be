@@ -24,7 +24,7 @@ exports.sendEmail = async (template, recievers, campaignId) => {
 					To: [
 						{
 							Email: reciever.email,
-							Name: `${reciever.firstname} ${reciever.lastname}`,
+							Name: `${reciever.firstName} ${reciever.lastName}`,
 						},
 					],
 					ReplyTo: {

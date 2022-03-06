@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Company = require('../models/company');
+const InvitationSettings = require('../models/invitationSettings');
 
 const getIdAndTypeFromAuth = (req, res, next) => {
 	if (req.headers && req.headers.authorization) {
@@ -190,12 +191,18 @@ exports.register = (req, res, next) => {
 				websiteURL,
 				ratings: [{ type: 'overall', rating: null, ratingCount: 0 }],
 			});
+			const invitationSettingsObject = new InvitationSettings({
+				company: companyObject._id,
+				senderName: companyName,
+				replyTo: email,
+			});
 
 			userObject.selectedCompany = companyObject._id;
 			userObject.companies = [companyObject._id];
 
 			const userCreated = await userObject.save();
 			const companyCreated = await companyObject.save();
+			await invitationSettingsObject.save();
 
 			if (userCreated && companyCreated) {
 				await userObject.populate('selectedCompany', '_id name websiteURL ratings');
