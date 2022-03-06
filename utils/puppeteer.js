@@ -524,8 +524,8 @@ const getBookingReviews = async ({ page, url, selectedCompany }) => {
 
 const getAirbnbReviews = async ({ page, url, selectedCompany }) => {
 	try {
-		// await page.click('a.toggle_review');
-		// await page.waitForNetworkIdle();
+		await page.waitForNetworkIdle();
+		await page.click('a[data-testid=pdp-show-all-reviews-button]');
 
 		// const items = [];
 		// let result = await page.content();
@@ -586,9 +586,9 @@ const getAirbnbReviews = async ({ page, url, selectedCompany }) => {
 		// 	await loadMore();
 		// }
 
-		// return items;
+		return items;
 	} catch (err) {
-		// console.log(err);
-		// return [];
+		console.log(err);
+		return [];
 	}
 };
