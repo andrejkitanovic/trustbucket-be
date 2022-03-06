@@ -36,20 +36,16 @@ exports.searchAirbnbProfile = (req, res, next) => {
 			const $ = cheerio.load(result);
 			await browser.close();
 
-			console.log($('div[data-plugin-in-point-id=TITLE_DEFAULT]').html());
+			const button = $('button[aria-label*=Rated]').attr('aria-label');
 
 			const object = {
 				title: $('h1').text(),
 				image: $('img#FMP-target').attr('src'),
+				rating: button.split(' ')[1],
+				ratingCount: button.split(' ')[6],
 				address: $('div[data-plugin-in-point-id=TITLE_DEFAULT] button[type=button] span').text(),
 				link: url,
 			};
-
-			const button = $('button[aria-label*=Rated]').attr('aria-label');
-			if (button) {
-				console.log('rating', button.split(' ')[1]);
-				console.log('total', button.split(' ')[6]);
-			}
 
 			res.json(object);
 		} catch (err) {
@@ -77,17 +73,24 @@ exports.saveAirbnbProfile = (req, res, next) => {
 			}
 			const { selectedCompany } = auth;
 
-			// const result = await useRp(url);
-			// const $ = cheerio.load(result);
-			// const json = await JSON.parse($('script[type="application/ld+json"]').html());
+			const browser = await puppeteer.launch(options);
+			const page = await browser.newPage();
+			await page.goto(url);
+			await page.waitForNetworkIdle();
+			const result = await page.content();
+
+			const $ = cheerio.load(result);
+			await browser.close();
+
+			const button = $('button[aria-label*=Rated]').attr('aria-label');
 
 			const rating = {
 				type: 'airbnb',
-				// rating: Number(json[0].aggregateRating.ratingValue),
-				// ratingCount: Number(json[0].aggregateRating.reviewCount),
+				rating: Number(button.split(' ')[1]),
+				ratingCount: Number(button.split(' ')[6]),
 				url,
 			};
-			// await updateRatingHandle(selectedCompany, rating);
+			await updateRatingHandle(selectedCompany, rating);
 			const cluster = await getCluster();
 			await cluster.queue({
 				url: url,

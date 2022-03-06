@@ -524,7 +524,6 @@ const getBookingReviews = async ({ page, url, selectedCompany }) => {
 
 const getAirbnbReviews = async ({ page, url, selectedCompany }) => {
 	try {
-		await page.waitForTimeout(5000);
 		// await page.click('a.toggle_review');
 		// await page.waitForNetworkIdle();
 
