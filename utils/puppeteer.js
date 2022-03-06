@@ -59,6 +59,8 @@ const options = {
 	// devtools:true
 };
 
+exports.options = options;
+
 let cluster;
 exports.getCluster = async () => {
 	if (!cluster) {

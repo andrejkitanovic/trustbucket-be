@@ -3,7 +3,7 @@ const cheerio = require('cheerio');
 const { useRp } = require('../../utils/request-promise');
 const { getIdAndTypeFromAuth } = require('../auth');
 const { updateRatingHandle } = require('../profile');
-const { getCluster } = require('../../utils/puppeteer');
+const { getCluster, options } = require('../../utils/puppeteer');
 
 const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
@@ -27,7 +27,7 @@ exports.searchAirbnbProfile = (req, res, next) => {
 				next(error);
 			}
 
-			const browser = await puppeteer.launch();
+			const browser = await puppeteer.launch(options);
 			const page = await browser.newPage();
 			await page.goto(url);
 			await page.waitForNetworkIdle();
