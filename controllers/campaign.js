@@ -38,15 +38,17 @@ exports.getCampaignStats = (req, res, next) => {
 			}
 			const { selectedCompany } = auth;
 
-			const campaigns = await Campaign.find({ company: selectedCompany }).select('id');
+			const campaigns = await Campaign.find({ company: selectedCompany }).select('id recievers');
 			const campaignsId = campaigns.map((campaign) => campaign._id.toString());
+			const campaignsEmails = campaigns.map((campaign) => campaign.recievers.map((reciever) => reciever.email)).flat();
 
 			const allCampaignsOverview = await getCampaignOverview();
 			const result = allCampaignsOverview.filter((campaign) => campaignsId.includes(campaign.Title));
 
 			const stats = {
 				campaignCount: result.length,
-				uniqueCustomersCount: result.reduce((sum, single) => sum + single.DeliveredCount, 0),
+				invitationsCount: result.reduce((sum, single) => sum + single.DeliveredCount, 0),
+				uniqueCustomersCount: [...new Set(campaignsEmails)].length,
 				openCount: result.reduce((sum, single) => sum + single.OpenedCount, 0),
 				clickCount: result.reduce((sum, single) => sum + single.ClickedCount, 0),
 				processCount: result.reduce((sum, single) => sum + single.ProcessedCount, 0),

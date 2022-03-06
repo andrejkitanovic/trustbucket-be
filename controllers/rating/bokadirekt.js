@@ -63,7 +63,6 @@ exports.saveBokadirektProfile = (req, res, next) => {
 				next(error);
 			}
 			const { selectedCompany } = auth;
-			const company = await Company.findById(selectedCompany);
 
 			const result = await useRp(url);
 			const $ = cheerio.load(result);
@@ -85,7 +84,7 @@ exports.saveBokadirektProfile = (req, res, next) => {
 				type: 'bokadirekt',
 				selectedCompany,
 			});
-			await updateRatingHandle(company, rating);
+			await updateRatingHandle(selectedCompany, rating);
 
 			// downloadBokadirektReviewsHandle(selectedCompany, url);
 

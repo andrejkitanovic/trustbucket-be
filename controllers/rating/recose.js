@@ -62,7 +62,6 @@ exports.saveRecoseProfile = (req, res, next) => {
 				next(error);
 			}
 			const { selectedCompany } = auth;
-			const company = await Company.findById(selectedCompany);
 
 			const result = await useRp(url);
 			const $ = cheerio.load(result);
@@ -81,7 +80,7 @@ exports.saveRecoseProfile = (req, res, next) => {
 				type: 'recose',
 				selectedCompany,
 			});
-			await updateRatingHandle(company, rating);
+			await updateRatingHandle(selectedCompany, rating);
 
 			// downloadRecoseReviewsHandle(selectedCompany, url);
 			res.json(rating);

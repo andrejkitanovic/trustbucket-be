@@ -60,7 +60,6 @@ exports.saveTrustpilotProfile = (req, res, next) => {
 				next(error);
 			}
 			const { selectedCompany } = auth;
-			const company = await Company.findById(selectedCompany);
 
 			const result = await useRp(url);
 			const $ = cheerio.load(result);
@@ -78,7 +77,7 @@ exports.saveTrustpilotProfile = (req, res, next) => {
 				type: 'trustpilot',
 				selectedCompany,
 			});
-			await updateRatingHandle(company, rating);
+			await updateRatingHandle(selectedCompany, rating);
 
 			// downloadTrustpilotReviewsHandle(selectedCompany, url);
 			res.json(rating);

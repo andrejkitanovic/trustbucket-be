@@ -1,7 +1,6 @@
 const { getIdAndTypeFromAuth } = require('./auth');
 const User = require('../models/user');
-
-// HANDLES
+const Company = require('../models/company')
 
 exports.changeDownloadingState = async (company, type, state) => {
 	try {
@@ -24,8 +23,9 @@ exports.changeDownloadingState = async (company, type, state) => {
 	}
 };
 
-exports.updateRatingHandle = async (company, rating) => {
+exports.updateRatingHandle = async (selectedCompany, rating) => {
 	try {
+		const company = await Company.findById(selectedCompany)
 		const ratings = company.ratings;
 		const { type } = rating;
 

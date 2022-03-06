@@ -61,10 +61,10 @@ exports.getCluster = async () => {
 	if (!cluster) {
 		cluster = await Cluster.launch({
 			concurrency: Cluster.CONCURRENCY_CONTEXT,
-			maxConcurrency: 5,
+			maxConcurrency: 4,
 			puppeteerOptions: options,
 			timeout: 10 * 60 * 1000,
-			retryLimit: 2,
+			retryLimit: 1,
 			retryDelay: 1000,
 			sameDomainDelay: 3000,
 			workerCreationDelay: 100,
@@ -264,6 +264,7 @@ const getBokadirektReviews = async ({ page, url, selectedCompany }) => {
 
 const getFreshaReviews = async ({ page, url, selectedCompany }) => {
 	try {
+		await page.waitForNetworkIdle();
 		if (await page.$('button[data-qa=cookie-accept-btn]')) {
 			await page.click('button[data-qa=cookie-accept-btn]');
 		}

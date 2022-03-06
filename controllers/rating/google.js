@@ -44,7 +44,6 @@ exports.saveGoogleRating = (req, res, next) => {
 				next(error);
 			}
 			const { selectedCompany } = auth;
-			const company = await Company.findById(selectedCompany);
 
 			const { data } = await axios.get(url);
 
@@ -53,6 +52,7 @@ exports.saveGoogleRating = (req, res, next) => {
 				name: data.result.name,
 				rating: data.result.rating,
 				ratingCount: data.result.user_ratings_total,
+				url: data.result.url,
 			};
 			const cluster = await getCluster();
 			await cluster.queue({
@@ -60,8 +60,8 @@ exports.saveGoogleRating = (req, res, next) => {
 				type: 'google',
 				selectedCompany,
 			});
-			
-			await updateRatingHandle(company, rating);
+
+			await updateRatingHandle(selectedCompany, rating);
 			await addAddress(
 				{ name: data.result.formatted_address, position: data.result.geometry.location },
 				selectedCompany

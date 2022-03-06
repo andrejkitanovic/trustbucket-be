@@ -53,9 +53,7 @@ exports.saveFreshaProfile = (req, res, next) => {
 				error.statusCode = 401;
 				next(error);
 			}
-
 			const { selectedCompany } = auth;
-			const company = await Company.findById(selectedCompany);
 
 			const result = await useRp(url);
 			const $ = cheerio.load(result);
@@ -75,7 +73,7 @@ exports.saveFreshaProfile = (req, res, next) => {
 				selectedCompany,
 			});
 
-			await updateRatingHandle(company, rating);
+			await updateRatingHandle(selectedCompany, rating);
 
 			res.json(rating);
 		} catch (err) {
