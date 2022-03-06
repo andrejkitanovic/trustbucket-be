@@ -63,7 +63,7 @@ exports.getCluster = async () => {
 			concurrency: Cluster.CONCURRENCY_CONTEXT,
 			maxConcurrency: 4,
 			puppeteerOptions: options,
-			timeout: 10 * 60 * 1000,
+			timeout: 30 * 60 * 1000,
 			retryLimit: 1,
 			retryDelay: 1000,
 			sameDomainDelay: 3000,
