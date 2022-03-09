@@ -336,10 +336,6 @@ const getTrustpilotReviews = async ({ page, url, selectedCompany }) => {
 			await page.waitForNetworkIdle();
 		}
 
-		if (await page.$('button[id=onetrust-accept-btn-handler]')) {
-			page.click('button[id=onetrust-accept-btn-handler]');
-		}
-
 		const items = [];
 		let result = await page.content();
 
@@ -372,6 +368,10 @@ const getTrustpilotReviews = async ({ page, url, selectedCompany }) => {
 		};
 
 		await loadReviews(items, result);
+
+		if (await page.$('button[id=onetrust-accept-btn-handler]')) {
+			page.click('button[id=onetrust-accept-btn-handler]');
+		}
 
 		const loadMore = async () => {
 			await page.evaluate(() => {
