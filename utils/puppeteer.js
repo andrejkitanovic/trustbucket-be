@@ -19,41 +19,41 @@ const Rating = require('../models/rating');
 const options = {
 	// headless: false,
 	args: [
-		// '--autoplay-policy=user-gesture-required',
-		// '--disable-background-networking',
-		// '--disable-background-timer-throttling',
-		// '--disable-backgrounding-occluded-windows',
-		// '--disable-breakpad',
-		// '--disable-client-side-phishing-detection',
-		// '--disable-component-update',
-		// '--disable-default-apps',
-		// '--disable-dev-shm-usage',
-		// '--disable-domain-reliability',
-		// '--disable-extensions',
-		// '--disable-features=AudioServiceOutOfProcess',
-		// '--disable-hang-monitor',
-		// '--disable-ipc-flooding-protection',
-		// '--disable-notifications',
-		// '--disable-offer-store-unmasked-wallet-cards',
-		// '--disable-print-preview',
-		// '--disable-prompt-on-repost',
-		// '--disable-renderer-backgrounding',
-		// '--disable-setuid-sandbox',
-		// '--disable-speech-api',
-		// '--disable-sync',
-		// '--disable-gpu',
-		// '--hide-scrollbars',
-		// '--metrics-recording-only',
-		// '--mute-audio',
-		// '--no-default-browser-check',
-		// '--no-first-run',
-		// '--no-pings',
+		'--autoplay-policy=user-gesture-required',
+		'--disable-background-networking',
+		'--disable-background-timer-throttling',
+		'--disable-backgrounding-occluded-windows',
+		'--disable-breakpad',
+		'--disable-client-side-phishing-detection',
+		'--disable-component-update',
+		'--disable-default-apps',
+		'--disable-dev-shm-usage',
+		'--disable-domain-reliability',
+		'--disable-extensions',
+		'--disable-features=AudioServiceOutOfProcess',
+		'--disable-hang-monitor',
+		'--disable-ipc-flooding-protection',
+		'--disable-notifications',
+		'--disable-offer-store-unmasked-wallet-cards',
+		'--disable-print-preview',
+		'--disable-prompt-on-repost',
+		'--disable-renderer-backgrounding',
+		'--disable-setuid-sandbox',
+		'--disable-speech-api',
+		'--disable-sync',
+		'--disable-gpu',
+		'--hide-scrollbars',
+		'--metrics-recording-only',
+		'--mute-audio',
+		'--no-default-browser-check',
+		'--no-first-run',
+		'--no-pings',
 		'--no-sandbox',
-		// '--no-zygote',
-		// '--password-store=basic',
-		// '--use-gl=swiftshader',
-		// '--use-mock-keychain',
-		// '--disable-accelerated-2d-canvas',
+		'--no-zygote',
+		'--password-store=basic',
+		'--use-gl=swiftshader',
+		'--use-mock-keychain',
+		'--disable-accelerated-2d-canvas',
 		// '--user-agent="Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"',
 	],
 	// devtools:true
@@ -87,6 +87,8 @@ exports.getCluster = async () => {
 
 		console.log('[N/A] Cluster Fetching [' + type + '] Reviews From URL: ' + url);
 		await page.goto(url);
+		const version = await page.browser().version();
+		console.log('Browser Version' + version);
 
 		let items;
 
@@ -368,20 +370,16 @@ const getTrustpilotReviews = async ({ page, url, selectedCompany }) => {
 		await loadReviews(items, result);
 
 		const loadMore = async () => {
-			const hasButton = await page.evaluate(() => {
+			await page.evaluate(() => {
 				const nextEl = document.querySelector('a[name=pagination-button-next]');
-				if (nextEl) {
-					nextEl.click();
-					return true;
-				}
-				return false;
+				if (nextEl) nextEl.click();
 			});
 			await page.waitForNetworkIdle();
 
 			result = await page.content();
 			await loadReviews(items, result);
 
-			if (hasButton) {
+			if (await page.$('a[name=pagination-button-next]')) {
 				await loadMore();
 			}
 		};
