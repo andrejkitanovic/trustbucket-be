@@ -87,8 +87,8 @@ exports.getCluster = async () => {
 
 		console.log('[N/A] Cluster Fetching [' + type + '] Reviews From URL: ' + url);
 		await page.goto(url);
-		const version = await page.browser().version();
-		console.log('Browser Version' + version);
+		// const version = await page.browser().version();
+		// console.log('Browser Version' + version);
 
 		let items;
 
@@ -370,6 +370,14 @@ const getTrustpilotReviews = async ({ page, url, selectedCompany }) => {
 		await loadReviews(items, result);
 
 		const loadMore = async () => {
+			await page.screenshot({
+				// Screenshot the website using defined options
+
+				path: 'uploads/test.png', // Save the screenshot in current directory
+
+				fullPage: true, // take a fullpage screenshot
+			});
+
 			await page.evaluate(() => {
 				const nextEl = document.querySelector('a[name=pagination-button-next]');
 				if (nextEl) nextEl.click();
