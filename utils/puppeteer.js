@@ -368,17 +368,20 @@ const getTrustpilotReviews = async ({ page, url, selectedCompany }) => {
 		await loadReviews(items, result);
 
 		const loadMore = async () => {
-			console.log('TRUSTPILOT Load More');
-			await page.evaluate(() => {
+			const hasButton = await page.evaluate(() => {
 				const nextEl = document.querySelector('a[name=pagination-button-next]');
-				if (nextEl) nextEl.click();
+				if (nextEl) {
+					nextEl.click();
+					return true;
+				}
+				return false;
 			});
 			await page.waitForNetworkIdle();
 
 			result = await page.content();
 			await loadReviews(items, result);
 
-			if (await page.$('a[name=pagination-button-next]')) {
+			if (hasButton) {
 				await loadMore();
 			}
 		};
