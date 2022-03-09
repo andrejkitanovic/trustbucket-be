@@ -25,12 +25,13 @@ exports.searchTrustpilotProfile = (req, res, next) => {
 
 			const result = await useRp(url);
 			const $ = cheerio.load(result);
-			const json = await JSON.parse($('script[type="application/ld+json"]').html());
+			const jsonParse = await JSON.parse($('script[type="application/ld+json"][data-business-unit-json-ld]').html());
+			const json = jsonParse['@graph'].find((object) => object['@type'] === 'LocalBusiness');
 
 			const object = {
-				title: json[1].name,
-				// image: json.image,
-				address: json[0].address && json[0].address.streetAddress,
+				title: json.name,
+				image: $('img[class*=[styles_image]').attr('src'),
+				address: json.address && json.address.streetAddress,
 				link: url,
 			};
 
@@ -62,12 +63,13 @@ exports.saveTrustpilotProfile = (req, res, next) => {
 
 			const result = await useRp(url);
 			const $ = cheerio.load(result);
-			const json = await JSON.parse($('script[type="application/ld+json"]').html());
+			const jsonParse = await JSON.parse($('script[type="application/ld+json"][data-business-unit-json-ld]').html());
+			const json = jsonParse['@graph'].find((object) => object['@type'] === 'LocalBusiness');
 
 			const rating = {
 				type: 'trustpilot',
-				rating: Number(json[0].aggregateRating.ratingValue),
-				ratingCount: Number(json[0].aggregateRating.reviewCount),
+				rating: Number(json.aggregateRating.ratingValue),
+				ratingCount: Number(json.aggregateRating.reviewCount),
 				url,
 			};
 			await updateRatingHandle(selectedCompany, rating);
@@ -77,7 +79,6 @@ exports.saveTrustpilotProfile = (req, res, next) => {
 				type: 'trustpilot',
 				selectedCompany,
 			});
-
 
 			// downloadTrustpilotReviewsHandle(selectedCompany, url);
 			res.json(rating);
