@@ -1,6 +1,6 @@
-const vanillaPuppeteer = require('puppeteer');
-const { addExtra } = require('puppeteer-extra');
-const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+// const vanillaPuppeteer = require('puppeteer');
+// const { addExtra } = require('puppeteer-extra');
+// const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const { Cluster } = require('puppeteer-cluster');
 const cheerio = require('cheerio');
 
@@ -54,7 +54,7 @@ const options = {
 		'--use-gl=swiftshader',
 		'--use-mock-keychain',
 		'--disable-accelerated-2d-canvas',
-		// '--user-agent="Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"',
+		'--user-agent="Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"',
 	],
 	// devtools:true
 };
@@ -64,11 +64,11 @@ exports.options = options;
 let cluster;
 exports.getCluster = async () => {
 	if (!cluster) {
-		const puppeteer = addExtra(vanillaPuppeteer);
-		puppeteer.use(StealthPlugin());
+		// const puppeteer = addExtra(vanillaPuppeteer);
+		// puppeteer.use(StealthPlugin());
 
 		cluster = await Cluster.launch({
-			puppeteer,
+			// puppeteer,
 			concurrency: Cluster.CONCURRENCY_CONTEXT,
 			maxConcurrency: 4,
 			puppeteerOptions: options,
