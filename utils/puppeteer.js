@@ -18,6 +18,7 @@ const Rating = require('../models/rating');
 const options = {
 	// headless: false,
 	args: [
+		'--window-size=1920,1080',
 		'--autoplay-policy=user-gesture-required',
 		'--disable-background-networking',
 		'--disable-background-timer-throttling',
