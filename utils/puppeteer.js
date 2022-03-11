@@ -181,6 +181,7 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 			} else if (tries > 0) {
 				tries -= 1;
 				previous = scrollHeight;
+				await page.waitForTimeout(500);
 				await loadMore();
 			}
 		};
