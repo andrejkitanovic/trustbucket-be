@@ -18,7 +18,6 @@ const Rating = require('../models/rating');
 const options = {
 	// headless: false,
 	args: [
-		'--window-size=1920,1080',
 		'--autoplay-policy=user-gesture-required',
 		'--disable-background-networking',
 		'--disable-background-timer-throttling',
@@ -182,7 +181,7 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 			} else if (tries > 0) {
 				tries -= 1;
 				previous = scrollHeight;
-				await page.waitForTimeout(500);
+				await page.waitForTimeout(5000);
 				await loadMore();
 			}
 		};
