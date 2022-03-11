@@ -56,7 +56,7 @@ exports.postCompany = (req, res, next) => {
 
 			if (userCreated && companyCreated) {
 				await profile.populate('selectedCompany');
-				await profile.populate('companies', '_id name');
+				await profile.populate('companies', '_id name websiteURL address.name');
 				res.status(200).json({
 					token,
 					data: profile,
@@ -97,7 +97,7 @@ exports.selectCompany = (req, res, next) => {
 
 			if (userUpdated) {
 				await profile.populate('selectedCompany');
-				await profile.populate('companies', '_id name');
+				await profile.populate('companies', '_id name websiteURL address.name');
 				res.status(200).json({
 					token,
 					data: profile,
@@ -168,7 +168,7 @@ exports.updateCompany = (req, res, next) => {
 			const profile = await User.findById(id);
 			if (companyUpdated) {
 				await profile.populate('selectedCompany');
-				await profile.populate('companies', '_id name');
+				await profile.populate('companies', '_id name websiteURL address.name');
 				res.status(200).json({
 					data: profile,
 					message: `Updated company!`,

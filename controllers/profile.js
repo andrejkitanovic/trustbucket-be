@@ -1,10 +1,10 @@
 const { getIdAndTypeFromAuth } = require('./auth');
 const User = require('../models/user');
-const Company = require('../models/company')
+const Company = require('../models/company');
 
-exports.changeDownloadingState = async (company, type, state) => {
+exports.changeDownloadingState = async (selectedCompany, type, state) => {
 	try {
-		console.log('change downloading state', type, state);
+		const company = await Company.findById(selectedCompany);
 		const ratings = company.ratings;
 
 		let updatedRatings = ratings.map((single) => {
@@ -25,7 +25,7 @@ exports.changeDownloadingState = async (company, type, state) => {
 
 exports.updateRatingHandle = async (selectedCompany, rating) => {
 	try {
-		const company = await Company.findById(selectedCompany)
+		const company = await Company.findById(selectedCompany);
 		const ratings = company.ratings;
 		const { type } = rating;
 
@@ -93,7 +93,7 @@ exports.getProfile = (req, res, next) => {
 
 			const profile = await User.findById(id);
 			await profile.populate('selectedCompany');
-			await profile.populate('companies', '_id name');
+			await profile.populate('companies', '_id name websiteURL address.name');
 			res.status(200).json({
 				data: profile,
 			});

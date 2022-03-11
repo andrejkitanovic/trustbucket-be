@@ -11,7 +11,6 @@ const { reverseFromNow } = require('./dayjs');
 
 // CONTROLLERS:
 const { changeDownloadingState } = require('../controllers/profile');
-const Company = require('../models/company');
 const Rating = require('../models/rating');
 
 // let blockedResourceTypes = ['image', 'stylesheet', 'font'];
@@ -82,8 +81,7 @@ exports.getCluster = async () => {
 
 	await cluster.task(async ({ page, data }) => {
 		const { url, type, selectedCompany } = data;
-		company = await Company.findById(selectedCompany);
-		await changeDownloadingState(company, type, true);
+		await changeDownloadingState(selectedCompany, type, true);
 
 		console.log('[N/A] Cluster Fetching [' + type + '] Reviews From URL: ' + url);
 		await page.goto(url);
@@ -148,7 +146,7 @@ exports.getCluster = async () => {
 		items = items.filter((item) => item.name && item.rating && item.date);
 		await Rating.insertMany(items);
 
-		await changeDownloadingState(company, type, false);
+		await changeDownloadingState(selectedCompany, type, false);
 	});
 
 	return cluster;
