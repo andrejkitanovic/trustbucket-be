@@ -163,7 +163,6 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 		let tries = 3;
 
 		const loadMore = async () => {
-			await page.waitForTimeout(800)
 			await page.waitForNetworkIdle();
 
 			const scrollHeight = await page.evaluate((selector) => {
@@ -200,6 +199,13 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 		const $ = cheerio.load(result);
 
 		const items = [];
+
+		$.prototype.count = function (selector) {
+			return this.find(selector).length;
+		};
+
+		console.log($('result').count('span[class*=RGxYjb]'));
+
 		await $('div[data-review-id].gm2-body-2').map((index, el) => {
 			const $el = cheerio.load(el);
 
