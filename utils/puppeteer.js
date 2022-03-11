@@ -160,6 +160,7 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 		const scrollableDiv = 'div.section-scrollbox';
 
 		let previous = 0;
+		let tries = 3;
 
 		const loadMore = async () => {
 			await page.waitForNetworkIdle();
@@ -173,7 +174,12 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 
 			console.log('Google scrolling previous: ' + previous + ' current: ' + scrollHeight);
 
-			if (previous !== scrollHeight) {
+			if (previous !== scrollHeight && tries > 0) {
+				tries = 3;
+				previous = scrollHeight;
+				await loadMore();
+			} else if (tries > 0) {
+				tries -= 1;
 				previous = scrollHeight;
 				await loadMore();
 			}
