@@ -164,6 +164,7 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 		let tries = 3;
 
 		const loadMore = async () => {
+			await page.waitForTimeout(3000)
 			await page.waitForNetworkIdle();
 
 			const scrollHeight = await page.evaluate((selector) => {
