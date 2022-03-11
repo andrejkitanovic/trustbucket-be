@@ -204,7 +204,11 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 			return this.find(selector).length;
 		};
 
-		console.log($('result').count('span[class*=RGxYjb]'));
+		console.log($(result).count('span[class*=RGxYjb]'));
+		await page.screenshot({
+			path: 'uploads/test.png',
+			fullPage: true,
+		});
 
 		await $('div[data-review-id].gm2-body-2').map((index, el) => {
 			const $el = cheerio.load(el);
