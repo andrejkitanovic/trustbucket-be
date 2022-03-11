@@ -4,7 +4,7 @@ const Company = require('../models/company');
 
 exports.changeDownloadingState = async (selectedCompany, type, state) => {
 	try {
-		console.log('Downloading State changed for type ' + type + ' to ' + (state ? '[FINISHED]' : '[DOWNLOADING]'));
+		console.log('Downloading State changed for type ' + type + ' to ' + (state ? '[DOWNLOADING]' : '[FINISHED]'));
 		const company = await Company.findById(selectedCompany);
 		const ratings = company.ratings;
 
