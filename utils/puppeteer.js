@@ -172,7 +172,7 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 				return scrollableSection.scrollHeight;
 			}, scrollableDiv);
 
-			console.log('Google scrolling previous: ' + previous + ' current: ' + scrollHeight + ' index ' + index);
+			console.log('Google scrolling previous: ' + previous + ' current: ' + scrollHeight);
 
 			if (previous !== scrollHeight) {
 				previous = scrollHeight;
