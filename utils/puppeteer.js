@@ -16,7 +16,7 @@ const Rating = require('../models/rating');
 // let blockedResourceTypes = ['image', 'stylesheet', 'font'];
 // let blockedNetworks = ['analytics', 'hotjar'];
 const options = {
-	// headless: false,
+	headless: false,
 	args: [
 		'--autoplay-policy=user-gesture-required',
 		'--disable-background-networking',
@@ -154,17 +154,16 @@ exports.getCluster = async () => {
 
 const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 	try {
-		await page.setViewport({ width: 2450, height: 5000 });
 		await page.waitForNetworkIdle();
 		await page.click('button[jsaction*=moreReviews]');
 
 		const scrollableDiv = 'div.section-scrollbox';
 
 		let previous = 0;
-		let tries = 3;
+		let loadMore = true;
 
-		const loadMore = async () => {
-			await page.waitForTimeout(3000)
+		while (loadMore) {
+			index++;
 			await page.waitForNetworkIdle();
 
 			const scrollHeight = await page.evaluate((selector) => {
@@ -174,20 +173,14 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 				return scrollableSection.scrollHeight;
 			}, scrollableDiv);
 
-			console.log('Google scrolling previous: ' + previous + ' current: ' + scrollHeight);
+			console.log('Google scrolling previous: ' + previous + ' current: ' + scrollHeight + ' index ' + index);
 
-			if (previous !== scrollHeight && tries > 0) {
-				tries = 3;
+			if (previous !== scrollHeight) {
 				previous = scrollHeight;
-				await loadMore();
-			} else if (tries > 0) {
-				tries -= 1;
-				previous = scrollHeight;
-				await loadMore();
+			} else {
+				loadMore = false;
 			}
-		};
-
-		await loadMore();
+		}
 
 		await page.evaluate(() => {
 			const expand = document.querySelectorAll('button[jsaction="pane.review.expandReview"]');
@@ -201,16 +194,6 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 		const $ = cheerio.load(result);
 
 		const items = [];
-
-		$.prototype.count = function (selector) {
-			return this.find(selector).length;
-		};
-
-		console.log($(result).count('span[class*=RGxYjb]'));
-		await page.screenshot({
-			path: 'uploads/test.png',
-			fullPage: true,
-		});
 
 		await $('div[data-review-id].gm2-body-2').map((index, el) => {
 			const $el = cheerio.load(el);
