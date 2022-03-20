@@ -18,44 +18,44 @@ const Rating = require('../models/rating');
 const options = {
 	// headless: false,
 	args: [
-		// '--autoplay-policy=user-gesture-required',
-		// '--disable-background-networking',
-		// '--disable-background-timer-throttling',
-		// '--disable-backgrounding-occluded-windows',
-		// '--disable-breakpad',
-		// '--disable-client-side-phishing-detection',
-		// '--disable-component-update',
-		// '--disable-default-apps',
-		// '--disable-dev-shm-usage',
-		// '--disable-domain-reliability',
-		// '--disable-extensions',
-		// '--disable-features=AudioServiceOutOfProcess',
-		// '--disable-hang-monitor',
-		// '--disable-ipc-flooding-protection',
-		// '--disable-notifications',
-		// '--disable-offer-store-unmasked-wallet-cards',
-		// '--disable-print-preview',
-		// '--disable-prompt-on-repost',
-		// '--disable-renderer-backgrounding',
+		'--autoplay-policy=user-gesture-required',
+		'--disable-background-networking',
+		'--disable-background-timer-throttling',
+		'--disable-backgrounding-occluded-windows',
+		'--disable-breakpad',
+		'--disable-client-side-phishing-detection',
+		'--disable-component-update',
+		'--disable-default-apps',
+		'--disable-dev-shm-usage',
+		'--disable-domain-reliability',
+		'--disable-extensions',
+		'--disable-features=AudioServiceOutOfProcess',
+		'--disable-hang-monitor',
+		'--disable-ipc-flooding-protection',
+		'--disable-notifications',
+		'--disable-offer-store-unmasked-wallet-cards',
+		'--disable-print-preview',
+		'--disable-prompt-on-repost',
+		'--disable-renderer-backgrounding',
 		'--disable-setuid-sandbox',
-		// '--disable-speech-api',
-		// '--disable-sync',
-		// '--disable-gpu',
-		// '--hide-scrollbars',
-		// '--metrics-recording-only',
-		// '--mute-audio',
-		// '--no-default-browser-check',
-		// '--no-first-run',
-		// '--no-pings',
+		'--disable-speech-api',
+		'--disable-sync',
+		'--disable-gpu',
+		'--hide-scrollbars',
+		'--metrics-recording-only',
+		'--mute-audio',
+		'--no-default-browser-check',
+		'--no-first-run',
+		'--no-pings',
 		'--no-sandbox',
-		// '--no-zygote',
-		// '--password-store=basic',
-		// '--use-gl=swiftshader',
-		// '--use-mock-keychain',
-		// '--disable-accelerated-2d-canvas',
+		'--no-zygote',
+		'--password-store=basic',
+		'--use-gl=swiftshader',
+		'--use-mock-keychain',
+		'--disable-accelerated-2d-canvas',
 		// '--user-agent="Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"',
 	],
-	// devtools:true
+	// devtools: true,
 };
 
 exports.options = options;
@@ -133,13 +133,13 @@ exports.getCluster = async () => {
 					selectedCompany,
 				});
 				break;
-			case 'airbnb':
-				items = await getAirbnbReviews({
-					page,
-					url,
-					selectedCompany,
-				});
-				break;
+			// case 'airbnb':
+			// 	items = await getAirbnbReviews({
+			// 		page,
+			// 		url,
+			// 		selectedCompany,
+			// 	});
+			// 	break;
 			default:
 				break;
 		}
@@ -154,6 +154,7 @@ exports.getCluster = async () => {
 
 const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 	try {
+		await page.setViewport({ width: 375, height: 480 });
 		await page.waitForNetworkIdle();
 		await page.click('button[jsaction*=moreReviews]');
 
@@ -181,6 +182,7 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 			}
 		}
 
+		await page.waitForTimeout(100000);
 		await page.evaluate(() => {
 			const expand = document.querySelectorAll('button[jsaction="pane.review.expandReview"]');
 
@@ -206,6 +208,7 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 			const object = {
 				company: selectedCompany,
 				url,
+				image: $el('img').attr('src'),
 				type: 'google',
 				name: $el('a[target=_blank]>div:first-child>span').text(),
 				description: removeAfter($el('span[jsan*=-text]').text().trim(), '(Original)'),
@@ -263,6 +266,7 @@ const getBokadirektReviews = async ({ page, url, selectedCompany }) => {
 				company: selectedCompany,
 				type: 'bokadirekt',
 				url,
+				image: 'https://www.bokadirekt.se' + $el('.review-user img').attr('src'),
 				name: $el('span[itemprop=name]').text(),
 				rating: Number($el('meta[itemprop=ratingValue]').attr('content')),
 				description: $el('div.review-text').text(),
@@ -361,6 +365,13 @@ const getTrustpilotReviews = async ({ page, url, selectedCompany }) => {
 				if ($el(el).exists('div[class*=replyInfo]')) {
 					object.reply = { text: $el('div[class*=replyInfo] ~ p').html() };
 				}
+				if ($el(el).exists('noscript')) {
+					let noscript = $el('noscript').text();
+					let image = noscript.split('src="').pop().split('"')[0].trim();
+					if (image) {
+						object.image = image;
+					}
+				}
 
 				items.push(object);
 			});
@@ -447,6 +458,10 @@ const getRecoseReviews = async ({ page, url, selectedCompany }) => {
 				object.reply = { text: $el('.review-card--response q').html() };
 			}
 
+			if ($el(el).exists('img.js--lazy-load')) {
+				object.image = $el('img.js--lazy-load').attr('src').trim();
+			} else object.image = 'https://www.reco.se/assets/images/icons/default-user.svg';
+
 			items.push(object);
 		});
 		console.log('RECO Review Cards', items.length);
@@ -490,6 +505,7 @@ const getBookingReviews = async ({ page, url, selectedCompany }) => {
 					company: selectedCompany,
 					type: 'booking',
 					url,
+					image: $el('.bui-avatar__image').attr('src'),
 					name: $el('.bui-avatar-block__title').text(),
 					rating: Number($el('.bui-review-score__badge').text().trim().replace(',', '.')) / 2,
 					title: $el('.c-review-block__title').text().trim(),
@@ -529,73 +545,73 @@ const getBookingReviews = async ({ page, url, selectedCompany }) => {
 	}
 };
 
-const getAirbnbReviews = async ({ page, url, selectedCompany }) => {
-	try {
-		await page.waitForNetworkIdle();
-		await page.click('a[data-testid=pdp-show-all-reviews-button]');
+// const getAirbnbReviews = async ({ page, url, selectedCompany }) => {
+// 	try {
+// 		await page.waitForNetworkIdle();
+// 		await page.click('a[data-testid=pdp-show-all-reviews-button]');
 
-		// const items = [];
-		// let result = await page.content();
+// const items = [];
+// let result = await page.content();
 
-		// const loadReviews = async (items, result) => {
-		// 	const $ = cheerio.load(result);
+// const loadReviews = async (items, result) => {
+// 	const $ = cheerio.load(result);
 
-		// 	await $('div[itemprop=review]').map((index, el) => {
-		// 		const $el = cheerio.load(el);
+// 	await $('div[itemprop=review]').map((index, el) => {
+// 		const $el = cheerio.load(el);
 
-		// 		const date = $el('.c-review-block__right .c-review-block__date').text().replace('Reviewed:', '').trim();
+// 		const date = $el('.c-review-block__right .c-review-block__date').text().replace('Reviewed:', '').trim();
 
-		// 		let format = '';
-		// 		if (dayjs(date, 'MMMM D, YYYY').isValid()) {
-		// 			format = 'MMMM D, YYYY';
-		// 		} else if (dayjs(date, 'D MMMM YYYY').isValid()) {
-		// 			format = 'D MMMM YYYY';
-		// 		} else if (dayjs(date, 'D. MMMM YYYY.').isValid()) {
-		// 			format = 'D. MMMM YYYY.';
-		// 		}
+// 		let format = '';
+// 		if (dayjs(date, 'MMMM D, YYYY').isValid()) {
+// 			format = 'MMMM D, YYYY';
+// 		} else if (dayjs(date, 'D MMMM YYYY').isValid()) {
+// 			format = 'D MMMM YYYY';
+// 		} else if (dayjs(date, 'D. MMMM YYYY.').isValid()) {
+// 			format = 'D. MMMM YYYY.';
+// 		}
 
-		// 		$el.prototype.exists = function (selector) {
-		// 			return this.find(selector).length > 0;
-		// 		};
-		// 		const object = {
-		// 			company: selectedCompany,
-		// 			type: 'booking',
-		// 			url,
-		// 			name: $el('.bui-avatar-block__title').text(),
-		// 			rating: Number($el('.bui-review-score__badge').text().trim().replace(',', '.')) / 2,
-		// 			title: $el('.c-review-block__title').text().trim(),
-		// 			description: $el('.c-review__body').text().trim(),
-		// 			date: dayjs(date, format),
-		// 		};
+// 		$el.prototype.exists = function (selector) {
+// 			return this.find(selector).length > 0;
+// 		};
+// 		const object = {
+// 			company: selectedCompany,
+// 			type: 'booking',
+// 			url,
+// 			name: $el('.bui-avatar-block__title').text(),
+// 			rating: Number($el('.bui-review-score__badge').text().trim().replace(',', '.')) / 2,
+// 			title: $el('.c-review-block__title').text().trim(),
+// 			description: $el('.c-review__body').text().trim(),
+// 			date: dayjs(date, format),
+// 		};
 
-		// 		if ($el(el).exists('.c-review-block__response')) {
-		// 			object.reply = { text: $el('.c-review-block__response__inner').text() };
-		// 		}
+// 		if ($el(el).exists('.c-review-block__response')) {
+// 			object.reply = { text: $el('.c-review-block__response__inner').text() };
+// 		}
 
-		// 		items.push(object);
-		// 	});
-		// };
+// 		items.push(object);
+// 	});
+// };
 
-		// await loadReviews(items, result);
+// await loadReviews(items, result);
 
-		// const loadMore = async () => {
-		// 	await page.click('.bui-pagination__next-arrow');
-		// 	await page.waitForNetworkIdle();
+// const loadMore = async () => {
+// 	await page.click('.bui-pagination__next-arrow');
+// 	await page.waitForNetworkIdle();
 
-		// 	result = await page.content();
-		// 	await loadReviews(items, result);
+// 	result = await page.content();
+// 	await loadReviews(items, result);
 
-		// 	if (await page.$('.bui-pagination__next-arrow:not(.bui-pagination__item--disabled)')) {
-		// 		await loadMore();
-		// 	}
-		// };
-		// if (await page.$('.bui-pagination__next-arrow:not(.bui-pagination__item--disabled)')) {
-		// 	await loadMore();
-		// }
+// 	if (await page.$('.bui-pagination__next-arrow:not(.bui-pagination__item--disabled)')) {
+// 		await loadMore();
+// 	}
+// };
+// if (await page.$('.bui-pagination__next-arrow:not(.bui-pagination__item--disabled)')) {
+// 	await loadMore();
+// }
 
-		return items;
-	} catch (err) {
-		console.log(err);
-		return [];
-	}
-};
+// 		return items;
+// 	} catch (err) {
+// 		console.log(err);
+// 		return [];
+// 	}
+// };

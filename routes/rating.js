@@ -6,7 +6,7 @@ const recoseRatingController = require('../controllers/rating/recose');
 const bookingRatingController = require('../controllers/rating/booking');
 const trustpilotController = require('../controllers/rating/trustpilot');
 const bokadirektController = require('../controllers/rating/bokadirekt');
-const airbnbController = require('../controllers/rating/airbnb')
+const airbnbController = require('../controllers/rating/airbnb');
 
 const router = express.Router();
 
@@ -27,7 +27,7 @@ router.post('/trustpilot', trustpilotController.saveTrustpilotProfile);
 router.get('/fresha/search', freshaRatingController.searchFreshaProfile);
 router.post('/fresha', freshaRatingController.saveFreshaProfile);
 
-//BOOKING
+//BOOKING - DONE
 router.get('/booking/search', bookingRatingController.searchBookingProfile);
 router.post('/booking', bookingRatingController.saveBookingProfile);
 
@@ -39,8 +39,8 @@ router.post('/recose', recoseRatingController.saveRecoseProfile);
 router.get('/bokadirekt/search', bokadirektController.searchBokadirektProfile);
 router.post('/bokadirekt', bokadirektController.saveBokadirektProfile);
 
-//AIRBNB
-router.get('/airbnb/search', airbnbController.searchAirbnbProfile);
-router.post('/airbnb', airbnbController.saveAirbnbProfile);
+// AIRBNB - ON HOLD
+// router.get('/airbnb/search', airbnbController.searchAirbnbProfile);
+// router.post('/airbnb', airbnbController.saveAirbnbProfile);
 
 module.exports = router;

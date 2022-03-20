@@ -16,6 +16,7 @@ const ratingSchema = new Schema({
 		type: String,
 		required: true,
 	},
+	image: String,
 	rating: {
 		type: Number,
 		required: true,

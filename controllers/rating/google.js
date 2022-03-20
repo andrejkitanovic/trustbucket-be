@@ -48,6 +48,7 @@ exports.saveGoogleRating = (req, res, next) => {
 			const { data } = await axios.get(url);
 
 			const rating = {
+				placeId,
 				type: 'google',
 				name: data.result.name,
 				rating: data.result.rating,
@@ -62,7 +63,6 @@ exports.saveGoogleRating = (req, res, next) => {
 				selectedCompany,
 			});
 
-	
 			await addAddress(
 				{ name: data.result.formatted_address, position: data.result.geometry.location },
 				selectedCompany

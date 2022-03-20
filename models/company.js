@@ -37,6 +37,9 @@ const companySchema = new Schema(
 		],
 		ratings: [
 			{
+				placeId: {
+					type: String,
+				},
 				type: {
 					type: String,
 					enum: ['overall', 'google', 'airbnb', 'booking', 'fresha', 'recose', 'bokadirekt', 'trustpilot'],
