@@ -37,7 +37,10 @@ exports.postCompany = (req, res, next) => {
 				user: profile._id,
 				name: companyName,
 				websiteURL,
-				ratings: [{ type: 'overall', rating: null, ratingCount: 0 }],
+				ratings: [
+					{ type: 'overall', rating: null, ratingCount: 0 },
+					{ type: 'trustbucket', rating: null, ratingCount: 0 },
+				],
 			});
 
 			profile.selectedCompany = companyObject._id;

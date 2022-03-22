@@ -61,7 +61,7 @@ exports.deleteRatingHandle = async (company, type) => {
 
 const calculateOverallRating = (ratings) => {
 	const updatedRatings = ratings.filter((single) => single.type !== 'overall');
-	if (!updatedRatings.length) return [{ type: 'overall', rating: null, ratingCount: 0 }];
+	// if (!updatedRatings.length) return [{ type: 'overall', rating: null, ratingCount: 0 }];
 
 	const ratingCount = updatedRatings.reduce((prev, current) => prev + current.ratingCount, 0);
 	const rating =

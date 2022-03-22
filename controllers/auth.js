@@ -189,7 +189,10 @@ exports.register = (req, res, next) => {
 				user: userObject._id,
 				name: companyName,
 				websiteURL,
-				ratings: [{ type: 'overall', rating: null, ratingCount: 0 }],
+				ratings: [
+					{ type: 'overall', rating: null, ratingCount: 0 },
+					{ type: 'trustbucket', rating: null, ratingCount: 0 },
+				],
 			});
 			const invitationSettingsObject = new InvitationSettings({
 				company: companyObject._id,
