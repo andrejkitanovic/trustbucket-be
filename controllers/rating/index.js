@@ -36,20 +36,20 @@ exports.companyRatings = (req, res, next) => {
 				};
 			}
 
-			const additionalObject = {};
-
-			if (req.body.reply === false) {
-				additionalObject.reply = undefined;
-			}
-
-			const ratings = await Rating.find({ ...filterObject, ...additionalObject })
+			const ratings = await Rating.find({ ...filterObject })
 				.sort([[sortField, sortOrder === 'asc' ? 1 : -1]])
 				.skip(Number((pageNumber - 1) * pageSize))
 				.limit(Number(pageSize));
 			const count = await Rating.countDocuments(filterObject);
 
+			const stars = {};
+			for (let i = 5; i > 0; i--) {
+				stars[i] = await Rating.countDocuments({ company: selectedCompany, rating: i });
+			}
+
 			res.status(200).json({
 				total: count,
+				stars,
 				data: ratings,
 			});
 		} catch (err) {

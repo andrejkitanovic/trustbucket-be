@@ -11,12 +11,13 @@ const airbnbController = require('../controllers/rating/airbnb');
 
 const router = express.Router();
 
-router.post('/list/:slug', ratingsController.companyRatings);
-
 router.get('/', ratingsController.getRatings);
 router.get('/stats', ratingsController.stats);
 router.post('/filter', ratingsController.filterRatings);
 router.delete('/', ratingsController.deleteRating);
+
+//GUEST GET COMPANY RATINGS
+router.post('/list/:slug', ratingsController.companyRatings);
 
 //TRUSTBUCKET - DOING
 router.get('/trustbucket/:slug', trustbucketController.getTrustbucketReviews);
