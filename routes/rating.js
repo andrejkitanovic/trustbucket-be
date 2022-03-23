@@ -1,5 +1,6 @@
 const express = require('express');
 const ratingsController = require('../controllers/rating');
+const trustbucketController = require('../controllers/rating/trustbucket');
 const googleRatingController = require('../controllers/rating/google');
 const freshaRatingController = require('../controllers/rating/fresha');
 const recoseRatingController = require('../controllers/rating/recose');
@@ -10,10 +11,15 @@ const airbnbController = require('../controllers/rating/airbnb');
 
 const router = express.Router();
 
+router.post('/list/:slug', ratingsController.companyRatings);
+
 router.get('/', ratingsController.getRatings);
 router.get('/stats', ratingsController.stats);
 router.post('/filter', ratingsController.filterRatings);
 router.delete('/', ratingsController.deleteRating);
+
+//TRUSTBUCKET - DOING
+router.get('/trustbucket/:slug', trustbucketController.getTrustbucketReviews);
 
 //GOOGLE - DONE
 router.get('/google/search', googleRatingController.getGoogleProfile);

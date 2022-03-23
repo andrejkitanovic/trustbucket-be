@@ -5,6 +5,59 @@ const Rating = require('../../models/rating');
 const mongoose = require('mongoose');
 const _ = require('lodash');
 
+exports.companyRatings = (req, res, next) => {
+	(async function () {
+		try {
+			const { slug } = req.params;
+
+			const company = await Company.findOne({
+				name: {
+					$regex: new RegExp(slug, 'i'),
+				},
+			});
+
+			const selectedCompany = company._id;
+
+			const { pageNumber, pageSize, sortField, sortOrder } = req.body.queryParams;
+
+			const filterObject = {
+				company: selectedCompany,
+			};
+
+			if (req.body.type) {
+				filterObject.type = req.body.type;
+			}
+			if (req.body.rating) {
+				const rating = req.body.rating;
+
+				filterObject.rating = {
+					$gt: _.min(rating) - 1,
+					$lte: _.max(rating),
+				};
+			}
+
+			const additionalObject = {};
+
+			if (req.body.reply === false) {
+				additionalObject.reply = undefined;
+			}
+
+			const ratings = await Rating.find({ ...filterObject, ...additionalObject })
+				.sort([[sortField, sortOrder === 'asc' ? 1 : -1]])
+				.skip(Number((pageNumber - 1) * pageSize))
+				.limit(Number(pageSize));
+			const count = await Rating.countDocuments(filterObject);
+
+			res.status(200).json({
+				total: count,
+				data: ratings,
+			});
+		} catch (err) {
+			next(err);
+		}
+	})();
+};
+
 exports.getRatings = (req, res, next) => {
 	(async function () {
 		try {
