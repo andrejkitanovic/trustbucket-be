@@ -3,6 +3,9 @@ const Schema = mongoose.Schema;
 
 const companySchema = new Schema(
 	{
+		image: {
+			type: String,
+		},
 		user: {
 			type: Schema.Types.ObjectID,
 			ref: 'User',

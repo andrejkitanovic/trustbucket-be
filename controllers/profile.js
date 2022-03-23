@@ -61,7 +61,6 @@ exports.deleteRatingHandle = async (company, type) => {
 
 const calculateOverallRating = (ratings) => {
 	const updatedRatings = ratings.filter((single) => single.type !== 'overall');
-	// if (!updatedRatings.length) return [{ type: 'overall', rating: null, ratingCount: 0 }];
 
 	const ratingCount = updatedRatings.reduce((prev, current) => prev + current.ratingCount, 0);
 	const rating =
@@ -69,10 +68,10 @@ const calculateOverallRating = (ratings) => {
 			if (!current.rating) return prev;
 			return prev + current.rating * current.ratingCount;
 		}, 0) / ratingCount;
-
+		
 	const overall = {
 		type: 'overall',
-		rating,
+		rating: isNaN(rating) ? null : rating,
 		ratingCount,
 	};
 
