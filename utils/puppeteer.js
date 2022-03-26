@@ -154,7 +154,6 @@ exports.getCluster = async () => {
 
 const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 	try {
-		await page.setViewport({ width: 375, height: 480 });
 		await page.waitForNetworkIdle();
 		await page.click('button[jsaction*=moreReviews]');
 
@@ -182,7 +181,6 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 			}
 		}
 
-		await page.waitForTimeout(100000);
 		await page.evaluate(() => {
 			const expand = document.querySelectorAll('button[jsaction="pane.review.expandReview"]');
 
