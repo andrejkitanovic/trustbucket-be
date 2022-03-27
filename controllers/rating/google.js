@@ -19,7 +19,7 @@ exports.getGoogleProfile = (req, res, next) => {
 				'geometry',
 				'icon',
 			].join('%2C');
-			const textquery = req.query.q;
+			const textquery = req.body.q;
 			const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=${fields}&input=${textquery}&inputtype=textquery&key=${process.env.API_KEY_GOOGLE}`;
 
 			const auth = getIdAndTypeFromAuth(req, res, next);

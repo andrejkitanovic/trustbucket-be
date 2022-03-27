@@ -6,7 +6,7 @@ const { updateRatingHandle } = require('../profile');
 const { getCluster } = require('../../utils/puppeteer');
 
 exports.searchRecoseProfile = (req, res, next) => {
-	const { q } = req.query;
+	const { q } = req.body;
 	const url = `https://www.reco.se/sok/s?q=${q}&page=1`;
 
 	(async function () {

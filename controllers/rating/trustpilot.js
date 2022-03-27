@@ -6,7 +6,7 @@ const { updateRatingHandle } = require('../profile');
 const { getCluster } = require('../../utils/puppeteer');
 
 exports.searchTrustpilotProfile = (req, res, next) => {
-	const { q: url } = req.query;
+	const { q: url } = req.body;
 
 	(async function () {
 		try {
