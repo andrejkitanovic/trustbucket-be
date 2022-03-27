@@ -30,7 +30,7 @@ exports.getCurrentUser = (req, res, next) => {
 
 		try {
 			const currentUser = await User.findById(id);
-			await currentUser.populate('selectedCompany', '_id name websiteURL ratings');
+			await currentUser.populate('selectedCompany', '_id name image websiteURL ratings');
 			await currentUser.populate('companies', '_id name');
 			res.status(200).json({
 				data: currentUser,
@@ -117,7 +117,7 @@ exports.updatePassword = (req, res, next) => {
 			loginUser.password = hashedPassword;
 			const savedUser = await loginUser.save();
 
-			await savedUser.populate('selectedCompany', '_id name websiteURL ratings');
+			await savedUser.populate('selectedCompany', '_id name image websiteURL ratings');
 			await savedUser.populate('companies', '_id name');
 			res.status(200).json({
 				data: savedUser,
@@ -208,7 +208,7 @@ exports.register = (req, res, next) => {
 			await invitationSettingsObject.save();
 
 			if (userCreated && companyCreated) {
-				await userObject.populate('selectedCompany', '_id name websiteURL ratings');
+				await userObject.populate('selectedCompany', '_id name image websiteURL ratings');
 				await userObject.populate('companies', '_id name');
 				res.status(200).json({
 					data: userObject,

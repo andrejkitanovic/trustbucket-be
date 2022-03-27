@@ -21,6 +21,7 @@ router.post('/list/:slug', ratingsController.companyRatings);
 
 // TRUSTBUCKET - DOING
 router.get('/trustbucket/:slug', trustbucketController.getTrustbucketReviews);
+router.post('/trustbucket', trustbucketController.postTrustbucketReviews);
 
 // GOOGLE - DONE
 router.post('/google/search', googleRatingController.getGoogleProfile);
@@ -45,6 +46,7 @@ router.post('/recose', recoseRatingController.saveRecoseProfile);
 // BOKADIREKT - DONE
 router.post('/bokadirekt/search', bokadirektController.searchBokadirektProfile);
 router.post('/bokadirekt', bokadirektController.saveBokadirektProfile);
+
 
 // AIRBNB - ON HOLD
 // router.get('/airbnb/search', airbnbController.searchAirbnbProfile);
