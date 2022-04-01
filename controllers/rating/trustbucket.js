@@ -75,7 +75,7 @@ exports.postTrustbucketReply = (req, res, next) => {
 		try {
 			const { id, reply } = req.body;
 
-			await Rating.findByIdAndUpdate(id, { reply });
+			await Rating.findByIdAndUpdate(id, { reply: { text: reply } });
 
 			res.json({
 				message: 'Successfully replied!',
