@@ -96,7 +96,7 @@ exports.deleteTrustbucketReply = (req, res, next) => {
 				next(error);
 			}
 
-			const { id } = req.body;
+			const { id } = req.params;
 
 			await Rating.findByIdAndUpdate(id, { reply: null });
 

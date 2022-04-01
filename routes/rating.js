@@ -23,7 +23,7 @@ router.post('/list/:slug', ratingsController.companyRatings);
 router.get('/trustbucket/:slug', trustbucketController.getTrustbucketReviews);
 router.post('/trustbucket', trustbucketController.postTrustbucketReviews);
 router.post('/trustbucket/reply', trustbucketController.postTrustbucketReply);
-router.delete('/trustbucket/reply', trustbucketController.deleteTrustbucketReply);
+router.delete('/trustbucket/reply/:id', trustbucketController.deleteTrustbucketReply);
 
 // GOOGLE - DONE
 router.post('/google/search', googleRatingController.getGoogleProfile);
