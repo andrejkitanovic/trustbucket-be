@@ -35,7 +35,7 @@ exports.searchHittaProfile = (req, res, next) => {
 				link: url,
 			};
 
-			res.json(json);
+			res.json(object);
 		} catch (err) {
 			next(err);
 		}
