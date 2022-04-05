@@ -68,6 +68,7 @@ exports.saveTrustpilotProfile = (req, res, next) => {
 
 			const rating = {
 				type: 'trustpilot',
+				name: json.name,
 				rating: Number(json.aggregateRating.ratingValue),
 				ratingCount: Number(json.aggregateRating.reviewCount),
 				url,
