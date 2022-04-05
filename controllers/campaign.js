@@ -2,6 +2,7 @@ const { sendEmail, getCampaignOverview } = require('../utils/mailer');
 const { getIdAndTypeFromAuth } = require('./auth');
 const EmailTemplate = require('../models/emailTemplate');
 const Campaign = require('../models/campaign');
+const InvitationSettings = require('../models/invitationSettings');
 
 exports.getCampaigns = (req, res, next) => {
 	(async function () {
@@ -85,7 +86,9 @@ exports.postCampaign = (req, res, next) => {
 				recievers,
 			});
 			const campaign = await campaignObject.save();
-			await sendEmail(template, recievers, campaign._id);
+
+			const invitation = await InvitationSettings.findOne({ company: selectedCompany });
+			await sendEmail(template, recievers, campaign._id, invitation);
 
 			res.status(200).json({
 				campaign: campaignObject,
