@@ -5,12 +5,17 @@ const { getIdAndTypeFromAuth } = require('../auth');
 const { updateRatingHandle } = require('../profile');
 const { getCluster } = require('../../utils/puppeteer');
 
-exports.searchRecoseProfile = (req, res, next) => {
-	const { q } = req.body;
-	const url = `https://www.reco.se/sok/s?q=${q}&page=1`;
+exports.searchHittaProfile = (req, res, next) => {
+	const { q: url } = req.body;
 
 	(async function () {
 		try {
+			if (!url || !url.includes('hitta.se/')) {
+				const error = new Error('Not Valid URL!');
+				error.statusCode = 422;
+				next(error);
+			}
+
 			const auth = getIdAndTypeFromAuth(req, res, next);
 			if (!auth) {
 				const error = new Error('Not Authorized!');
@@ -21,34 +26,28 @@ exports.searchRecoseProfile = (req, res, next) => {
 			const result = await useRp(url);
 
 			const $ = cheerio.load(result);
-			const items = [];
-			await $('div.media.clfx')
-				.slice(0, 3)
-				.map((index, el) => {
-					const $el = cheerio.load(el);
+			const json = await JSON.parse($('script[type="application/ld+json"]').html());
 
-					const object = {
-						title: $el('a.nou.uh').text(),
-						image: 'https:' + $el('img').attr('data-picture'),
-						link: 'https://www.reco.se' + $el('a.nou.uh').attr('href'),
-					};
-					items.push(object);
-				});
-			if (!items.length) throw new Error('Not Found!');
+            const object = {
+				title: json.name,
+				image: json.logo,
+				address: json.address && json.address.streetAddress,
+				link: url,
+			};
 
-			res.json(items[0]);
+			res.json(json);
 		} catch (err) {
 			next(err);
 		}
 	})();
 };
 
-exports.saveRecoseProfile = (req, res, next) => {
+exports.saveHittaProfile = (req, res, next) => {
 	const url = req.body.url;
 
 	(async function () {
 		try {
-			if (!url || !url.includes('www.reco.se/')) {
+			if (!url || !url.includes('hitta.se/')) {
 				const error = new Error('Not Valid URL!');
 				error.statusCode = 422;
 				next(error);
@@ -67,7 +66,7 @@ exports.saveRecoseProfile = (req, res, next) => {
 			const json = await JSON.parse($('script[type="application/ld+json"]').html());
 
 			const rating = {
-				type: 'recose',
+				type: 'hitta',
 				name: json.name,
 				rating: json.aggregateRating.ratingValue,
 				ratingCount: json.aggregateRating.ratingCount,
@@ -77,10 +76,9 @@ exports.saveRecoseProfile = (req, res, next) => {
 			const cluster = await getCluster();
 			await cluster.queue({
 				url: url,
-				type: 'recose',
+				type: 'hitta',
 				selectedCompany,
 			});
-		
 
 			res.json(rating);
 		} catch (err) {

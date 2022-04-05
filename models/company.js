@@ -55,6 +55,7 @@ const companySchema = new Schema(
 						'recose',
 						'bokadirekt',
 						'trustpilot',
+						'hitta'
 					],
 					default: 'overall',
 				},

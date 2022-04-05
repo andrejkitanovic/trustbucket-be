@@ -7,7 +7,8 @@ const recoseRatingController = require('../controllers/rating/recose');
 const bookingRatingController = require('../controllers/rating/booking');
 const trustpilotController = require('../controllers/rating/trustpilot');
 const bokadirektController = require('../controllers/rating/bokadirekt');
-const airbnbController = require('../controllers/rating/airbnb');
+const hittaController = require('../controllers/rating/hitta')
+// const airbnbController = require('../controllers/rating/airbnb');
 
 const router = express.Router();
 
@@ -48,6 +49,10 @@ router.post('/recose', recoseRatingController.saveRecoseProfile);
 // BOKADIREKT - DONE
 router.post('/bokadirekt/search', bokadirektController.searchBokadirektProfile);
 router.post('/bokadirekt', bokadirektController.saveBokadirektProfile);
+
+// HITA - DOING
+router.post('/hitta/search', hittaController.searchHittaProfile);
+router.post('/hitta', hittaController.saveHittaProfile);
 
 // AIRBNB - ON HOLD
 // router.get('/airbnb/search', airbnbController.searchAirbnbProfile);

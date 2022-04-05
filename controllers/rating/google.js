@@ -1,11 +1,16 @@
 const axios = require('axios');
-const download = require('image-downloader');
 
+// const GoogleStrategy = require('passport-google-oauth20').Strategy
 const Company = require('../../models/company');
 const { getIdAndTypeFromAuth } = require('../auth');
 const { addAddress } = require('../company');
 const { updateRatingHandle } = require('../profile');
 const { getCluster } = require('../../utils/puppeteer');
+
+
+// exports.authGoogle = (req, res, next) => {
+
+// }
 
 exports.getGoogleProfile = (req, res, next) => {
 	(async function () {

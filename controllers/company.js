@@ -1,5 +1,6 @@
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
+// const stripe = require('stripe');
 const User = require('../models/user');
 const Company = require('../models/company');
 const { getIdAndTypeFromAuth } = require('./auth');
@@ -177,6 +178,53 @@ exports.updateCompany = (req, res, next) => {
 					message: `Updated company!`,
 				});
 			}
+		} catch (err) {
+			next(err);
+		}
+	})();
+};
+
+exports.subscribe = (req, res, next) => {
+	(async function () {
+		try {
+			const auth = getIdAndTypeFromAuth(req, res, next);
+			if (!auth) {
+				const error = new Error('Not Authorized!');
+				error.statusCode = 401;
+				next(error);
+			}
+			const { selectedCompany } = auth;
+
+			const { type, package } = req.body;
+			const pricing = {
+				monthly: {
+					freelancer: 24,
+					startup: 32,
+				},
+				anually: {
+					freelancer: 200,
+					startup: 280,
+				},
+			};
+
+			const price = pricing[type][package];
+
+			// const payment = await stripe.checkout.sessions.create({
+			// billing_address_collection: 'auto',
+			// 	payment_method_types: ['card'],
+			// 	line_items: [
+			// 		{
+			// 			name: `Trustbucket Plan | Type: ${type} Package: ${package}`,
+			// 			description: 'Trustbucket platform premium plan',
+			// 			amount: price,
+			// 			currency: 'usd',
+			// 			quantity: 1,
+			// 		},
+			// 	],
+			//  mode: subscription,
+			// 	sucess_url: '',
+			// 	cancel_url: '',
+			// });
 		} catch (err) {
 			next(err);
 		}

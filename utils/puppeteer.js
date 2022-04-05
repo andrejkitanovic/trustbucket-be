@@ -16,7 +16,7 @@ const Rating = require('../models/rating');
 // let blockedResourceTypes = ['image', 'stylesheet', 'font'];
 // let blockedNetworks = ['analytics', 'hotjar'];
 const options = {
-	// headless: false,
+	headless: false,
 	args: [
 		'--autoplay-policy=user-gesture-required',
 		'--disable-background-networking',
@@ -126,6 +126,13 @@ exports.getCluster = async () => {
 					selectedCompany,
 				});
 				break;
+			case 'hitta':
+				items = await getHittaReviews({
+					page,
+					url,
+					selectedCompany,
+				});
+				break;
 			case 'booking':
 				items = await getBookingReviews({
 					page,
@@ -143,7 +150,9 @@ exports.getCluster = async () => {
 			default:
 				break;
 		}
+		console.log(items);
 		items = items.filter((item) => item.name && item.rating && item.date);
+
 		await Rating.insertMany(items);
 
 		await changeDownloadingState(selectedCompany, type, false);
@@ -270,6 +279,43 @@ const getBokadirektReviews = async ({ page, url, selectedCompany }) => {
 				description: $el('div.review-text').text(),
 				date: dayjs($el('time[datetime]').attr('datetime'), 'YYYY-MM-DD'),
 			};
+
+			items.push(object);
+		});
+
+		return items;
+	} catch (err) {
+		console.log(err);
+		return [];
+	}
+};
+
+const getHittaReviews = async ({ page, url, selectedCompany }) => {
+	try {
+		await page.waitForNetworkIdle();
+
+		const result = await page.content();
+		const $ = cheerio.load(result);
+
+		const items = [];
+		await $('div.section-block--review').map((index, el) => {
+			const $el = cheerio.load(el);
+
+			$el.prototype.count = function (selector) {
+				return this.find(selector).length;
+			};
+			const object = {
+				company: selectedCompany,
+				type: 'hitta',
+				url,
+				name: $el('div.section-block--review_meta h4').text(),
+				description: $el('div.section-block--review_comment p').text(),
+				date: new Date(),
+			};
+			const reviewEl = $el('div.widget-header_rating-svg_container > div').attr('style');
+			if (reviewEl) {
+				object.rating = parseInt(reviewEl.slice(reviewEl.indexOf(' ') + 1, reviewEl.lastIndexOf('%'))) / 20;
+			}
 
 			items.push(object);
 		});
