@@ -27,6 +27,11 @@ const companySchema = new Schema(
 				lng: Number,
 			},
 		},
+		slug: {
+			name: String,
+			// required: true,
+			// unique: true,
+		},
 		socialLinks: [
 			{
 				media: {
@@ -55,7 +60,7 @@ const companySchema = new Schema(
 						'recose',
 						'bokadirekt',
 						'trustpilot',
-						'hitta'
+						'hitta',
 					],
 					default: 'overall',
 				},

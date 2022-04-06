@@ -7,9 +7,9 @@ exports.getWidget = (req, res, next) => {
 		try {
 			const { id } = req.query;
 
-			const widget = await Widget.findById(id);
-			const companyId = widget.company;
-			await widget.populate('company');
+			let widget = await Widget.findById(id);
+			const companyId = widget.selectedCompany;
+			await widget.populate('selectedCompany');
 
 			const params = {};
 			if (widget.object && widget.object.reviewSources && widget.object.reviewSources !== 'all') {
@@ -40,14 +40,14 @@ exports.postWidget = (req, res, next) => {
 			const { selectedCompany } = auth;
 
 			const widgetObject = new Widget({
-				company: selectedCompany,
+				selectedCompany,
 				object,
 			});
 
 			const widget = await widgetObject.save();
 
 			res.status(200).json({
-				link: `<iframe id="trustbucketReviews" title="Trustbucket Reviews" src="https://admin.trustbucket.io/widget/${widget._id}"></iframe>`,
+				link: `<iframe id="trustbucketReviews" title="Trustbucket Reviews" width="100%" scrolling="no" src="https://admin.trustbucket.io/widget/${widget._id}"></iframe>`,
 				message: 'Successfully created!',
 			});
 		} catch (err) {

@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const widgetSchema = new Schema(
 	{
-		company: {
+		selectedCompany: {
 			type: Schema.Types.ObjectID,
 			ref: 'Company',
 		},

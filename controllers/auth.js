@@ -221,4 +221,6 @@ exports.register = (req, res, next) => {
 	})();
 };
 
+exports.googleRegister = (req, res, next) => {};
+
 exports.getIdAndTypeFromAuth = getIdAndTypeFromAuth;
