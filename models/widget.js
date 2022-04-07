@@ -7,6 +7,7 @@ const widgetSchema = new Schema(
 			type: Schema.Types.ObjectID,
 			ref: 'Company',
 		},
+		attributes: {},
 		object: {},
 	},
 	{ timestamps: true }

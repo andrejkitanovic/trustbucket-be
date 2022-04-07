@@ -35,19 +35,22 @@ exports.postWidget = (req, res, next) => {
 				next(error);
 			}
 
-			const { object } = req.body;
+			const { object, attributes } = req.body;
 
 			const { selectedCompany } = auth;
 
 			const widgetObject = new Widget({
 				selectedCompany,
 				object,
+				attributes,
 			});
 
 			const widget = await widgetObject.save();
 
+			const attributesToValues = Object.keys(attributes).map((attribute) => `${attribute}="${attributes[attribute]}"`);
+
 			res.status(200).json({
-				link: `<iframe id="trustbucketReviews" title="Trustbucket Reviews" width="100%" scrolling="no" src="https://admin.trustbucket.io/widget/${widget._id}"></iframe>`,
+				link: `<iframe ${attributesToValues.join(' ')} src="https://admin.trustbucket.io/widget/${widget._id}"></iframe>`,
 				message: 'Successfully created!',
 			});
 		} catch (err) {
