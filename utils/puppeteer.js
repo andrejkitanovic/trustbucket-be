@@ -150,8 +150,9 @@ exports.getCluster = async () => {
 			default:
 				break;
 		}
-		console.log(items)
+		console.log('LOADED REVIEWS:' + items.length);
 		items = items.filter((item) => item.name && item.rating && item.date);
+		console.log('VALID REVIEWS:' + items.length);
 
 		await Rating.insertMany(items);
 
@@ -222,10 +223,8 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 				date: reverseFromNow($el('span[class*=-date]').text().trim()),
 			};
 
-			if (Number($el(el).count('img[class*=active]'))) {
-				object.rating = Number($el(el).count('img[class*=active]'));
-			} else {
-				object.rating = Number($el('span[class*=RGxYjb]').text().charAt(0));
+			if ($el(el).exists('span[aria-label*=stars]')) {
+				object.rating = parseInt($el('span[aria-label*=stars]').attr('aria-label').trim('').charAt(0))
 			}
 
 			if ($el(el).exists('div[class*=-text]') && $el('div[class*=-text]').text().trim()) {
