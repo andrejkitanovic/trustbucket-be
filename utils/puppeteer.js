@@ -150,6 +150,7 @@ exports.getCluster = async () => {
 			default:
 				break;
 		}
+		console.log(items)
 		items = items.filter((item) => item.name && item.rating && item.date);
 
 		await Rating.insertMany(items);
