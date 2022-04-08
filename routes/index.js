@@ -9,6 +9,7 @@ module.exports = (app) => {
 	const campaignRoutes = require('./campaign');
 	const invitationSettingsRoutes = require('./invitationSettings');
 	const widgetRoutes = require('./widget');
+	const webhookRoutes = require('./webhook');
 
 	// API routes
 	app.use('/api/auth', authRoutes);
@@ -21,4 +22,5 @@ module.exports = (app) => {
 	app.use('/api/campaign', campaignRoutes);
 	app.use('/api/invitation-settings', invitationSettingsRoutes);
 	app.use('/api/widget', widgetRoutes);
+	app.use('/webhook', webhookRoutes);
 };

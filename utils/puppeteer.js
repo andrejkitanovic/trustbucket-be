@@ -150,7 +150,6 @@ exports.getCluster = async () => {
 			default:
 				break;
 		}
-		console.log(items);
 		items = items.filter((item) => item.name && item.rating && item.date);
 
 		await Rating.insertMany(items);
@@ -203,7 +202,7 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 
 		const items = [];
 
-		await $('div[data-review-id].gm2-body-2').map((index, el) => {
+		await $('div[data-review-id]').map((index, el) => {
 			const $el = cheerio.load(el);
 
 			$el.prototype.count = function (selector) {

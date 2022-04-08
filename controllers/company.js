@@ -1,6 +1,6 @@
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
-// const stripe = require('stripe');
+const stripe = require('stripe')(process.env.STRIPE_PUBLISH_KEY);
 const User = require('../models/user');
 const Company = require('../models/company');
 const { getIdAndTypeFromAuth } = require('./auth');
@@ -184,7 +184,7 @@ exports.updateCompany = (req, res, next) => {
 	})();
 };
 
-exports.subscribe = (req, res, next) => {
+exports.subscribeSession = (req, res, next) => {
 	(async function () {
 		try {
 			const auth = getIdAndTypeFromAuth(req, res, next);
@@ -195,38 +195,55 @@ exports.subscribe = (req, res, next) => {
 			}
 			const { selectedCompany } = auth;
 
-			const { type, package } = req.body;
+			const { type, plan } = req.body;
 			const pricing = {
 				monthly: {
-					freelancer: 24,
-					startup: 32,
+					freelancer: 2400,
+					startup: 3200,
 				},
 				anually: {
-					freelancer: 200,
-					startup: 280,
+					freelancer: 20000,
+					startup: 28000,
 				},
 			};
 
-			const price = pricing[type][package];
+			const price = pricing[type][plan];
 
-			// const payment = await stripe.checkout.sessions.create({
-			// billing_address_collection: 'auto',
-			// 	payment_method_types: ['card'],
-			// 	line_items: [
-			// 		{
-			// 			name: `Trustbucket Plan | Type: ${type} Package: ${package}`,
-			// 			description: 'Trustbucket platform premium plan',
-			// 			amount: price,
-			// 			currency: 'usd',
-			// 			quantity: 1,
-			// 		},
-			// 	],
-			//  mode: subscription,
-			// 	sucess_url: '',
-			// 	cancel_url: '',
-			// });
+			const session = await stripe.checkout.sessions.create({
+				billing_address_collection: 'auto',
+				payment_method_types: ['card'],
+				line_items: [
+					{
+						name: `Trustbucket Plan | Type: ${type} Plan: ${plan}`,
+						description: 'Trustbucket platform premium plan',
+						amount: price,
+						currency: 'usd',
+						quantity: 1,
+					},
+				],
+				// mode: 'subscription',
+				success_url: req.protocol + '://' + req.get('host') + '/api/company/subscribe-success',
+				cancel_url: req.protocol + '://' + req.get('host') + '/api/company/subscribe-cancel',
+			});
+			
+			res.status(200).json({
+				url: session.url,
+			});
 		} catch (err) {
 			next(err);
 		}
 	})();
+};
+
+exports.subscribeSuccess = (req, res, next) => {
+	(async function () {
+		console.log('SUCCESS');
+		console.log(req.body)
+	});
+};
+
+exports.subscribeCancel = (req, res, next) => {
+	(async function () {
+		console.log('CANCEL');
+	});
 };

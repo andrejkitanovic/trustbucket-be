@@ -35,7 +35,8 @@
 		"puppeteer-extra-plugin-stealth": "^2.9.0",
 		"request": "^2.88.2",
 		"request-promise": "^4.2.6",
-		"socket.io": "^4.1.2"
+		"socket.io": "^4.1.2",
+		"stripe": "^8.216.0"
 	},
 	"devDependencies": {
 		"prettier": "^2.2.1"
