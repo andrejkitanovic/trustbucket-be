@@ -202,7 +202,7 @@ exports.subscribeSession = (req, res, next) => {
 					start: 'price_1KmgwOA7vheuEVbYwHVFzqgR',
 					pro: 'price_1KmgzvA7vheuEVbYQPxVaEU1',
 				},
-				anually: {
+				yearly: {
 					start: 'price_1KmgyBA7vheuEVbYjV4huWnb',
 					pro: 'price_1Kmh0zA7vheuEVbYF7gYWS63',
 				},
