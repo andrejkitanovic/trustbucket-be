@@ -7,6 +7,7 @@ router.get('/me', userController.getCurrentUser);
 router.put('/update-email', userController.updateEmail);
 router.put('/update-password', userController.updatePassword);
 router.post('/login', userController.login);
+router.post('/google-login', userController.googleLogin);
 router.post('/register', userController.register);
 
 module.exports = router;

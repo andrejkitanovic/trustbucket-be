@@ -172,6 +172,39 @@ exports.login = (req, res, next) => {
 	})();
 };
 
+exports.googleLogin = (req, res, next) => {
+	(async function () {
+		try {
+			const { email } = req.body;
+			const loginUser = await User.findOne({ email });
+
+			if (!loginUser) {
+				const error = new Error('User not found!');
+				error.statusCode = 404;
+				return next(error);
+			}
+
+			const token = jwt.sign(
+				{ id: loginUser._id, type: loginUser.type, selectedCompany: loginUser.selectedCompany },
+				process.env.DECODE_KEY,
+				{
+					// expiresIn: "1h",
+				}
+			);
+
+			await loginUser.populate('selectedCompany', '_id name websiteURL ratings');
+			await loginUser.populate('companies', '_id name');
+			res.status(200).json({
+				token,
+				data: loginUser,
+				message: 'Successful login!',
+			});
+		} catch (err) {
+			next(err);
+		}
+	})();
+};
+
 exports.register = (req, res, next) => {
 	(async function () {
 		try {

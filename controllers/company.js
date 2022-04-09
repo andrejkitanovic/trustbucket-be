@@ -214,9 +214,11 @@ exports.subscribeSession = (req, res, next) => {
 				payment_method_types: ['card'],
 				line_items: [{ price: 'price_1KmgwOA7vheuEVbYwHVFzqgR', quantity: 1 }],
 				mode: 'subscription',
-				success_url: req.protocol + '://' + req.get('host') + '/api/company/subscribe-success',
-				cancel_url: req.protocol + '://' + req.get('host') + '/api/company/subscribe-cancel',
+				success_url: 'https://admin.trustbucket.io/settings/plans',
+				cancel_url: 'https://admin.trustbucket.io/settings/plans',
+				client_reference_id: selectedCompany,
 			});
+			console.log(selectedCompany)
 
 			res.status(200).json({
 				url: session.url,
