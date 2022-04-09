@@ -43,6 +43,20 @@ const companySchema = new Schema(
 				},
 			},
 		],
+		subscription: {
+			type: {
+				type: String,
+				enum: ['monthly', 'yearly'],
+			},
+			plan: {
+				type: String,
+				enum: ['free', 'start', 'pro'],
+				default: 'free',
+			},
+			lastSubscription: {
+				type: Date,
+			},
+		},
 		ratings: [
 			{
 				placeId: {

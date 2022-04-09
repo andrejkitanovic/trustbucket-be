@@ -217,7 +217,6 @@ exports.subscribeSession = (req, res, next) => {
 				cancel_url: 'https://admin.trustbucket.io/settings/plans',
 				client_reference_id: selectedCompany,
 			});
-			console.log(selectedCompany);
 
 			res.status(200).json({
 				url: session.url,
