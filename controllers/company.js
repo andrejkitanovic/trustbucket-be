@@ -195,37 +195,29 @@ exports.subscribeSession = (req, res, next) => {
 			}
 			const { selectedCompany } = auth;
 
-			const { type, plan } = req.body;
-			const pricing = {
-				monthly: {
-					freelancer: 2400,
-					startup: 3200,
-				},
-				anually: {
-					freelancer: 20000,
-					startup: 28000,
-				},
-			};
+			// const { type, plan } = req.body;
+			// const pricing = {
+			// 	monthly: {
+			// 		freelancer: 2400,
+			// 		startup: 3200,
+			// 	},
+			// 	anually: {
+			// 		freelancer: 20000,
+			// 		startup: 28000,
+			// 	},
+			// };
 
-			const price = pricing[type][plan];
+			// const price = pricing[type][plan];
 
 			const session = await stripe.checkout.sessions.create({
 				billing_address_collection: 'auto',
 				payment_method_types: ['card'],
-				line_items: [
-					{
-						name: `Trustbucket Plan | Type: ${type} Plan: ${plan}`,
-						description: 'Trustbucket platform premium plan',
-						amount: price,
-						currency: 'usd',
-						quantity: 1,
-					},
-				],
-				// mode: 'subscription',
+				line_items: [{ price: 'price_1KmgwOA7vheuEVbYwHVFzqgR', quantity: 1 }],
+				mode: 'subscription',
 				success_url: req.protocol + '://' + req.get('host') + '/api/company/subscribe-success',
 				cancel_url: req.protocol + '://' + req.get('host') + '/api/company/subscribe-cancel',
 			});
-			
+
 			res.status(200).json({
 				url: session.url,
 			});
@@ -238,7 +230,7 @@ exports.subscribeSession = (req, res, next) => {
 exports.subscribeSuccess = (req, res, next) => {
 	(async function () {
 		console.log('SUCCESS');
-		console.log(req.body)
+		console.log(req.body);
 	});
 };
 
