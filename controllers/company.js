@@ -195,30 +195,29 @@ exports.subscribeSession = (req, res, next) => {
 			}
 			const { selectedCompany } = auth;
 
-			// const { type, plan } = req.body;
-			// const pricing = {
-			// 	monthly: {
-			// 		freelancer: 2400,
-			// 		startup: 3200,
-			// 	},
-			// 	anually: {
-			// 		freelancer: 20000,
-			// 		startup: 28000,
-			// 	},
-			// };
+			const { type, plan } = req.body;
 
-			// const price = pricing[type][plan];
+			const paymentId = {
+				monthly: {
+					start: 'price_1KmgwOA7vheuEVbYwHVFzqgR',
+					pro: 'price_1KmgzvA7vheuEVbYQPxVaEU1',
+				},
+				anually: {
+					start: 'price_1KmgyBA7vheuEVbYjV4huWnb',
+					pro: 'price_1Kmh0zA7vheuEVbYF7gYWS63',
+				},
+			};
 
 			const session = await stripe.checkout.sessions.create({
 				billing_address_collection: 'auto',
 				payment_method_types: ['card'],
-				line_items: [{ price: 'price_1KmgwOA7vheuEVbYwHVFzqgR', quantity: 1 }],
+				line_items: [{ price: paymentId[type][plan], quantity: 1 }],
 				mode: 'subscription',
 				success_url: 'https://admin.trustbucket.io/settings/plans',
 				cancel_url: 'https://admin.trustbucket.io/settings/plans',
 				client_reference_id: selectedCompany,
 			});
-			console.log(selectedCompany)
+			console.log(selectedCompany);
 
 			res.status(200).json({
 				url: session.url,
@@ -227,17 +226,4 @@ exports.subscribeSession = (req, res, next) => {
 			next(err);
 		}
 	})();
-};
-
-exports.subscribeSuccess = (req, res, next) => {
-	(async function () {
-		console.log('SUCCESS');
-		console.log(req.body);
-	});
-};
-
-exports.subscribeCancel = (req, res, next) => {
-	(async function () {
-		console.log('CANCEL');
-	});
 };
