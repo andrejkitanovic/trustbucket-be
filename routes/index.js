@@ -24,5 +24,5 @@ module.exports = (app) => {
 	app.use('/api/campaign', campaignRoutes);
 	app.use('/api/invitation-settings', invitationSettingsRoutes);
 	app.use('/api/widget', widgetRoutes);
-	app.use('/api/webhook', express.raw({ type: 'application/json' }), webhookRoutes);
+	app.use('/api/webhook', webhookRoutes);
 };

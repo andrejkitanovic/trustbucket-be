@@ -3,13 +3,13 @@ const Company = require('../models/company');
 const endpointSecret = process.env.STRIPE_SECRET_KEY;
 
 exports.webhook = async (req, res, next) => {
-	let event = req.body;
+	let event = req.rawBody;
 
 	if (endpointSecret) {
 		const signature = req.headers['stripe-signature'];
-		console.log(signature)
 		try {
 			event = stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
+			console.log('event', event);
 		} catch (err) {
 			console.log(`⚠️ Webhook signature verification failed.`, err.message);
 			return res.sendStatus(400);
