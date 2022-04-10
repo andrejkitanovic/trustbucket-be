@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 
 module.exports = (app) => {
 	const authRoutes = require('./auth');
@@ -24,5 +24,5 @@ module.exports = (app) => {
 	app.use('/api/campaign', campaignRoutes);
 	app.use('/api/invitation-settings', invitationSettingsRoutes);
 	app.use('/api/widget', widgetRoutes);
-	app.use('/api/webhook', webhookRoutes, express.raw({ type: 'application/json' }));
+	app.use('/api/webhook', express.raw({ type: 'application/json' }), webhookRoutes);
 };
