@@ -1,7 +1,8 @@
 const stripe = require('stripe')(process.env.STRIPE_PUBLISH_KEY);
+const Company = require('../models/company');
 const endpointSecret = process.env.STRIPE_SECRET_KEY;
 
-exports.webhook = (req, res, next) => {
+exports.webhook = async (req, res, next) => {
 	let event = req.body;
 	// Only verify the event if you have an endpoint secret defined.
 	// Otherwise use the basic event deserialized with JSON.parse
@@ -20,6 +21,11 @@ exports.webhook = (req, res, next) => {
 	switch (event.type) {
 		case 'payment_intent.succeeded':
 			const payment = event.data.object;
+
+			const { customer } = payment;
+
+			const company = await Company.findOne({ stripeId: customer });
+			console.log(company);
 
 			// Then define and call a method to handle the successful payment intent.
 			// handlePaymentIntentSucceeded(paymentIntent);

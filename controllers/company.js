@@ -32,7 +32,9 @@ exports.postCompany = (req, res, next) => {
 			const { id } = auth;
 			const { companyName, websiteURL } = req.body;
 
-			const customer = await stripe.customers.create({});
+			const customer = await stripe.customers.create({
+				name: companyName,
+			});
 
 			const profile = await User.findById(id);
 
@@ -198,7 +200,7 @@ exports.subscribeSession = (req, res, next) => {
 			}
 			const { selectedCompany } = auth;
 
-			const company = Company.findById(selectedCompany);
+			const company = await Company.findById(selectedCompany);
 
 			const { type, plan } = req.body;
 
@@ -212,6 +214,8 @@ exports.subscribeSession = (req, res, next) => {
 					pro: 'price_1Kmo1FA7vheuEVbY2CcFOZ4d',
 				},
 			};
+
+			console.log(company.stripeId)
 
 			const session = await stripe.checkout.sessions.create({
 				billing_address_collection: 'auto',
