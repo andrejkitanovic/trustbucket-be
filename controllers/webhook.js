@@ -1,9 +1,10 @@
-const stripe = require('stripe')(process.env.STRIPE_PUBLISH_KEY);
+const { stripe } = require('../utils/stripe');
 const Company = require('../models/company');
 const endpointSecret = process.env.STRIPE_SECRET_KEY;
 
 exports.webhook = async (req, res, next) => {
 	let event = req.body;
+	console.log('Event', event);
 	// Only verify the event if you have an endpoint secret defined.
 	// Otherwise use the basic event deserialized with JSON.parse
 	if (endpointSecret) {
