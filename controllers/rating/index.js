@@ -11,7 +11,7 @@ exports.companyRatings = (req, res, next) => {
 			const { slug } = req.params;
 
 			const company = await Company.findOne({
-				name: {
+				slug: {
 					$regex: new RegExp(slug, 'i'),
 				},
 			});

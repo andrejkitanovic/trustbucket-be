@@ -9,7 +9,7 @@ exports.getTrustbucketReviews = (req, res, next) => {
 			const { slug } = req.params;
 
 			const company = await Company.findOne({
-				name: {
+				slug: {
 					$regex: new RegExp(slug, 'i'),
 				},
 			}).select('image name websiteURL email phone address socialLinks ratings');
@@ -27,7 +27,7 @@ exports.postTrustbucketReviews = (req, res, next) => {
 			const { slug, rating, title, description, image, name, email } = req.body;
 
 			const company = await Company.findOne({
-				name: {
+				slug: {
 					$regex: new RegExp(slug, 'i'),
 				},
 			});
