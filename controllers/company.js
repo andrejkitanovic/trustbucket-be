@@ -1,6 +1,6 @@
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
-const stripe = require('stripe')(process.env.STRIPE_PUBLISH_KEY);
+const { stripe } = require('../utils/stripe');
 const User = require('../models/user');
 const Company = require('../models/company');
 const { getIdAndTypeFromAuth } = require('./auth');
@@ -32,12 +32,15 @@ exports.postCompany = (req, res, next) => {
 			const { id } = auth;
 			const { companyName, websiteURL } = req.body;
 
+			const customer = await stripe.customers.create({});
+
 			const profile = await User.findById(id);
 
 			const companyObject = new Company({
 				user: profile._id,
 				name: companyName,
 				websiteURL,
+				stripeId: customer.id,
 				ratings: [
 					{ type: 'overall', rating: null, ratingCount: 0 },
 					{ type: 'trustbucket', rating: null, ratingCount: 0 },
@@ -195,6 +198,8 @@ exports.subscribeSession = (req, res, next) => {
 			}
 			const { selectedCompany } = auth;
 
+			const company = Company.findById(selectedCompany);
+
 			const { type, plan } = req.body;
 
 			const paymentId = {
@@ -211,8 +216,10 @@ exports.subscribeSession = (req, res, next) => {
 			const session = await stripe.checkout.sessions.create({
 				billing_address_collection: 'auto',
 				payment_method_types: ['card'],
-				line_items: [{ price: paymentId[type][plan], quantity: 1 }],
-				mode: 'subscription',
+				// line_items: [{ price: paymentId[type][plan], quantity: 1 }],
+				line_items: [{ currency: 'usd', amount: 5000, name: 'test', quantity: 1 }],
+				customer: company.stripeId,
+				// mode: 'subscription',
 				success_url: 'https://admin.trustbucket.io/settings/plans',
 				cancel_url: 'https://admin.trustbucket.io/settings/plans',
 				client_reference_id: selectedCompany,

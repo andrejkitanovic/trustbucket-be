@@ -1,8 +1,10 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { stripe } = require('../utils/stripe');
 const User = require('../models/user');
 const Company = require('../models/company');
 const InvitationSettings = require('../models/invitationSettings');
+const { confirmEmail } = require('../utils/mailer');
 
 const getIdAndTypeFromAuth = (req, res, next) => {
 	if (req.headers && req.headers.authorization) {
@@ -218,9 +220,11 @@ exports.register = (req, res, next) => {
 				email,
 				password: hashedPassword,
 			});
+			const customer = await stripe.customers.create({});
 			const companyObject = new Company({
 				user: userObject._id,
 				name: companyName,
+				stripeId: customer.id,
 				websiteURL,
 				ratings: [
 					{ type: 'overall', rating: null, ratingCount: 0 },
@@ -240,12 +244,14 @@ exports.register = (req, res, next) => {
 			const companyCreated = await companyObject.save();
 			await invitationSettingsObject.save();
 
+			await confirmEmail({ id: userObject._id, firstName, lastName, email });
+
 			if (userCreated && companyCreated) {
 				await userObject.populate('selectedCompany', '_id name image websiteURL ratings');
 				await userObject.populate('companies', '_id name');
 				res.status(200).json({
 					data: userObject,
-					message: 'User successfully registered!',
+					message: 'Please confirm your email address!',
 				});
 			}
 		} catch (err) {

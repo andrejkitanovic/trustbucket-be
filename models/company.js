@@ -43,6 +43,7 @@ const companySchema = new Schema(
 				},
 			},
 		],
+		stripeId: String,
 		subscription: {
 			type: {
 				type: String,

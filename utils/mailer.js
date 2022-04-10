@@ -1,4 +1,5 @@
 const mailjet = require('node-mailjet').connect(process.env.MJ_APIKEY_PUBLIC, process.env.MJ_APIKEY_PRIVATE);
+const confirmEmail = require('./emailTemplates/confirmEmail');
 
 exports.getCampaignOverview = async () => {
 	const { body: result } = await mailjet.get('campaignoverview').request();
@@ -43,5 +44,32 @@ exports.sendEmail = async (template, recievers, campaignId, invitation) => {
 	} catch (err) {
 		console.log(err);
 		return 'Error while sending!';
+	}
+};
+
+exports.confirmEmail = async (user) => {
+	try {
+		const { body: result } = await mailjet.post('send', { version: 'v3.1' }).request({
+			Messages: [
+				{
+					From: {
+						Email: 'kitanovicandrej213@gmail.com',
+						Name: 'Trustbucket IO',
+					},
+					To: [
+						{
+							Email: user.email,
+							Name: `${user.firstName} ${user.lastName}`,
+						},
+					],
+					Subject: 'Trustbucket Confirmation Email',
+					HTMLPart: confirmEmail(user),
+				},
+			],
+		});
+
+		return result.Data;
+	} catch (err) {
+		console.log(err);
 	}
 };

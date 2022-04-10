@@ -39,6 +39,7 @@
 		"stripe": "^8.216.0"
 	},
 	"devDependencies": {
+		"nodemon": "^2.0.15",
 		"prettier": "^2.2.1"
 	},
 	"engines": {
