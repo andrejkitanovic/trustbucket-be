@@ -184,10 +184,10 @@ exports.confirmEmail = (req, res, next) => {
 	(async function () {
 		try {
 			const { id } = req.body;
-			const company = await Company.findById(id);
+			const user = await User.findById(id);
 
-			company.confirmed = true;
-			await company.save();
+			user.confirmed = true;
+			await user.save();
 
 			res.status(200).json({
 				message: 'Successful confirmed email!',
