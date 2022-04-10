@@ -2,8 +2,8 @@ const { stripe } = require('../utils/stripe');
 const Company = require('../models/company');
 const endpointSecret = process.env.STRIPE_SECRET_KEY;
 
-exports.webhook = async (req, res, next) => {
-	let event = req.rawBody;
+exports.webhook = (req, res, next) => {
+	let event = req.body;
 
 	if (endpointSecret) {
 		const signature = req.headers['stripe-signature'];
@@ -20,11 +20,11 @@ exports.webhook = async (req, res, next) => {
 	switch (event.type) {
 		case 'payment_intent.succeeded':
 			const payment = event.data.object;
+			console.log(payment)
+			// const { customer } = payment;
 
-			const { customer } = payment;
-
-			const company = await Company.findOne({ stripeId: customer });
-			console.log(company);
+			// const company = await Company.findOne({ stripeId: customer });
+			// console.log(company);
 
 			// Then define and call a method to handle the successful payment intent.
 			// handlePaymentIntentSucceeded(paymentIntent);
