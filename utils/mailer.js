@@ -77,6 +77,7 @@ exports.confirmEmail = async (user) => {
 
 exports.forgotPassword = async (user) => {
 	try {
+		console.log(user);
 		const { body: result } = await mailjet.post('send', { version: 'v3.1' }).request({
 			Messages: [
 				{
@@ -98,6 +99,6 @@ exports.forgotPassword = async (user) => {
 
 		return result.Data;
 	} catch (err) {
-		console.log(err);
+		// console.log(err);
 	}
 };
