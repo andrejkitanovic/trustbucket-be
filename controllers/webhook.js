@@ -1,15 +1,16 @@
-const { stripe } = require('../utils/stripe');
-const Company = require('../models/company');
+const stripe = require('stripe')(process.env.STRIPE_PUBLISH_KEY);
 const endpointSecret = process.env.STRIPE_SECRET_KEY;
 
 exports.webhook = (req, res, next) => {
+	console.log('Webhook called', req.body);
 	let event = req.body;
-
+	// Only verify the event if you have an endpoint secret defined.
+	// Otherwise use the basic event deserialized with JSON.parse
 	if (endpointSecret) {
+		// Get the signature sent by Stripe
 		const signature = req.headers['stripe-signature'];
 		try {
 			event = stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
-			console.log('event', event);
 		} catch (err) {
 			console.log(`⚠️ Webhook signature verification failed.`, err.message);
 			return res.sendStatus(400);
@@ -19,13 +20,8 @@ exports.webhook = (req, res, next) => {
 	// Handle the event
 	switch (event.type) {
 		case 'payment_intent.succeeded':
-			const payment = event.data.object;
-			console.log(payment)
-			// const { customer } = payment;
-
-			// const company = await Company.findOne({ stripeId: customer });
-			// console.log(company);
-
+			const paymentIntent = event.data.object;
+			console.log(`PaymentIntent for ${paymentIntent.amount} was successful!`);
 			// Then define and call a method to handle the successful payment intent.
 			// handlePaymentIntentSucceeded(paymentIntent);
 			break;
