@@ -4,7 +4,7 @@ const { stripe } = require('../utils/stripe');
 const User = require('../models/user');
 const Company = require('../models/company');
 const InvitationSettings = require('../models/invitationSettings');
-const { confirmEmail } = require('../utils/mailer');
+const { confirmEmail, forgotPassword } = require('../utils/mailer');
 
 const getIdAndTypeFromAuth = (req, res, next) => {
 	if (req.headers && req.headers.authorization) {
@@ -198,6 +198,29 @@ exports.confirmEmail = (req, res, next) => {
 	})();
 };
 
+exports.forgotPassword = (req, res, next) => {
+	(async function () {
+		try {
+			const { email } = req.body;
+			const user = await User.findOne({ email });
+
+			if (!user) {
+				const error = new Error('User not found!');
+				error.statusCode = 404;
+				return next(error);
+			}
+
+			await forgotPassword({ id: user._id, ...user });
+
+			res.status(200).json({
+				message: 'Email for reset password sent!',
+			});
+		} catch (err) {
+			next(err);
+		}
+	})();
+};
+
 exports.googleLogin = (req, res, next) => {
 	(async function () {
 		try {
@@ -290,6 +313,6 @@ exports.register = (req, res, next) => {
 	})();
 };
 
-exports.googleRegister = (req, res, next) => {};
+// exports.googleRegister = (req, res, next) => {};
 
 exports.getIdAndTypeFromAuth = getIdAndTypeFromAuth;

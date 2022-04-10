@@ -10,5 +10,6 @@ router.post('/login', userController.login);
 router.post('/google-login', userController.googleLogin);
 router.post('/register', userController.register);
 router.post('/confirm-email', userController.confirmEmail);
+router.post('/forgot-password', userController.forgotPassword);
 
 module.exports = router;

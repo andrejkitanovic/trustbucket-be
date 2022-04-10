@@ -1,11 +1,11 @@
-module.exports = ({ id, firstName, lastName }) => {
+module.exports = ({ id }) => {
 	return `<!DOCTYPE html>
     <html lang="en">
       <head>
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Trustbucket email confirmation</title>
+        <title>Trustbucket forgot password</title>
       </head>
       <body style="background: #f1f5f9">
         <table
@@ -202,15 +202,11 @@ module.exports = ({ id, firstName, lastName }) => {
                                       style="line-height: 175%; text-align: left"
                                       align="left"
                                     >
-                                      Hi ${firstName} ${lastName},<br />Ready to start
-                                      using your new Trustbucket account? Just click
-                                      below or copy and paste the following URL into
-                                      your browser<br />
-                                      <a
-                                        style="color: #2563eb"
-                                        href="https://admin.trustbucket.io/confirm-email?id=${id}"
-                                        >https://admin.trustbucket.io/confirm-email?id=${id}</a
-                                      >
+                                      Hello, Somebody (hopefully you) requested a
+                                      new password for Trustindex account. There
+                                      have no changes made to your account, yet...
+                                      You can reset your password below with the
+                                      button!<br />
                                     </p>
                                   </div>
                                 </div>
@@ -306,7 +302,7 @@ module.exports = ({ id, firstName, lastName }) => {
                                           "
                                         >
                                           <a
-                                            href="https://admin.trustbucket.io/confirm-email?id=${id}"
+                                            href="https://admin.trustbucket.io/reset-password?id=${id}"
                                             style="
                                               color: #00a4bd;
                                               font-size: 16px;
@@ -318,7 +314,7 @@ module.exports = ({ id, firstName, lastName }) => {
                                               display: block;
                                             "
                                             target="_blank"
-                                            data-saferedirecturl="https://admin.trustbucket.io/confirm-email?id=${id}"
+                                            data-saferedirecturl="https://admin.trustbucket.io/reset-password?id=${id}"
                                           >
                                             <strong
                                               style="
@@ -327,7 +323,7 @@ module.exports = ({ id, firstName, lastName }) => {
                                                 text-decoration: none;
                                                 font-style: normal;
                                               "
-                                              >Confirm email address</strong
+                                              >Password</strong
                                             >
                                           </a>
                                         </td>
