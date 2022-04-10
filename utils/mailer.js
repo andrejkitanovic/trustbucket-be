@@ -90,7 +90,7 @@ exports.forgotPassword = async (user) => {
 							Name: `${user.firstName} ${user.lastName}`,
 						},
 					],
-					Subject: 'Trustbucket Confirmation Email',
+					Subject: 'Trustbucket Reset Password',
 					HTMLPart: forgotPassword(user),
 				},
 			],

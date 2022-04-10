@@ -195,7 +195,7 @@ module.exports = ({ id }) => {
                                       "
                                       align="left"
                                     >
-                                      Confirm your email address
+                                      Reset password
                                     </h1>
                                     <p style="line-height: 25%">&nbsp;</p>
                                     <p
@@ -302,7 +302,7 @@ module.exports = ({ id }) => {
                                           "
                                         >
                                           <a
-                                            href="https://admin.trustbucket.io/reset-password?id=${id}"
+                                            href="https://admin.trustbucket.io/auth/reset-password?id=${id}"
                                             style="
                                               color: #00a4bd;
                                               font-size: 16px;
@@ -314,7 +314,7 @@ module.exports = ({ id }) => {
                                               display: block;
                                             "
                                             target="_blank"
-                                            data-saferedirecturl="https://admin.trustbucket.io/reset-password?id=${id}"
+                                            data-saferedirecturl="https://admin.trustbucket.io/auth/reset-password?id=${id}"
                                           >
                                             <strong
                                               style="
