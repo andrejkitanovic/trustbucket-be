@@ -184,7 +184,7 @@ exports.confirmEmail = (req, res, next) => {
 	(async function () {
 		try {
 			const { id } = req.body;
-			const company = Company.findById(id);
+			const company = await Company.findById(id);
 
 			company.confirmed = true;
 			await company.save();

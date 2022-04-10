@@ -204,25 +204,23 @@ exports.subscribeSession = (req, res, next) => {
 
 			const paymentId = {
 				monthly: {
-					start: 'price_1KmgwOA7vheuEVbYwHVFzqgR',
-					pro: 'price_1KmgzvA7vheuEVbYQPxVaEU1',
+					start: 'price_1Kmo1FA7vheuEVbY2CcFOZ4d',
+					pro: 'price_1Kmo1FA7vheuEVbY2CcFOZ4d',
 				},
 				yearly: {
-					start: 'price_1KmgyBA7vheuEVbYjV4huWnb',
-					pro: 'price_1Kmh0zA7vheuEVbYF7gYWS63',
+					start: 'price_1Kmo1FA7vheuEVbY2CcFOZ4d',
+					pro: 'price_1Kmo1FA7vheuEVbY2CcFOZ4d',
 				},
 			};
 
 			const session = await stripe.checkout.sessions.create({
 				billing_address_collection: 'auto',
 				payment_method_types: ['card'],
-				// line_items: [{ price: paymentId[type][plan], quantity: 1 }],
-				line_items: [{ currency: 'usd', amount: 5000, name: 'test', quantity: 1 }],
+				line_items: [{ price: paymentId[type][plan], quantity: 1 }],
 				customer: company.stripeId,
-				// mode: 'subscription',
+				mode: 'subscription',
 				success_url: 'https://admin.trustbucket.io/settings/plans',
 				cancel_url: 'https://admin.trustbucket.io/settings/plans',
-				client_reference_id: selectedCompany,
 			});
 
 			res.status(200).json({
