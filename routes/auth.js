@@ -11,5 +11,6 @@ router.post('/google-login', userController.googleLogin);
 router.post('/register', userController.register);
 router.post('/confirm-email', userController.confirmEmail);
 router.post('/forgot-password', userController.forgotPassword);
+router.post('/reset-password', userController.resetPassword);
 
 module.exports = router;

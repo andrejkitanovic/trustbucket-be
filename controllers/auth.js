@@ -221,6 +221,32 @@ exports.forgotPassword = (req, res, next) => {
 	})();
 };
 
+exports.resetPassword = (req, res, next) => {
+	(async function () {
+		try {
+			const { id, password } = req.body;
+			const user = await User.findById(id);
+
+			if (!user) {
+				const error = new Error('User not found!');
+				error.statusCode = 404;
+				return next(error);
+			}
+
+			const hashedPassword = await bcrypt.hash(password, 12);
+
+			user.password = hashedPassword;
+			await user.save();
+
+			res.status(200).json({
+				message: 'Successfully reseted password!',
+			});
+		} catch (err) {
+			next(err);
+		}
+	})();
+};
+
 exports.googleLogin = (req, res, next) => {
 	(async function () {
 		try {
