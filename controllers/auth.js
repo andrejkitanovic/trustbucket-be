@@ -153,7 +153,7 @@ exports.login = (req, res, next) => {
 				return next(error);
 			}
 
-			if (!loginUser.confirmed){
+			if (!loginUser.confirmed) {
 				const error = new Error('User is not confirmed!');
 				error.statusCode = 401;
 				return next(error);
@@ -173,6 +173,24 @@ exports.login = (req, res, next) => {
 				token,
 				data: loginUser,
 				message: 'Successful login!',
+			});
+		} catch (err) {
+			next(err);
+		}
+	})();
+};
+
+exports.confirmEmail = (req, res, next) => {
+	(async function () {
+		try {
+			const { id } = req.body;
+			const company = Company.findById(id);
+
+			company.confirmed = true;
+			await company.save();
+
+			res.status(200).json({
+				message: 'Successful confirmed email!',
 			});
 		} catch (err) {
 			next(err);

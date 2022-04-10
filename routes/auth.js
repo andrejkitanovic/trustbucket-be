@@ -9,5 +9,6 @@ router.put('/update-password', userController.updatePassword);
 router.post('/login', userController.login);
 router.post('/google-login', userController.googleLogin);
 router.post('/register', userController.register);
+router.post('/confirm-email', userController.confirmEmail);
 
 module.exports = router;
