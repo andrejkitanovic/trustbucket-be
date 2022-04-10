@@ -4,12 +4,10 @@ const endpointSecret = process.env.STRIPE_SECRET_KEY;
 
 exports.webhook = async (req, res, next) => {
 	let event = req.body;
-	console.log('Event', event);
-	// Only verify the event if you have an endpoint secret defined.
-	// Otherwise use the basic event deserialized with JSON.parse
+
 	if (endpointSecret) {
-		// Get the signature sent by Stripe
 		const signature = req.headers['stripe-signature'];
+		console.log(signature)
 		try {
 			event = stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
 		} catch (err) {
