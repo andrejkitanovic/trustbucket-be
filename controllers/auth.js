@@ -210,6 +210,11 @@ exports.googleLogin = (req, res, next) => {
 				return next(error);
 			}
 
+			if (!loginUser.confirmed) {
+				loginUser.confirmed = true;
+				await loginUser.save();
+			}
+
 			const token = jwt.sign(
 				{ id: loginUser._id, type: loginUser.type, selectedCompany: loginUser.selectedCompany },
 				process.env.DECODE_KEY,
@@ -234,7 +239,7 @@ exports.googleLogin = (req, res, next) => {
 exports.register = (req, res, next) => {
 	(async function () {
 		try {
-			const { password, firstName, lastName, phone, email, companyName, websiteURL } = req.body;
+			const { password, firstName, lastName, phone, email, companyName, websiteURL, slug } = req.body;
 			const hashedPassword = await bcrypt.hash(password, 12);
 
 			const userObject = new User({
@@ -249,6 +254,7 @@ exports.register = (req, res, next) => {
 				user: userObject._id,
 				name: companyName,
 				stripeId: customer.id,
+				slug,
 				websiteURL,
 				ratings: [
 					{ type: 'overall', rating: null, ratingCount: 0 },

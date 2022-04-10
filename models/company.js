@@ -27,11 +27,10 @@ const companySchema = new Schema(
 				lng: Number,
 			},
 		},
-
 		slug: {
-			name: String,
-			// required: true,
-			// unique: true,
+			type: String,
+			required: true,
+			unique: true,
 		},
 		socialLinks: [
 			{
