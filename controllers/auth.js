@@ -210,7 +210,7 @@ exports.forgotPassword = (req, res, next) => {
 				return next(error);
 			}
 
-			await forgotPassword({ id: user._id, ...user });
+			await forgotPassword({ id: user._id, email: user.email, firstName: user.firstName, lastName: user.lastName });
 
 			res.status(200).json({
 				message: 'Email for reset password sent!',
