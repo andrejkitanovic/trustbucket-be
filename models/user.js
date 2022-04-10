@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
 	{
+		confirmed: {
+			type: Boolean,
+			default: false,
+		},
 		type: {
 			type: String,
 			enum: ['basic', 'admin'],

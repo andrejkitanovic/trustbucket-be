@@ -3,10 +3,6 @@ const Schema = mongoose.Schema;
 
 const companySchema = new Schema(
 	{
-		confirmed: {
-			type: Boolean,
-			default: false,
-		},
 		image: {
 			type: String,
 		},
