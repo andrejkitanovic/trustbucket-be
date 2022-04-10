@@ -153,6 +153,12 @@ exports.login = (req, res, next) => {
 				return next(error);
 			}
 
+			if (!loginUser.confirmed){
+				const error = new Error('User is not confirmed!');
+				error.statusCode = 401;
+				return next(error);
+			}
+
 			const token = jwt.sign(
 				{ id: loginUser._id, type: loginUser.type, selectedCompany: loginUser.selectedCompany },
 				process.env.DECODE_KEY,

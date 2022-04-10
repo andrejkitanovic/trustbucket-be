@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 const companySchema = new Schema(
 	{
+		confirmed: {
+			type: Boolean,
+			default: false,
+		},
 		image: {
 			type: String,
 		},
@@ -27,6 +31,7 @@ const companySchema = new Schema(
 				lng: Number,
 			},
 		},
+
 		slug: {
 			name: String,
 			// required: true,
