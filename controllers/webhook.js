@@ -21,21 +21,13 @@ exports.webhook = async (req, res, next) => {
 
 	// Handle the event
 	switch (event.type) {
-		case 'payment_intent.succeeded':
+		case 'invoice.paid':
 			const payment = event.data.object;
 
 			const company = await Company.findOne({ stripeId: payment.customer });
 			if (!company) return;
 
-			const previousInvoices = company.invoices ? [...company.invoices] : [];
-			company.invoices = [
-				...previousInvoices,
-				{
-					url: payment.charges.data[0].receipt_url,
-					amount: payment.charges.data[0].amount / 100,
-					date: new Date(),
-				},
-			];
+			company.billingInfo.interval = payment.lines.data[0].plan.interval;
 			// company.billingInfo.card =
 
 			await company.save();

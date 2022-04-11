@@ -44,30 +44,20 @@ const companySchema = new Schema(
 			},
 		],
 		stripeId: String,
+		billingInfo: {
+			interval: String,
+			card: String,
+		},
 		subscription: {
-			type: {
-				type: String,
-				enum: ['monthly', 'yearly'],
-			},
 			plan: {
 				type: String,
 				enum: ['free', 'start', 'pro'],
 				default: 'free',
 			},
-			lastSubscription: {
+			ends: {
 				type: Date,
 			},
 		},
-		billingInfo: {
-			card: String,
-		},
-		invoices: [
-			{
-				url: String,
-				amount: Number,
-				date: Date,
-			},
-		],
 		ratings: [
 			{
 				placeId: {

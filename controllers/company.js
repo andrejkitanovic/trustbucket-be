@@ -20,6 +20,38 @@ const addAddress = async (address, selectedCompany) => {
 
 exports.addAddress = addAddress;
 
+exports.getInvoices = (req, res, next) => {
+	(async function () {
+		try {
+			const auth = getIdAndTypeFromAuth(req, res, next);
+			if (!auth) {
+				const error = new Error('Not Authorized!');
+				error.statusCode = 401;
+				next(error);
+			}
+			const { selectedCompany } = auth;
+
+			const company = await Company.findById(selectedCompany);
+
+			const invoices = await stripe.invoices.list({
+				customer: company.stripeId,
+			});
+
+			const invoicesObject = invoices.data.map((invoice) => ({
+				amount: invoice.total / 100,
+				created: invoice.created,
+				currency: invoice.currency,
+				pdf: invoice.invoice_pdf,
+				item: invoice.lines.data[0].description
+			}));
+
+			res.status(200).json(invoicesObject);
+		} catch (err) {
+			next(err);
+		}
+	})();
+};
+
 exports.postCompany = (req, res, next) => {
 	(async function () {
 		try {

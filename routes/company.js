@@ -3,6 +3,7 @@ const companyController = require('../controllers/company');
 
 const router = express.Router();
 
+router.get('/invoices', companyController.getInvoices)
 router.post('/', companyController.postCompany);
 router.post('/select', companyController.selectCompany);
 router.put('/', companyController.updateCompany);
