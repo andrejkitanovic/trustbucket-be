@@ -204,7 +204,7 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 
 		const items = [];
 
-		await $('div[data-review-id]').map((index, el) => {
+		await $('div.section-scrollbox div[data-review-id]').map((index, el) => {
 			const $el = cheerio.load(el);
 
 			$el.prototype.count = function (selector) {

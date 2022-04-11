@@ -215,8 +215,6 @@ exports.subscribeSession = (req, res, next) => {
 				},
 			};
 
-			console.log(company.stripeId)
-
 			const session = await stripe.checkout.sessions.create({
 				billing_address_collection: 'auto',
 				payment_method_types: ['card'],
