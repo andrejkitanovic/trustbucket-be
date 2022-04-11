@@ -1,7 +1,8 @@
 // const stripe = require('stripe')(process.env.STRIPE_PUBLISH_KEY);
 // const endpointSecret = process.env.STRIPE_SECRET_KEY;
+const Company = require('../models/company')
 
-exports.webhook = (req, res, next) => {
+exports.webhook = async (req, res, next) => {
 	// console.log('Webhook called', req.body);
 	let event = req.body;
 
