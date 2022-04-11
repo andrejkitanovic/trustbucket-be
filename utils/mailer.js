@@ -10,7 +10,7 @@ exports.getCampaignOverview = async () => {
 
 exports.sendEmail = async (template, recievers, campaignId, invitation) => {
 	try {
-		const { subject, content } = template;
+		const { subject, content, linkUrl } = template;
 
 		const { body: result } = await mailjet.post('send', { version: 'v3.1' }).request({
 			Messages: recievers.map((reciever) => {
@@ -22,7 +22,7 @@ exports.sendEmail = async (template, recievers, campaignId, invitation) => {
 				let buttonText = null;
 				if (/{review_link:(.*?)}/g.test(personalizedContent)) {
 					buttonText = personalizedContent.split('{review_link:').pop().split('}')[0];
-					personalizedContent = personalizedContent.replace(/{review_link:(.*?)}/g, `<a href="">${buttonText.trim()}</a>`);
+					personalizedContent = personalizedContent.replace(/{review_link:(.*?)}/g, `<a href="${linkUrl}">${buttonText.trim()}</a>`);
 				}
 
 				return {

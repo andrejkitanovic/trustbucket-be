@@ -298,7 +298,11 @@ exports.register = (req, res, next) => {
 				email,
 				password: hashedPassword,
 			});
-			const customer = await stripe.customers.create({});
+			const customer = await stripe.customers.create({
+				name: companyName,
+				email,
+				phone
+			});
 			const companyObject = new Company({
 				user: userObject._id,
 				name: companyName,

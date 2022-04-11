@@ -52,7 +52,7 @@ const companySchema = new Schema(
 			plan: {
 				type: String,
 				enum: ['free', 'start', 'pro'],
-				default: 'free',
+				default: 'pro',
 			},
 			ends: {
 				type: Date,
