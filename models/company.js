@@ -58,6 +58,14 @@ const companySchema = new Schema(
 				type: Date,
 			},
 		},
+		billingInfo: {
+			card: String,
+		},
+		invoices: {
+			url: String,
+			amount: Number,
+			date: Date,
+		},
 		ratings: [
 			{
 				placeId: {

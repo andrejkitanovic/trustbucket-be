@@ -2,8 +2,9 @@
 // const endpointSecret = process.env.STRIPE_SECRET_KEY;
 
 exports.webhook = (req, res, next) => {
-	console.log('Webhook called', req.body);
+	// console.log('Webhook called', req.body);
 	let event = req.body;
+
 	// Only verify the event if you have an endpoint secret defined.
 	// Otherwise use the basic event deserialized with JSON.parse
 	// if (endpointSecret) {
@@ -20,15 +21,23 @@ exports.webhook = (req, res, next) => {
 	// Handle the event
 	switch (event.type) {
 		case 'payment_intent.succeeded':
-			const paymentIntent = event.data.object;
-			console.log(`PaymentIntent for ${paymentIntent.amount} was successful!`);
-			// Then define and call a method to handle the successful payment intent.
-			// handlePaymentIntentSucceeded(paymentIntent);
-			break;
-		case 'payment_method.attached':
-			const paymentMethod = event.data.object;
-			// Then define and call a method to handle the successful attachment of a PaymentMethod.
-			// handlePaymentMethodAttached(paymentMethod);
+			const payment = event.data.object;
+
+			const company = await Company.findOne(payment.customer);
+			if (!company) return;
+
+			company.invoices = [
+				...company.invoices,
+				{
+					url: payment.charges.data[0].receipt_url,
+					amount: payment.charges.data[0].amount / 100,
+					date: new Date(),
+				},
+			];
+			// company.billingInfo.card = 
+
+			await company.save()
+
 			break;
 		default:
 			// Unexpected event type
