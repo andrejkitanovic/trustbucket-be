@@ -39,10 +39,10 @@ exports.getInvoices = (req, res, next) => {
 
 			const invoicesObject = invoices.data.map((invoice) => ({
 				amount: invoice.total / 100,
-				created: invoice.created,
+				created: invoice.created * 1000,
 				currency: invoice.currency,
 				pdf: invoice.invoice_pdf,
-				item: invoice.lines.data[0].description
+				item: invoice.lines.data[0].description,
 			}));
 
 			res.status(200).json(invoicesObject);

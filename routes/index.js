@@ -11,6 +11,7 @@ module.exports = (app) => {
 	const invitationSettingsRoutes = require('./invitationSettings');
 	const widgetRoutes = require('./widget');
 	const webhookRoutes = require('./webhook');
+	const feedbackRoutes = require('./feedback');
 
 	// API routes
 	app.use('/api/auth', authRoutes);
@@ -24,4 +25,5 @@ module.exports = (app) => {
 	app.use('/api/invitation-settings', invitationSettingsRoutes);
 	app.use('/api/widget', widgetRoutes);
 	app.use('/api/webhook', webhookRoutes);
+	app.use('/api/feedback', feedbackRoutes);
 };

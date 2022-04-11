@@ -2,7 +2,9 @@ const { getIdAndTypeFromAuth } = require('../auth');
 const { deleteRatingHandle } = require('../profile');
 const Company = require('../../models/company');
 const Rating = require('../../models/rating');
+const Campaign = require('../../models/campaign');
 const mongoose = require('mongoose');
+const { getCampaignOverview } = require('../../utils/mailer');
 const _ = require('lodash');
 
 exports.companyRatings = (req, res, next) => {
@@ -254,9 +256,15 @@ exports.stats = (req, res, next) => {
 				}
 			}
 
+			const campaigns = await Campaign.find({ company: selectedCompany }).select('id recievers');
+			const campaignsId = campaigns.map((campaign) => campaign._id.toString());
+			const allCampaignsOverview = await getCampaignOverview();
+			const campaignResult = allCampaignsOverview.filter((campaign) => campaignsId.includes(campaign.Title));
+
 			res.status(200).json({
 				labels,
 				...stats,
+				invitationsCount: campaignResult.reduce((sum, single) => sum + single.DeliveredCount, 0),
 			});
 		} catch (err) {
 			next(err);
