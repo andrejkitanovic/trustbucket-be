@@ -215,8 +215,8 @@ module.exports = ({ subject, content, button }) => {
                     </div>
                   </div>
                   ${
-										button &&
-										`<div
+										button
+											? `<div
                     id="m_-5072298247928332435section-2"
                     class="m_-5072298247928332435hse-section"
                     style="padding-left: 10px; padding-right: 10px"
@@ -337,6 +337,7 @@ module.exports = ({ subject, content, button }) => {
                       </div>
                     </div>
                   </div>`
+											: ''
 									}
                   <div
                     id="m_-5072298247928332435section-3"

@@ -9,12 +9,6 @@ exports.getCampaignOverview = async () => {
 	return result.Data;
 };
 
-// const sendEmailButton = (url, text) => `<a
-// style="color: #2563eb"
-// href="${url}"
-// >https://admin.trustbucket.io/confirm-email?id=${id}</a
-// >`;
-
 exports.sendEmail = async (template, recievers, campaignId, invitation) => {
 	try {
 		const { subject, content, linkUrl } = template;
