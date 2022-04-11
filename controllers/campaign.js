@@ -77,7 +77,7 @@ exports.postCampaign = (req, res, next) => {
 			}
 			const { selectedCompany } = auth;
 
-			const template = await EmailTemplate.findById(templateId).select('subject content');
+			const template = await EmailTemplate.findById(templateId).select('subject content linkUrl');
 
 			const campaignObject = new Campaign({
 				company: selectedCompany,
