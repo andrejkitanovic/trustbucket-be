@@ -18,6 +18,13 @@ exports.sendEmail = async (template, recievers, campaignId, invitation) => {
 				personalizedContent = personalizedContent.replace(/{firstName}/g, reciever.firstName);
 				personalizedContent = personalizedContent.replace(/{lastName}/g, reciever.lastName);
 				personalizedContent = personalizedContent.replace(/{email}/g, reciever.email);
+
+				let buttonText = null;
+				if (/{review_id:(.*?)}/g.test(personalizedContent)) {
+					buttonText = personalizedContent.split('{review_link:').pop().split('}')[0];
+					personalizedContent.replace(/{review_id:(.*?)}/g, `<a href="">${buttonText.trim()}</a>`);
+				}
+
 				return {
 					From: {
 						// Email: 'noreply.invitations@trustbucket.io',
