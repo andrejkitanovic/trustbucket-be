@@ -1,6 +1,6 @@
 // const stripe = require('stripe')(process.env.STRIPE_PUBLISH_KEY);
 // const endpointSecret = process.env.STRIPE_SECRET_KEY;
-const Company = require('../models/company')
+const Company = require('../models/company');
 
 exports.webhook = async (req, res, next) => {
 	// console.log('Webhook called', req.body);
@@ -24,7 +24,7 @@ exports.webhook = async (req, res, next) => {
 		case 'payment_intent.succeeded':
 			const payment = event.data.object;
 
-			const company = await Company.findOne(payment.customer);
+			const company = await Company.findOne({ stripeId: payment.customer });
 			if (!company) return;
 
 			company.invoices = [
@@ -35,9 +35,9 @@ exports.webhook = async (req, res, next) => {
 					date: new Date(),
 				},
 			];
-			// company.billingInfo.card = 
+			// company.billingInfo.card =
 
-			await company.save()
+			await company.save();
 
 			break;
 		default:
