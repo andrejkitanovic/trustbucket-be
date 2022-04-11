@@ -33,6 +33,7 @@ exports.sendEmail = async (template, recievers, campaignId, invitation) => {
 					// 	/{review_link:(.*?)}/g,
 					// 	`<a href="${linkUrl}">${buttonText.trim()}</a>`
 					// );
+					personalizedContent = personalizedContent.replace(/{review_link:(.*?)}/g, '');
 
 					button = {
 						text: buttonText.trim(),
