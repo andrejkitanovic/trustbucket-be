@@ -1,4 +1,4 @@
-module.exports = ({ subject, content }) => {
+module.exports = ({ subject, content, button }) => {
 	return `<!DOCTYPE html>
     <html lang="en">
       <head>
