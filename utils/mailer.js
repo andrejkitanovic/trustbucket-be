@@ -1,4 +1,5 @@
 const mailjet = require('node-mailjet').connect(process.env.MJ_APIKEY_PUBLIC, process.env.MJ_APIKEY_PRIVATE);
+const campaignEmail = require('./emailTemplates/campaignEmail');
 const confirmEmail = require('./emailTemplates/confirmEmail');
 const forgotPassword = require('./emailTemplates/forgotPassword');
 
@@ -7,6 +8,12 @@ exports.getCampaignOverview = async () => {
 
 	return result.Data;
 };
+
+// const sendEmailButton = (url, text) => `<a
+// style="color: #2563eb"
+// href="${url}"
+// >https://admin.trustbucket.io/confirm-email?id=${id}</a
+// >`;
 
 exports.sendEmail = async (template, recievers, campaignId, invitation) => {
 	try {
@@ -19,10 +26,18 @@ exports.sendEmail = async (template, recievers, campaignId, invitation) => {
 				personalizedContent = personalizedContent.replace(/{lastName}/g, reciever.lastName);
 				personalizedContent = personalizedContent.replace(/{email}/g, reciever.email);
 
-				let buttonText = null;
+				let button = null;
 				if (/{review_link:(.*?)}/g.test(personalizedContent)) {
-					buttonText = personalizedContent.split('{review_link:').pop().split('}')[0];
-					personalizedContent = personalizedContent.replace(/{review_link:(.*?)}/g, `<a href="${linkUrl}">${buttonText.trim()}</a>`);
+					const buttonText = personalizedContent.split('{review_link:').pop().split('}')[0];
+					// personalizedContent = personalizedContent.replace(
+					// 	/{review_link:(.*?)}/g,
+					// 	`<a href="${linkUrl}">${buttonText.trim()}</a>`
+					// );
+
+					button = {
+						text: buttonText.trim(),
+						url: linkUrl,
+					};
 				}
 
 				return {
@@ -42,7 +57,7 @@ exports.sendEmail = async (template, recievers, campaignId, invitation) => {
 						Email: invitation.replyTo,
 					},
 					Subject: subject,
-					HTMLPart: personalizedContent,
+					HTMLPart: campaignEmail({ subject, content: personalizedContent, button }),
 					CustomCampaign: campaignId,
 				};
 			}),

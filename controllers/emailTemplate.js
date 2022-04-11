@@ -12,7 +12,7 @@ exports.getEmailTemplates = (req, res, next) => {
 			}
 			const { selectedCompany } = auth;
 
-			const emailTemplates = await EmailTemplate.find({ company: selectedCompany }).select('name subject content');
+			const emailTemplates = await EmailTemplate.find({ company: selectedCompany }).select('name subject content linkUrl');
 			const count = await EmailTemplate.countDocuments({ company: selectedCompany });
 
 			res.status(200).json({
