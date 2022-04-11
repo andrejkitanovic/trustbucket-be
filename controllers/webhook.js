@@ -27,8 +27,9 @@ exports.webhook = async (req, res, next) => {
 			const company = await Company.findOne({ stripeId: payment.customer });
 			if (!company) return;
 
+			const previousInvoices = company.invoices ? [...company.invoices] : [];
 			company.invoices = [
-				...company.invoices,
+				...previousInvoices,
 				{
 					url: payment.charges.data[0].receipt_url,
 					amount: payment.charges.data[0].amount / 100,

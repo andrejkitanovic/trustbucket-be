@@ -61,11 +61,13 @@ const companySchema = new Schema(
 		billingInfo: {
 			card: String,
 		},
-		invoices: {
-			url: String,
-			amount: Number,
-			date: Date,
-		},
+		invoices: [
+			{
+				url: String,
+				amount: Number,
+				date: Date,
+			},
+		],
 		ratings: [
 			{
 				placeId: {
