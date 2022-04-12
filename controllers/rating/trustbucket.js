@@ -1,7 +1,9 @@
 const Company = require('../../models/company');
 const Rating = require('../../models/rating');
+const UnconfirmedRating = require('../../models/unconfirmedRating');
 const { updateRatingHandle } = require('../profile');
 const { getIdAndTypeFromAuth } = require('../auth');
+const { confirmEmail } = require('../../utils/mailer')
 
 exports.getTrustbucketReviews = (req, res, next) => {
 	(async function () {
@@ -31,9 +33,9 @@ exports.postTrustbucketReviews = (req, res, next) => {
 					$regex: new RegExp(slug, 'i'),
 				},
 			});
-			const newRating = new Rating({
+			const newRating = new UnconfirmedRating({
 				company: company._id,
-				type: 'trustbucket',
+				// type: 'trustbucket',
 				rating,
 				title,
 				description,
@@ -42,20 +44,28 @@ exports.postTrustbucketReviews = (req, res, next) => {
 				date: new Date(),
 			});
 
-			await newRating.save();
-
-			const allRatings = await Rating.find({ company: company._id, type: 'trustbucket' }).select('rating');
-			const avarageRating = allRatings.reduce((total, el) => total + el.rating, 0);
-			const totalRatingCount = await Rating.count({ company: company._id, type: 'trustbucket' });
-
-			updateRatingHandle(company._id, {
-				type: 'trustbucket',
-				rating: avarageRating / totalRatingCount,
-				ratingCount: totalRatingCount,
+			await confirmReview({
+				id: newRating._id,
+				rating,
+				title,
+				description,
+				email
 			});
 
+			await newRating.save();
+
+			// const allRatings = await Rating.find({ company: company._id, type: 'trustbucket' }).select('rating');
+			// const avarageRating = allRatings.reduce((total, el) => total + el.rating, 0);
+			// const totalRatingCount = await Rating.count({ company: company._id, type: 'trustbucket' });
+
+			// updateRatingHandle(company._id, {
+			// 	type: 'trustbucket',
+			// 	rating: avarageRating / totalRatingCount,
+			// 	ratingCount: totalRatingCount,
+			// });
+
 			res.json({
-				message: 'Successfully commented!',
+				message: 'Verification Email Sent!',
 			});
 		} catch (err) {
 			next(err);

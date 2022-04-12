@@ -2,6 +2,7 @@ const mailjet = require('node-mailjet').connect(process.env.MJ_APIKEY_PUBLIC, pr
 const campaignEmail = require('./emailTemplates/campaignEmail');
 const confirmEmail = require('./emailTemplates/confirmEmail');
 const forgotPassword = require('./emailTemplates/forgotPassword');
+const reviewEmail = require('./emailTemplates/reviewEmail');
 
 exports.getCampaignOverview = async () => {
 	const { body: result } = await mailjet.get('campaignoverview').request();
@@ -109,6 +110,33 @@ exports.forgotPassword = async (user) => {
 					],
 					Subject: 'Trustbucket Reset Password',
 					HTMLPart: forgotPassword(user),
+				},
+			],
+		});
+
+		return result.Data;
+	} catch (err) {
+		console.log(err);
+	}
+};
+
+exports.confirmReview = async (review) => {
+	try {
+		const { body: result } = await mailjet.post('send', { version: 'v3.1' }).request({
+			Messages: [
+				{
+					From: {
+						Email: 'kitanovicandrej213@gmail.com',
+						Name: 'Trustbucket IO',
+					},
+					To: [
+						{
+							Email: review.email,
+							// Name: `${user.firstName} ${user.lastName}`,
+						},
+					],
+					Subject: 'Trustbucket Confirmation Email',
+					HTMLPart: reviewEmail(review),
 				},
 			],
 		});
