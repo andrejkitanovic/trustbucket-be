@@ -1,4 +1,4 @@
-module.exports = ({ id, rating, title, description }) => {
+module.exports = ({ id, rating, title, description, name }) => {
 	return `<!DOCTYPE html>
     <html lang="en">
       <head>
@@ -202,6 +202,7 @@ module.exports = ({ id, rating, title, description }) => {
                                       style="line-height: 175%; text-align: left"
                                       align="left"
                                     >
+                                      Dear ${name} please confirm that this is your review:<br />
                                       Rating: ${rating}<br />
                                       
                                       Title: ${title}<br />

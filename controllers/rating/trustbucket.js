@@ -49,7 +49,8 @@ exports.postTrustbucketReviews = (req, res, next) => {
 				rating,
 				title,
 				description,
-				email
+				email,
+				name
 			});
 
 			await newRating.save();
