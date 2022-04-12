@@ -47,7 +47,7 @@ const companySchema = new Schema(
 		billingInfo: {
 			interval: String,
 			card: {
-				type: String,
+				provider: String,
 				last4digits: String,
 				expires: String
 			},

@@ -29,15 +29,14 @@ exports.webhook = async (req, res, next) => {
 	switch (event.type) {
 		case 'payment_intent.succeeded':
 			const { charges } = payment;
-			const card = {
-				type: charges.data[0].payment_method_details.card.brand,
+			company.billingInfo.card = {
+				provider: charges.data[0].payment_method_details.card.brand,
 				last4digits: charges.data[0].payment_method_details.card.last4,
 				expires:
 					charges.data[0].payment_method_details.card.exp_month +
 					' / ' +
 					charges.data[0].payment_method_details.card.exp_year,
 			};
-			company.billingInfo.card = card;
 			await company.save();
 
 			break;
