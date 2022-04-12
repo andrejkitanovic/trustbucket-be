@@ -180,6 +180,7 @@ exports.stats = (req, res, next) => {
 			const { selectedCompany } = auth;
 
 			const company = await Company.findById(selectedCompany);
+			console.log(company)
 			const types = company.ratings.map((el) => !el.downloading && el.type);
 
 			let matchObjectCore = {
