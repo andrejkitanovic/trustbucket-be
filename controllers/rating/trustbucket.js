@@ -3,7 +3,7 @@ const Rating = require('../../models/rating');
 const UnconfirmedRating = require('../../models/unconfirmedRating');
 const { updateRatingHandle } = require('../profile');
 const { getIdAndTypeFromAuth } = require('../auth');
-const { confirmEmail } = require('../../utils/mailer')
+const { confirmReview } = require('../../utils/mailer')
 
 exports.getTrustbucketReviews = (req, res, next) => {
 	(async function () {
