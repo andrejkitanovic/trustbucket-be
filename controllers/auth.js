@@ -301,8 +301,6 @@ exports.register = (req, res, next) => {
 			});
 			const customer = await stripe.customers.create({
 				name: companyName,
-				email,
-				phone
 			});
 			const companyObject = new Company({
 				user: userObject._id,

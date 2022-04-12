@@ -46,7 +46,14 @@ const companySchema = new Schema(
 		stripeId: String,
 		billingInfo: {
 			interval: String,
-			card: String,
+			card: {
+				type: String,
+				last4digits: String,
+				expires: String
+			},
+			vatNumber: String,
+			address: String,
+			email: String,
 		},
 		subscription: {
 			plan: {

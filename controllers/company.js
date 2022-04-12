@@ -62,7 +62,7 @@ exports.postCompany = (req, res, next) => {
 				next(error);
 			}
 			const { id } = auth;
-			const { companyName, websiteURL } = req.body;
+			const { companyName, websiteURL, slug } = req.body;
 
 			const customer = await stripe.customers.create({
 				name: companyName,
@@ -74,6 +74,7 @@ exports.postCompany = (req, res, next) => {
 				user: profile._id,
 				name: companyName,
 				websiteURL,
+				slug,
 				stripeId: customer.id,
 				ratings: [
 					{ type: 'overall', rating: null, ratingCount: 0 },
