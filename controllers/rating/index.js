@@ -257,15 +257,15 @@ exports.stats = (req, res, next) => {
 				}
 			}
 
-			const campaigns = await Campaign.find({ company: selectedCompany }).select('id recievers');
-			const campaignsId = campaigns.map((campaign) => campaign._id.toString());
-			const allCampaignsOverview = await getCampaignOverview();
-			const campaignResult = allCampaignsOverview.filter((campaign) => campaignsId.includes(campaign.Title));
+			// const campaigns = await Campaign.find({ company: selectedCompany }).select('id recievers');
+			// const campaignsId = campaigns.map((campaign) => campaign._id.toString());
+			// const allCampaignsOverview = await getCampaignOverview();
+			// const campaignResult = allCampaignsOverview.filter((campaign) => campaignsId.includes(campaign.Title));
 
 			res.status(200).json({
 				labels,
 				...stats,
-				invitationsCount: campaignResult.reduce((sum, single) => sum + single.DeliveredCount, 0),
+				// invitationsCount: campaignResult.reduce((sum, single) => sum + single.DeliveredCount, 0),
 			});
 		} catch (err) {
 			next(err);
