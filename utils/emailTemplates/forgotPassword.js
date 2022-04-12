@@ -1,4 +1,4 @@
-module.exports = ({ id }) => {
+module.exports = ({ id, firstName }) => {
 	return `<!DOCTYPE html>
   <html lang="en">
     <head>
