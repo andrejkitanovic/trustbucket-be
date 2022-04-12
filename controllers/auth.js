@@ -5,6 +5,7 @@ const User = require('../models/user');
 const Company = require('../models/company');
 const InvitationSettings = require('../models/invitationSettings');
 const { confirmEmail, forgotPassword } = require('../utils/mailer');
+const dayjs = require('dayjs');
 
 const getIdAndTypeFromAuth = (req, res, next) => {
 	if (req.headers && req.headers.authorization) {
@@ -313,6 +314,10 @@ exports.register = (req, res, next) => {
 					{ type: 'overall', rating: null, ratingCount: 0 },
 					{ type: 'trustbucket', rating: null, ratingCount: 0 },
 				],
+				subscription: {
+					plan: 'trial',
+					ends: dayjs().add(7, 'day')
+				}
 			});
 			const invitationSettingsObject = new InvitationSettings({
 				company: companyObject._id,

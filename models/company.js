@@ -51,8 +51,8 @@ const companySchema = new Schema(
 		subscription: {
 			plan: {
 				type: String,
-				enum: ['free', 'start', 'pro'],
-				default: 'pro',
+				enum: ['trial', 'free', 'start', 'pro'],
+				default: 'free',
 			},
 			ends: {
 				type: Date,
