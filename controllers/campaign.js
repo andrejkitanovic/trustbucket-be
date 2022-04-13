@@ -55,20 +55,21 @@ exports.postCampaign = async (req, res, next) => {
 
 		const { templateId, reminder, recievers } = req.body;
 
+		const campaignObject = new Campaign({
+			company: selectedCompany,
+			reminder,
+			recievers,
+		});
+
 		let template;
 		if (templateId.includes('default')) {
 			const company = await Company.findById(selectedCompany);
 			template = defaultEmailTemplates(company.name, comapny.slug).find((template) => template._id === templateId);
 		} else {
 			template = await EmailTemplate.findById(templateId).select('subject content linkUrl');
+			campaignObject.emailTemplate = templateId;
 		}
 
-		const campaignObject = new Campaign({
-			company: selectedCompany,
-			emailTemplate: !templateId.includes('default') && templateId,
-			reminder,
-			recievers,
-		});
 		const campaign = await campaignObject.save();
 
 		const invitation = await InvitationSettings.findOne({ company: selectedCompany });
