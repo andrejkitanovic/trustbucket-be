@@ -3,11 +3,13 @@ const geoip = require('geoip-lite');
 
 module.exports = (app) => {
 	app.use((req, res, next) => {
-		const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || null;
+		const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress;
 		let location = {};
 
 		if (ip) {
+			console.log(ip);
 			location = geoip.lookup(ip);
+			console.log(location);
 		}
 
 		const { method, _parsedUrl } = req;
