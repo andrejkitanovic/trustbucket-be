@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { stripe } = require('../utils/stripe');
+const stripe = require('../utils/stripe');
 const User = require('../models/user');
 const Company = require('../models/company');
 const InvitationSettings = require('../models/invitationSettings');

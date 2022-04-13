@@ -4,6 +4,11 @@ const confirmEmail = require('./emailTemplates/confirmEmail');
 const forgotPassword = require('./emailTemplates/forgotPassword');
 const reviewEmail = require('./emailTemplates/reviewEmail');
 
+const From = {
+	Email: 'kitanovicandrej213@gmail.com',
+	Name: 'Trustbucket IO',
+};
+
 exports.getCampaignOverview = async () => {
 	const { body: result } = await mailjet.get('campaignoverview').request();
 
@@ -24,10 +29,6 @@ exports.sendEmail = async (template, recievers, campaignId, invitation) => {
 				let button = null;
 				if (/{review_link:(.*?)}/g.test(personalizedContent)) {
 					const buttonText = personalizedContent.split('{review_link:').pop().split('}')[0];
-					// personalizedContent = personalizedContent.replace(
-					// 	/{review_link:(.*?)}/g,
-					// 	`<a href="${linkUrl}">${buttonText.trim()}</a>`
-					// );
 					personalizedContent = personalizedContent.replace(/{review_link:(.*?)}/g, '');
 
 					button = {
@@ -38,8 +39,7 @@ exports.sendEmail = async (template, recievers, campaignId, invitation) => {
 
 				return {
 					From: {
-						// Email: 'noreply.invitations@trustbucket.io',
-						Email: 'kitanovicandrej213@gmail.com',
+						Email: From.Email,
 						Name: invitation.senderName,
 					},
 					To: [
@@ -49,7 +49,6 @@ exports.sendEmail = async (template, recievers, campaignId, invitation) => {
 						},
 					],
 					ReplyTo: {
-						// Email: 'kitanovicandrej213@gmail.com',
 						Email: invitation.replyTo,
 					},
 					Subject: subject,
@@ -71,10 +70,7 @@ exports.confirmEmail = async (user) => {
 		const { body: result } = await mailjet.post('send', { version: 'v3.1' }).request({
 			Messages: [
 				{
-					From: {
-						Email: 'kitanovicandrej213@gmail.com',
-						Name: 'Trustbucket IO',
-					},
+					From,
 					To: [
 						{
 							Email: user.email,
@@ -98,10 +94,7 @@ exports.forgotPassword = async (user) => {
 		const { body: result } = await mailjet.post('send', { version: 'v3.1' }).request({
 			Messages: [
 				{
-					From: {
-						Email: 'kitanovicandrej213@gmail.com',
-						Name: 'Trustbucket IO',
-					},
+					From,
 					To: [
 						{
 							Email: user.email,
@@ -125,10 +118,7 @@ exports.confirmReview = async (review) => {
 		const { body: result } = await mailjet.post('send', { version: 'v3.1' }).request({
 			Messages: [
 				{
-					From: {
-						Email: 'kitanovicandrej213@gmail.com',
-						Name: 'Trustbucket IO',
-					},
+					From,
 					To: [
 						{
 							Email: review.email,
