@@ -21,14 +21,7 @@ const getIdAndTypeFromAuth = (req, res, next) => {
 };
 
 exports.getCurrentUser = async (req, res, next) => {
-	const auth = getIdAndTypeFromAuth(req, res, next);
-	if (!auth) {
-		const error = new Error('Not Authorized!');
-		error.statusCode = 401;
-		next(error);
-	}
-
-	const { id } = auth;
+	const { id } = req.auth;
 
 	try {
 		const currentUser = await User.findById(id);
@@ -44,13 +37,7 @@ exports.getCurrentUser = async (req, res, next) => {
 
 exports.updateEmail = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { id } = auth;
+		const { id } = req.auth;
 
 		const { newEmail, password } = req.body;
 		const loginUser = await User.findById(id);
