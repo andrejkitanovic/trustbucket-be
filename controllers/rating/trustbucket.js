@@ -31,7 +31,6 @@ exports.postTrustbucketReviews = async (req, res, next) => {
 		});
 		const newRating = new UnconfirmedRating({
 			company: company._id,
-			// type: 'trustbucket',
 			rating,
 			title,
 			description,
@@ -39,27 +38,12 @@ exports.postTrustbucketReviews = async (req, res, next) => {
 			name,
 			date: new Date(),
 		});
-
+		await newRating.save();
 		await confirmReview({
 			id: newRating._id,
-			rating,
-			title,
-			description,
-			email,
 			name,
+			email,
 		});
-
-		await newRating.save();
-
-		// const allRatings = await Rating.find({ company: company._id, type: 'trustbucket' }).select('rating');
-		// const avarageRating = allRatings.reduce((total, el) => total + el.rating, 0);
-		// const totalRatingCount = await Rating.countDocuments({ company: company._id, type: 'trustbucket' });
-
-		// updateRatingHandle(company._id, {
-		// 	type: 'trustbucket',
-		// 	rating: avarageRating / totalRatingCount,
-		// 	ratingCount: totalRatingCount,
-		// });
 
 		res.json({
 			message: 'Verification Email Sent!',

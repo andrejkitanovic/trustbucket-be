@@ -1,52 +1,55 @@
-module.exports = ({ id, rating, title, description, name }) => {
+module.exports = ({ id, name }) => {
 	return `<!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Trustbucket review confirmation</title>
-      </head>
-      <body style="background: #f1f5f9">
-        <table
-          role="presentation"
-          cellpadding="0"
-          cellspacing="0"
-          style="
-            border-spacing: 0 !important;
-            border-collapse: collapse;
-            margin: 0;
-            padding: 0;
-            width: 100% !important;
-            min-width: 320px !important;
-            height: 100% !important;
-          "
-          width="100%"
-          height="100%"
-        >
-          <tbody>
-            <tr>
-              <td
-                valign="top"
-                style="
-                  border-collapse: collapse;
-                  font-family: Arial, sans-serif;
-                  font-size: 15px;
-                  color: #23496d;
-                  word-break: break-word;
-                "
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Trustbucket | Review Confirmation</title>
+    </head>
+    <body style="background: #ffffff">
+      <table
+        role="presentation"
+        cellpadding="0"
+        cellspacing="0"
+        style="
+          border-spacing: 0 !important;
+          border-collapse: collapse;
+          margin: 0;
+          padding: 0;
+          width: 100% !important;
+          min-width: 320px !important;
+          height: 100% !important;
+          max-width: 600px;
+          margin: 0 auto;
+        "
+        width="100%"
+        height="100%"
+      >
+        <tbody>
+          <tr>
+            <td
+              valign="top"
+              style="
+                border-collapse: collapse;
+                font-family: Arial, sans-serif;
+                font-size: 15px;
+                color: #222d38;
+                word-break: break-word;
+              "
+            >
+              <div
+                id="m_-5072298247928332435hs_cos_wrapper_main"
+                style="color: inherit; font-size: inherit; line-height: inherit"
               >
-                <div
-                  id="m_-5072298247928332435hs_cos_wrapper_main"
-                  style="color: inherit; font-size: inherit; line-height: inherit"
-                >
+                <div style="border: 1px solid #d6dae4; border-radius: 4px">
                   <div
                     id="m_-5072298247928332435section-0"
                     class="m_-5072298247928332435hse-section"
                     style="
                       padding-left: 10px;
                       padding-right: 10px;
-                      padding-top: 20px;
+                      padding-top: 10px;
                     "
                   >
                     <div
@@ -60,7 +63,7 @@ module.exports = ({ id, rating, title, description, name }) => {
                         border-collapse: collapse;
                         border-spacing: 0;
                         background-color: #ffffff;
-                        padding-bottom: 20px;
+                        padding-bottom: 0;
                         padding-top: 20px;
                       "
                       bgcolor="#ffffff"
@@ -95,10 +98,10 @@ module.exports = ({ id, rating, title, description, name }) => {
                                   style="
                                     border-collapse: collapse;
                                     font-family: Arial, sans-serif;
-                                    color: #23496d;
+                                    color: #222d38;
                                     word-break: break-word;
                                     text-align: left;
-                                    padding: 10px 20px;
+                                    padding: 10px 20px 0;
                                     font-size: 0px;
                                   "
                                 >
@@ -139,7 +142,7 @@ module.exports = ({ id, rating, title, description, name }) => {
                         border-collapse: collapse;
                         border-spacing: 0;
                         background-color: #ffffff;
-                        padding-bottom: 20px;
+                        padding-bottom: 0;
                       "
                       bgcolor="#ffffff"
                     >
@@ -165,7 +168,7 @@ module.exports = ({ id, rating, title, description, name }) => {
                                   border-collapse: collapse;
                                   font-family: Arial, sans-serif;
                                   font-size: 15px;
-                                  color: #23496d;
+                                  color: #222d38;
                                   word-break: break-word;
                                   padding: 10px 20px;
                                 "
@@ -186,27 +189,16 @@ module.exports = ({ id, rating, title, description, name }) => {
                                       line-height: inherit;
                                     "
                                   >
-                                    <h1
-                                      style="
-                                        margin: 0;
-                                        line-height: 175%;
-                                        font-size: 24px;
-                                        text-align: left;
-                                      "
-                                      align="left"
-                                    >
-                                      Post Trustbucket Review
-                                    </h1>
                                     <p style="line-height: 25%">&nbsp;</p>
                                     <p
                                       style="line-height: 175%; text-align: left"
                                       align="left"
                                     >
-                                      Dear ${name} please confirm that this is your review:<br />
-                                      Rating: ${rating}<br />
-                                      
-                                      Title: ${title}<br />
-                                      Review: ${description}
+                                      <b>Hi ${name},</b><br /><br />
+  
+                                      We’re super happy that you took your time to
+                                      leave a review.  Click the link below to
+                                      publish your review.
                                     </p>
                                   </div>
                                 </div>
@@ -249,6 +241,7 @@ module.exports = ({ id, rating, title, description, name }) => {
                           style="
                             border-spacing: 0 !important;
                             border-collapse: collapse;
+                            max-width: 280px;
                           "
                         >
                           <tbody>
@@ -259,9 +252,9 @@ module.exports = ({ id, rating, title, description, name }) => {
                                   border-collapse: collapse;
                                   font-family: Arial, sans-serif;
                                   font-size: 15px;
-                                  color: #23496d;
+                                  color: #222d38;
                                   word-break: break-word;
-                                  padding: 10px 20px;
+                                  padding: 0 20px;
                                 "
                               >
                                 <div
@@ -295,14 +288,15 @@ module.exports = ({ id, rating, title, description, name }) => {
                                             border-collapse: collapse;
                                             font-family: Arial, sans-serif;
                                             font-size: 15px;
-                                            color: #23496d;
+                                            color: #222d38;
                                             word-break: break-word;
                                             border-radius: 3px;
                                             background-color: #2563eb;
+                                            width: 228px;
                                           "
                                         >
                                           <a
-                                            href="https://reviews.trustbucket.io/confirm-review?id=${id}"
+                                            href="https://admin.trustbucket.io/confirm-review?id=${id}"
                                             style="
                                               color: #00a4bd;
                                               font-size: 16px;
@@ -310,11 +304,11 @@ module.exports = ({ id, rating, title, description, name }) => {
                                               margin: 0;
                                               text-transform: none;
                                               text-decoration: none;
-                                              padding: 12px 18px;
+                                              padding: 16px;
                                               display: block;
                                             "
                                             target="_blank"
-                                            data-saferedirecturl="https://reviews.trustbucket.io/confirm-review?id=${id}"
+                                            data-saferedirecturl="https://admin.trustbucket.io/confirm-email?id=${id}"
                                           >
                                             <strong
                                               style="
@@ -323,9 +317,16 @@ module.exports = ({ id, rating, title, description, name }) => {
                                                 text-decoration: none;
                                                 font-style: normal;
                                               "
-                                              >Confirm review</strong
+                                              >Publish review</strong
                                             >
                                           </a>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          <p style="margin-top: 24px">
+                                            Thank you!
+                                          </p>
                                         </td>
                                       </tr>
                                     </tbody>
@@ -338,134 +339,105 @@ module.exports = ({ id, rating, title, description, name }) => {
                       </div>
                     </div>
                   </div>
+                </div>
+                <div
+                  id="m_-5072298247928332435section-3"
+                  class="m_-5072298247928332435hse-section"
+                  style="
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    background-color: #ffffff;
+                  "
+                  bgcolor="#f1f5f9"
+                >
                   <div
-                    id="m_-5072298247928332435section-3"
-                    class="m_-5072298247928332435hse-section"
+                    class="m_-5072298247928332435hse-column-container"
                     style="
-                      padding-left: 10px;
-                      padding-right: 10px;
-                      background-color: #f1f5f9;
+                      min-width: 280px;
+                      max-width: 600px;
+                      width: 100%;
+                      margin-left: auto;
+                      margin-right: auto;
+                      border-collapse: collapse;
+                      border-spacing: 0;
+                      padding-bottom: 100px;
                     "
-                    bgcolor="#f1f5f9"
                   >
                     <div
-                      class="m_-5072298247928332435hse-column-container"
-                      style="
-                        min-width: 280px;
-                        max-width: 600px;
-                        width: 100%;
-                        margin-left: auto;
-                        margin-right: auto;
-                        border-collapse: collapse;
-                        border-spacing: 0;
-                        padding-bottom: 100px;
-                      "
+                      id="m_-5072298247928332435column-3-0"
+                      class="m_-5072298247928332435hse-column m_-5072298247928332435hse-size-12"
                     >
                       <div
-                        id="m_-5072298247928332435column-3-0"
-                        class="m_-5072298247928332435hse-column m_-5072298247928332435hse-size-12"
+                        id="m_-5072298247928332435hs_cos_wrapper_module-3-0-0"
+                        style="
+                          color: inherit;
+                          font-size: inherit;
+                          line-height: inherit;
+                        "
                       >
-                        <div
-                          id="m_-5072298247928332435hs_cos_wrapper_module-3-0-0"
+                        <table
+                          role="presentation"
+                          width="100%"
+                          cellpadding="0"
+                          cellspacing="0"
                           style="
-                            color: inherit;
-                            font-size: inherit;
-                            line-height: inherit;
+                            border-spacing: 0 !important;
+                            border-collapse: collapse;
+                            font-family: Arial, sans-serif;
+                            font-size: 12px;
+                            line-height: 135%;
+                            color: #222d38;
+                            margin-bottom: 0;
+                            padding: 0;
                           "
                         >
-                          <table
-                            role="presentation"
-                            width="100%"
-                            cellpadding="0"
-                            cellspacing="0"
-                            style="
-                              border-spacing: 0 !important;
-                              border-collapse: collapse;
-                              font-family: Arial, sans-serif;
-                              font-size: 12px;
-                              line-height: 135%;
-                              color: #23496d;
-                              margin-bottom: 0;
-                              padding: 0;
-                            "
-                          >
-                            <tbody>
-                              <tr>
-                                <td
-                                  align="center"
-                                  valign="top"
+                          <tbody>
+                            <tr>
+                              <td
+                                align="center"
+                                valign="top"
+                                style="
+                                  border-collapse: collapse;
+                                  font-family: Arial, sans-serif;
+                                  font-size: 15px;
+                                  color: #222d38;
+                                  word-break: break-word;
+                                  text-align: center;
+                                  margin-bottom: 0;
+                                  line-height: 135%;
+                                  padding: 10px 20px;
+                                "
+                              >
+                                <p
                                   style="
-                                    border-collapse: collapse;
-                                    font-family: Arial, sans-serif;
-                                    font-size: 15px;
-                                    color: #23496d;
-                                    word-break: break-word;
-                                    text-align: center;
-                                    margin-bottom: 0;
-                                    line-height: 135%;
-                                    padding: 10px 20px;
+                                    font-family: Tahoma, sans-serif;
+                                    font-size: 12px;
+                                    font-weight: normal;
+                                    text-decoration: none;
+                                    font-style: normal;
+                                    color: #222d38;
+                                    direction: lrt;
                                   "
+                                  dir="lrt"
                                 >
-                                  <p
-                                    style="
-                                      font-family: Tahoma, sans-serif;
-                                      font-size: 12px;
-                                      font-weight: normal;
-                                      text-decoration: none;
-                                      font-style: normal;
-                                      color: #23496d;
-                                      direction: lrt;
-                                    "
-                                    dir="lrt"
-                                  >
-                                    Trustbucket, Huskvarnavägen 62, 554 54
-                                    Jönköping, Sweden
-                                  </p>
-                                  <p>
-                                    <a
-                                      href="https://hs-6534445.s.hubspotstarter.net/hs/manage-preferences/unsubscribe-all-test?d=VngD138zPZtjW12407v3zdZRFW3SYLpH3Hbfm4W1S1PY43P3Q7wW3ZsjYm3_fymHW17f7hv4XT8wjW6p3s2x6pj31zW4QQVbG5b3hVJV28T4S8f9LyTMGKd_P20N5nW6n5LH45ZLYDNN5crc-ybBS7N4b_t01&amp;v=3&amp;utm_source=hs_email&amp;utm_medium=email&amp;utm_content=2&amp;_hsenc=p2ANqtz-8E4whzyKVzwYcAvbqwcyN6pGs41xTM-0JzydzonpNxvxQaHp6Zr5ByiVx3T1qfZ_u5l1z_v-ptargUkCMFJb3D7RYBGd0wzb15b_D30KQokAKUuS4&amp;_hsmi=2"
-                                      style="
-                                        font-family: Tahoma, sans-serif;
-                                        font-size: 12px;
-                                        color: #00a4bd;
-                                        font-weight: normal;
-                                        text-decoration: underline;
-                                        font-style: normal;
-                                      "
-                                      target="_blank"
-                                      data-saferedirecturl="https://www.google.com/url?q=https://hs-6534445.s.hubspotstarter.net/hs/manage-preferences/unsubscribe-all-test?d%3DVngD138zPZtjW12407v3zdZRFW3SYLpH3Hbfm4W1S1PY43P3Q7wW3ZsjYm3_fymHW17f7hv4XT8wjW6p3s2x6pj31zW4QQVbG5b3hVJV28T4S8f9LyTMGKd_P20N5nW6n5LH45ZLYDNN5crc-ybBS7N4b_t01%26v%3D3%26utm_source%3Dhs_email%26utm_medium%3Demail%26utm_content%3D2%26_hsenc%3Dp2ANqtz-8E4whzyKVzwYcAvbqwcyN6pGs41xTM-0JzydzonpNxvxQaHp6Zr5ByiVx3T1qfZ_u5l1z_v-ptargUkCMFJb3D7RYBGd0wzb15b_D30KQokAKUuS4%26_hsmi%3D2&amp;source=gmail&amp;ust=1649690989965000&amp;usg=AOvVaw0e0K3dcYzlBeOPOzAvYLLS"
-                                      >Unsubscribe</a
-                                    >
-    
-                                    <a
-                                      href="https://hs-6534445.s.hubspotstarter.net/hs/manage-preferences/unsubscribe-test?languagePreference=en&amp;d=VngD138zPZtjW12407v3zdZRFW3SYLpH3Hbfm4W1S1PY43P3Q7wW3ZsjYm3_fymHW17f7hv4XT8wjW6p3s2x6pj31zW4QQVbG5b3hVJV28T4S8f9LyTMGKd_P20N5nW6n5LH45ZLYDNN5crc-ybBS7N4b_t01&amp;v=3&amp;utm_source=hs_email&amp;utm_medium=email&amp;utm_content=2&amp;_hsenc=p2ANqtz-8E4whzyKVzwYcAvbqwcyN6pGs41xTM-0JzydzonpNxvxQaHp6Zr5ByiVx3T1qfZ_u5l1z_v-ptargUkCMFJb3D7RYBGd0wzb15b_D30KQokAKUuS4&amp;_hsmi=2"
-                                      style="
-                                        font-family: Tahoma, sans-serif;
-                                        font-size: 12px;
-                                        color: #00a4bd;
-                                        font-weight: normal;
-                                        text-decoration: underline;
-                                        font-style: normal;
-                                      "
-                                      target="_blank"
-                                      data-saferedirecturl="https://www.google.com/url?q=https://hs-6534445.s.hubspotstarter.net/hs/manage-preferences/unsubscribe-test?languagePreference%3Den%26d%3DVngD138zPZtjW12407v3zdZRFW3SYLpH3Hbfm4W1S1PY43P3Q7wW3ZsjYm3_fymHW17f7hv4XT8wjW6p3s2x6pj31zW4QQVbG5b3hVJV28T4S8f9LyTMGKd_P20N5nW6n5LH45ZLYDNN5crc-ybBS7N4b_t01%26v%3D3%26utm_source%3Dhs_email%26utm_medium%3Demail%26utm_content%3D2%26_hsenc%3Dp2ANqtz-8E4whzyKVzwYcAvbqwcyN6pGs41xTM-0JzydzonpNxvxQaHp6Zr5ByiVx3T1qfZ_u5l1z_v-ptargUkCMFJb3D7RYBGd0wzb15b_D30KQokAKUuS4%26_hsmi%3D2&amp;source=gmail&amp;ust=1649690989965000&amp;usg=AOvVaw2FM_A466nATByINuLv_hTm"
-                                      >Manage preferences</a
-                                    >
-                                  </p>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
+                                  You’re receiving this email because you created
+                                  an account on Trustbucket.
+                                </p>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                   </div>
                 </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </body>
-    </html>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+  
     `;
 };
