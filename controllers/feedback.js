@@ -1,15 +1,7 @@
 const Feedback = require('../models/feedback');
-const { getIdAndTypeFromAuth } = require('./auth');
 
 exports.getFeedbacks = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-
 		const feedbacks = await Feedback.find().populate('company');
 		const count = await Feedback.count();
 
@@ -24,13 +16,7 @@ exports.getFeedbacks = async (req, res, next) => {
 
 exports.postFeedback = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 
 		const feedbackObject = new Feedback({
 			company: selectedCompany,

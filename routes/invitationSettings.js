@@ -1,9 +1,10 @@
 const express = require('express');
 const invitationSettingsController = require('../controllers/invitationSettings');
+const auth = require('../helpers/auth');
 
 const router = express.Router();
 
-router.get('/', invitationSettingsController.getInvitationSettings);
-router.put('/', invitationSettingsController.updateInvitationSettings);
+router.get('/', auth, invitationSettingsController.getInvitationSettings);
+router.put('/', auth, invitationSettingsController.updateInvitationSettings);
 
 module.exports = router;

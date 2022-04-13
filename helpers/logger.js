@@ -1,4 +1,3 @@
-const { getIdAndTypeFromAuth } = require('../controllers/auth');
 const logController = require('../controllers/log');
 const geoip = require('geoip-lite');
 
@@ -12,7 +11,7 @@ module.exports = (app) => {
 		}
 
 		const { method, _parsedUrl } = req;
-		const auth = getIdAndTypeFromAuth(req);
+		const auth = req.auth;
 		next();
 
 		res.on('finish', () => {

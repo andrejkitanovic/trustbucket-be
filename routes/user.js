@@ -1,10 +1,12 @@
-const express = require("express");
-const userController = require("../controllers/user");
+const express = require('express');
+const userController = require('../controllers/user');
+const auth = require('../helpers/auth');
 
 const router = express.Router();
 
-router.get("/", userController.getUsers);
-router.post("/filter", userController.filterUsers);
-router.delete("/", userController.deleteUser);
+router.get('/', auth, userController.getUsers);
+router.post('/filter', auth, userController.filterUsers);
+// Should be auth admin
+router.delete('/', auth, userController.deleteUser);
 
 module.exports = router;

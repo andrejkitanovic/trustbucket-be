@@ -1,18 +1,11 @@
 const { sendEmail, getCampaignOverview } = require('../utils/mailer');
-const { getIdAndTypeFromAuth } = require('./auth');
 const EmailTemplate = require('../models/emailTemplate');
 const Campaign = require('../models/campaign');
 const InvitationSettings = require('../models/invitationSettings');
 
 exports.getCampaigns = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 
 		const campaigns = await Campaign.find({ company: selectedCompany });
 		const count = await Campaign.find({ company: selectedCompany }).countDocuments();
@@ -28,13 +21,7 @@ exports.getCampaigns = async (req, res, next) => {
 
 exports.getCampaignStats = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 
 		const campaigns = await Campaign.find({ company: selectedCompany }).select('id recievers');
 		const campaignsId = campaigns.map((campaign) => campaign._id.toString());
@@ -62,15 +49,9 @@ exports.getCampaignStats = async (req, res, next) => {
 
 exports.postCampaign = async (req, res, next) => {
 	try {
-		const { templateId, reminder, recievers } = req.body;
+		const { selectedCompany } = req.auth;
 
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { selectedCompany } = auth;
+		const { templateId, reminder, recievers } = req.body;
 
 		const template = await EmailTemplate.findById(templateId).select('subject content linkUrl');
 

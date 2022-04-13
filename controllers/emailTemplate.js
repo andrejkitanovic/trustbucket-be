@@ -1,15 +1,8 @@
 const EmailTemplate = require('../models/emailTemplate');
-const { getIdAndTypeFromAuth } = require('./auth');
 
 exports.getEmailTemplates = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 
 		const emailTemplates = await EmailTemplate.find({ company: selectedCompany }).select(
 			'name subject content linkUrl'
@@ -27,13 +20,7 @@ exports.getEmailTemplates = async (req, res, next) => {
 
 exports.postEmailTemplate = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 
 		await EmailTemplate.create({ company: selectedCompany, ...req.body });
 
@@ -47,13 +34,7 @@ exports.postEmailTemplate = async (req, res, next) => {
 
 exports.updateEmailTemplate = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 
 		const emailUpdated = await EmailTemplate.findOneAndUpdate(
 			{
@@ -81,13 +62,7 @@ exports.updateEmailTemplate = async (req, res, next) => {
 
 exports.deleteEmailTemplate = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 
 		const emailDeleted = await EmailTemplate.findOneAndDelete({ company: selectedCompany, _id: req.query.id });
 

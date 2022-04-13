@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const stripe = require('../utils/stripe');
 const User = require('../models/user');
 const Company = require('../models/company');
-const { getIdAndTypeFromAuth } = require('./auth');
 const { isAbsoluteURL } = require('../helpers/utils');
 
 const addAddress = async (address, selectedCompany) => {
@@ -22,13 +21,7 @@ exports.addAddress = addAddress;
 
 exports.getInvoices = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 
 		const company = await Company.findById(selectedCompany);
 
@@ -52,13 +45,8 @@ exports.getInvoices = async (req, res, next) => {
 
 exports.postCompany = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { id } = auth;
+		const { id } = req.auth;
+
 		const { companyName, websiteURL, slug } = req.body;
 
 		const customer = await stripe.customers.create({
@@ -109,13 +97,7 @@ exports.postCompany = async (req, res, next) => {
 
 exports.selectCompany = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { id } = auth;
+		const { id } = req.auth;
 		const { companyId } = req.body;
 
 		const profile = await User.findById(id);
@@ -157,13 +139,7 @@ exports.putAddress = async (req, res, next) => {
 		}
 		const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?fields=${fields}&input=${search}&inputtype=textquery&key=${process.env.API_KEY_GOOGLE}`;
 
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 
 		const { data } = await axios.get(url);
 		if (data.results.length) {
@@ -182,13 +158,7 @@ exports.putAddress = async (req, res, next) => {
 
 exports.updateCompany = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { id, selectedCompany } = auth;
+		const { id, selectedCompany } = req.auth;
 
 		const companyUpdated = await Company.findOneAndUpdate(
 			{ _id: selectedCompany },
@@ -214,13 +184,7 @@ exports.updateCompany = async (req, res, next) => {
 
 exports.subscribeSession = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 
 		const company = await Company.findById(selectedCompany);
 

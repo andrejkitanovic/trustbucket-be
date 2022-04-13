@@ -1,4 +1,3 @@
-const { getIdAndTypeFromAuth } = require('./auth');
 const User = require('../models/user');
 const Company = require('../models/company');
 
@@ -82,13 +81,7 @@ const calculateOverallRating = (ratings) => {
 
 exports.getProfile = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { id } = auth;
+		const { id } = req.auth;
 
 		const profile = await User.findById(id);
 		await profile.populate('selectedCompany');
@@ -103,13 +96,7 @@ exports.getProfile = async (req, res, next) => {
 
 exports.updateProfile = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { id } = auth;
+		const { id } = req.auth;
 
 		const updatedUser = await User.findOneAndUpdate(
 			{ _id: id },
@@ -132,13 +119,7 @@ exports.updateProfile = async (req, res, next) => {
 
 exports.deleteProfile = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { id } = auth;
+		const { id } = req.auth;
 
 		const userDeleted = await User.deleteOne({ _id: id });
 		if (!userDeleted) {

@@ -1,10 +1,11 @@
-const express = require("express");
-const profileController = require("../controllers/profile");
+const express = require('express');
+const profileController = require('../controllers/profile');
+const auth = require('../helpers/auth');
 
 const router = express.Router();
 
-router.get("/", profileController.getProfile);
-router.put("/", profileController.updateProfile);
-router.delete("/", profileController.deleteProfile);
+router.get('/', auth, profileController.getProfile);
+router.put('/', auth, profileController.updateProfile);
+router.delete('/', auth, profileController.deleteProfile);
 
 module.exports = router;

@@ -72,13 +72,7 @@ exports.updateEmail = async (req, res, next) => {
 
 exports.updatePassword = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { id } = auth;
+		const { id } = req.auth;
 
 		const { newPassword, password } = req.body;
 		const loginUser = await User.findById(id);
@@ -115,8 +109,6 @@ exports.updatePassword = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
 	try {
-		// const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || null;
-
 		const { email, password } = req.body;
 		const loginUser = await User.findOne({ email });
 

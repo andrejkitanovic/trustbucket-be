@@ -1,16 +1,8 @@
-const { getIdAndTypeFromAuth } = require('./auth');
 const Log = require('../models/log');
 
 exports.getLogs = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-
-		const { id } = auth;
+		const { id } = req.auth;
 
 		const logs = await Log.find({ user: id }).populate('user', 'email');
 		const count = await Log.find({ user: id }).countDocuments();
@@ -26,16 +18,9 @@ exports.getLogs = async (req, res, next) => {
 
 exports.filterLogs = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-
 		const { pageNumber, pageSize, sortField, sortOrder } = req.body.queryParams;
 
-		const { id } = auth;
+		const { id } = req.auth;
 
 		const logs = await Log.find({ user: id })
 			.sort([[sortField, sortOrder === 'asc' ? 1 : -1]])

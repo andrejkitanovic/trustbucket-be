@@ -1,16 +1,8 @@
-const { getIdAndTypeFromAuth } = require('./auth');
 const User = require('../models/user');
 
 exports.getUsers = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-
-		const { id } = auth;
+		const { id } = req.auth;
 
 		const users = await User.find({ _id: { $ne: id } });
 		const count = await User.find({ _id: { $ne: id } }).countDocuments();
@@ -26,15 +18,8 @@ exports.getUsers = async (req, res, next) => {
 
 exports.filterUsers = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-
 		const { pageNumber, pageSize, sortField, sortOrder } = req.body.queryParams;
-		const { id } = auth;
+		const { id } = req.auth;
 
 		const users = await User.find({ _id: { $ne: id } })
 			.sort([[sortField, sortOrder === 'asc' ? 1 : -1]])
@@ -53,14 +38,7 @@ exports.filterUsers = async (req, res, next) => {
 
 exports.deleteUser = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth || auth.type !== 'admin') {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-
-		const { id } = auth;
+		const { id } = req.auth;
 
 		const findId = req.query.id;
 

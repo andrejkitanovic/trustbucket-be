@@ -1,6 +1,5 @@
 const Widget = require('../models/widget');
 const Rating = require('../models/rating');
-const { getIdAndTypeFromAuth } = require('./auth');
 
 exports.getWidget = async (req, res, next) => {
 	try {
@@ -25,16 +24,9 @@ exports.getWidget = async (req, res, next) => {
 
 exports.postWidget = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-
 		const { object, attributes } = req.body;
 
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 
 		const widgetObject = new Widget({
 			selectedCompany,

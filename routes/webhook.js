@@ -5,4 +5,4 @@ const router = express.Router();
 
 router.post('/', webhookController.webhook);
 
-module.exports = router
+module.exports = router;
