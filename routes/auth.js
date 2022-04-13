@@ -1,17 +1,18 @@
 const express = require('express');
-const userController = require('../controllers/auth');
+const authController = require('../controllers/auth');
+const authValidation = require('../validation/auth');
 const auth = require('../helpers/auth');
 
 const router = express.Router();
 
-router.get('/me', auth, userController.getCurrentUser);
-router.put('/update-email', auth, userController.updateEmail);
-router.put('/update-password', auth, userController.updatePassword);
-router.post('/login', userController.login);
-router.post('/google-login', userController.googleLogin);
-router.post('/register', userController.register);
-router.post('/confirm-email', userController.confirmEmail);
-router.post('/forgot-password', userController.forgotPassword);
-router.post('/reset-password', userController.resetPassword);
+router.get('/me', auth, authController.getCurrentUser);
+router.put('/update-email', auth, authValidation.updateEmail, authController.updateEmail);
+router.put('/update-password', auth, authValidation.updatePassword, authController.updatePassword);
+router.post('/login', authValidation.login, authController.login);
+router.post('/forgot-password', authValidation.forgotPassword, authController.forgotPassword);
+router.post('/reset-password', authValidation.resetPassword, authController.resetPassword);
+router.post('/google-login', authController.googleLogin);
+router.post('/register', authValidation.register, authController.register);
+router.post('/confirm-email', authController.confirmEmail);
 
 module.exports = router;
