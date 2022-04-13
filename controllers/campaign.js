@@ -1,6 +1,8 @@
 const { sendEmail, getCampaignOverview } = require('../utils/mailer');
+const { defaultEmailTemplates } = require('./emailTemplate');
 const EmailTemplate = require('../models/emailTemplate');
 const Campaign = require('../models/campaign');
+const Company = require('../models/company');
 const InvitationSettings = require('../models/invitationSettings');
 
 exports.getCampaigns = async (req, res, next) => {
@@ -53,11 +55,17 @@ exports.postCampaign = async (req, res, next) => {
 
 		const { templateId, reminder, recievers } = req.body;
 
-		const template = await EmailTemplate.findById(templateId).select('subject content linkUrl');
+		let template;
+		if (templateId.includes('default')) {
+			const company = await Company.findById(selectedCompany);
+			template = defaultEmailTemplates(company.name, comapny.slug).find((template) => template.id === templateId);
+		} else {
+			template = await EmailTemplate.findById(templateId).select('subject content linkUrl');
+		}
 
 		const campaignObject = new Campaign({
 			company: selectedCompany,
-			emailTemplate: templateId,
+			emailTemplate: !templateId.includes('default') && templateId,
 			reminder,
 			recievers,
 		});

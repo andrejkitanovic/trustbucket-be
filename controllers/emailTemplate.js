@@ -3,6 +3,7 @@ const Company = require('../models/company');
 
 const defaultEmailTemplates = (companyName, slug) => [
 	{
+		id: `default-trustbucket-review`,
 		content:
 			"\n<h1>Hi {firstName}</h1>\n<p></p>\n<p>Thank you so much for choosing us!</p>\n<p></p>\n<p>We truly appreciate every customer's opinion and we want to hear all about your experience with us at {companyName}</p>\n<p></p>\n<p>{review_link: Click here to submit your review}</p>\n<p></p>\n<p>Thank you for helping us,</p>\n<p>{firstNameofUser} at {companyName}</p>\n",
 		linkUrl: `https://reviews.trustbucket.io/${slug}`,
@@ -93,3 +94,5 @@ exports.deleteEmailTemplate = async (req, res, next) => {
 		next(err);
 	}
 };
+
+exports.defaultEmailTemplates = defaultEmailTemplates;
