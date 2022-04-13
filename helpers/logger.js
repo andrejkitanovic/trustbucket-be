@@ -2,13 +2,12 @@ const logController = require('../controllers/log');
 const geoip = require('geoip-lite');
 
 module.exports = (app) => {
-	app.set('trust proxy', true);
 	app.use((req, res, next) => {
 		const ip = req.socket.remoteAddress || req.connection.remoteAddress || req.headers['x-forwarded-for'];
 		let location = {};
 
 		if (ip) {
-			console.log(ip);
+			console.log(req.ip);
 			location = geoip.lookup(ip);
 		}
 
