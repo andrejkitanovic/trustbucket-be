@@ -64,7 +64,7 @@ exports.postCampaign = async (req, res, next) => {
 		let template;
 		if (templateId.includes('default')) {
 			const company = await Company.findById(selectedCompany);
-			template = defaultEmailTemplates(company.name, comapny.slug).find((template) => template._id === templateId);
+			template = defaultEmailTemplates(company.name, company.slug).find((template) => template._id === templateId);
 		} else {
 			template = await EmailTemplate.findById(templateId).select('subject content linkUrl');
 			campaignObject.emailTemplate = templateId;
