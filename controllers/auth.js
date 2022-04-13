@@ -7,19 +7,6 @@ const InvitationSettings = require('../models/invitationSettings');
 const { confirmEmail, forgotPassword } = require('../utils/mailer');
 const dayjs = require('dayjs');
 
-const getIdAndTypeFromAuth = (req, res, next) => {
-	if (req.headers && req.headers.authorization) {
-		let authorization = req.headers.authorization.split(' ')[1];
-		let decoded = jwt.verify(authorization, process.env.DECODE_KEY);
-		return {
-			id: decoded.id,
-			type: decoded.type,
-			selectedCompany: decoded.selectedCompany,
-		};
-	}
-	return null;
-};
-
 exports.getCurrentUser = async (req, res, next) => {
 	const { id } = req.auth;
 
@@ -305,5 +292,3 @@ exports.register = async (req, res, next) => {
 };
 
 // exports.googleRegister = (req, res, next) => {};
-
-exports.getIdAndTypeFromAuth = getIdAndTypeFromAuth;

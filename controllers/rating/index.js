@@ -1,4 +1,3 @@
-const { getIdAndTypeFromAuth } = require('../auth');
 const { deleteRatingHandle } = require('../profile');
 const Company = require('../../models/company');
 const Rating = require('../../models/rating');
@@ -60,13 +59,7 @@ exports.companyRatings = async (req, res, next) => {
 
 exports.getRatings = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 
 		const ratings = await Rating.find({ company: selectedCompany });
 		const count = await Rating.countDocuments({ company: selectedCompany });
@@ -85,15 +78,8 @@ exports.getRatings = async (req, res, next) => {
 
 exports.filterRatings = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-
 		const { pageNumber, pageSize, sortField, sortOrder } = req.body.queryParams;
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 
 		const filterObject = {
 			company: selectedCompany,
@@ -138,13 +124,7 @@ exports.deleteRating = async (req, res, next) => {
 	const { type } = req.query;
 
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 
 		const company = await Company.findById(selectedCompany);
 
@@ -161,14 +141,7 @@ exports.deleteRating = async (req, res, next) => {
 
 exports.stats = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 		const { from, to } = req.query;
 
 		const company = await Company.findById(selectedCompany);

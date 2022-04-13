@@ -14,10 +14,10 @@ const auth = require('../helpers/auth');
 
 const router = express.Router();
 
-router.get('/', ratingsController.getRatings);
-router.get('/stats', ratingsController.stats);
-router.post('/filter', ratingsController.filterRatings);
-router.delete('/', ratingsController.deleteRating);
+router.get('/', auth, ratingsController.getRatings);
+router.get('/stats', auth, ratingsController.stats);
+router.post('/filter', auth, ratingsController.filterRatings);
+router.delete('/', auth, ratingsController.deleteRating);
 
 // GUEST GET COMPANY RATINGS
 router.post('/list/:slug', ratingsController.companyRatings);
