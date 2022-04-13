@@ -224,7 +224,7 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 			};
 
 			if ($el(el).exists('span[aria-label*=stars]')) {
-				object.rating = parseInt($el('span[aria-label*=stars]').attr('aria-label').trim('').charAt(0))
+				object.rating = parseInt($el('span[aria-label*=stars]').attr('aria-label').trim('').charAt(0));
 			}
 
 			if ($el(el).exists('div[class*=-text]') && $el('div[class*=-text]').text().trim()) {
