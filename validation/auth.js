@@ -59,13 +59,14 @@ exports.register = [
 		.custom(async (value) => {
 			try {
 				const userExists = await User.findOne({ email: value });
-				console.log(userExists, value);
 
 				if (Boolean(userExists)) {
-					return new Error('Email is in use!');
+					throw new Error('Email is in use!');
 				}
+
+				return true;
 			} catch (err) {
-				return new Error('Server error', err);
+				throw new Error('Server error', err);
 			}
 		}),
 	body('phone', 'Phone is required!').notEmpty(),
