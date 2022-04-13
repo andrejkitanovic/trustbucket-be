@@ -57,17 +57,13 @@ exports.register = [
 		.normalizeEmail()
 		.withMessage('Email is not valid!')
 		.custom(async (value) => {
-			try {
-				const userExists = await User.findOne({ email: value });
+			const userExists = await User.findOne({ email: value });
 
-				if (Boolean(userExists)) {
-					throw new Error('Email is in use!');
-				}
-
-				return true;
-			} catch (err) {
-				throw new Error('Server error', err);
+			if (Boolean(userExists)) {
+				throw new Error('Email is in use!');
 			}
+
+			return true;
 		}),
 	body('phone', 'Phone is required!').notEmpty(),
 	body('websiteURL', 'Website URL is required!').notEmpty().isURL().withMessage('Website URL is not valid!'),
