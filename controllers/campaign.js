@@ -8,7 +8,7 @@ exports.getCampaigns = async (req, res, next) => {
 		const { selectedCompany } = req.auth;
 
 		const campaigns = await Campaign.find({ company: selectedCompany });
-		const count = await Campaign.find({ company: selectedCompany }).countDocuments();
+		const count = await Campaign.countDocuments({ company: selectedCompany });
 
 		res.status(200).json({
 			total: count,

@@ -3,7 +3,7 @@ const Feedback = require('../models/feedback');
 exports.getFeedbacks = async (req, res, next) => {
 	try {
 		const feedbacks = await Feedback.find().populate('company');
-		const count = await Feedback.count();
+		const count = await Feedback.countDocuments();
 
 		res.status(200).json({
 			data: feedbacks,

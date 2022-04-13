@@ -5,7 +5,7 @@ exports.getLogs = async (req, res, next) => {
 		const { id } = req.auth;
 
 		const logs = await Log.find({ user: id }).populate('user', 'email');
-		const count = await Log.find({ user: id }).countDocuments();
+		const count = await Log.countDocuments({ user: id });
 
 		res.status(200).json({
 			data: logs,
@@ -27,7 +27,7 @@ exports.filterLogs = async (req, res, next) => {
 			.skip(Number((pageNumber - 1) * pageSize))
 			.limit(Number(pageSize))
 			.populate('user', 'email');
-		const count = await Log.find({ user: id }).countDocuments();
+		const count = await Log.countDocuments({ user: id });
 
 		res.status(200).json({
 			data: logs,

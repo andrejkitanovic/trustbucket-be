@@ -5,7 +5,7 @@ exports.getUsers = async (req, res, next) => {
 		const { id } = req.auth;
 
 		const users = await User.find({ _id: { $ne: id } });
-		const count = await User.find({ _id: { $ne: id } }).countDocuments();
+		const count = await User.countDocuments({ _id: { $ne: id } });
 
 		res.status(200).json({
 			total: count,
@@ -25,7 +25,7 @@ exports.filterUsers = async (req, res, next) => {
 			.sort([[sortField, sortOrder === 'asc' ? 1 : -1]])
 			.skip(Number((pageNumber - 1) * pageSize))
 			.limit(Number(pageSize));
-		const count = await User.find({ _id: { $ne: id } }).countDocuments();
+		const count = await User.countDocuments({ _id: { $ne: id } });
 
 		res.status(200).json({
 			data: users,
@@ -51,7 +51,7 @@ exports.deleteUser = async (req, res, next) => {
 		}
 
 		const users = await User.find({ _id: { $ne: id } });
-		const count = await User.find({ _id: { $ne: id } }).countDocuments();
+		const count = await User.countDocuments({ _id: { $ne: id } });
 
 		res.status(200).json({
 			data: users,

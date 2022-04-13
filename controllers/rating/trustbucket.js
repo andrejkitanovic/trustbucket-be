@@ -53,7 +53,7 @@ exports.postTrustbucketReviews = async (req, res, next) => {
 
 		// const allRatings = await Rating.find({ company: company._id, type: 'trustbucket' }).select('rating');
 		// const avarageRating = allRatings.reduce((total, el) => total + el.rating, 0);
-		// const totalRatingCount = await Rating.count({ company: company._id, type: 'trustbucket' });
+		// const totalRatingCount = await Rating.countDocuments({ company: company._id, type: 'trustbucket' });
 
 		// updateRatingHandle(company._id, {
 		// 	type: 'trustbucket',
