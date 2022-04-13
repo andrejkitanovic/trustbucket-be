@@ -56,16 +56,16 @@ exports.register = [
 		.isEmail()
 		.normalizeEmail()
 		.withMessage('Email is not valid!')
-		.custom(async (value, { req }) => {
+		.custom(async (value) => {
 			try {
-				const userExists = await User.findOne({ email: req.body.email });
+				const userExists = await User.findOne({ email: value });
 				console.log(userExists, value);
 
 				if (Boolean(userExists)) {
-					new Error('Email is in use!');
+					return new Error('Email is in use!');
 				}
 			} catch (err) {
-				new Error('Server error', err);
+				return new Error('Server error', err);
 			}
 		}),
 	body('phone', 'Phone is required!').notEmpty(),
