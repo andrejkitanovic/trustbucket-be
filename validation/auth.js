@@ -1,5 +1,6 @@
 const { body } = require('express-validator');
 const validation = require('../helpers/validation');
+const User = require('../models/user');
 
 exports.updateEmail = [
 	body('newEmail', 'Email is required!').notEmpty().isEmail().normalizeEmail().withMessage('Email is not valid!'),
@@ -50,7 +51,22 @@ exports.register = [
 		.isLength({ min: 3 })
 		.withMessage('Password must be longer then 3 characters!'),
 	body('companyName', 'Company Name is required!').notEmpty(),
-	body('email', 'Email is required!').notEmpty().isEmail().normalizeEmail().withMessage('Email is not valid!'),
+	body('email', 'Email is required!')
+		.notEmpty()
+		.isEmail()
+		.normalizeEmail()
+		.withMessage('Email is not valid!')
+		.custom(async (value, { req }) => {
+			try {
+				const userExists = await User.findOne({ email: req.body.email });
+
+				if (Boolean(userExists)) {
+					new Error('Email is in use!');
+				}
+			} catch (err) {
+				new Error('Server error', err);
+			}
+		}),
 	body('phone', 'Phone is required!').notEmpty(),
 	body('websiteURL', 'Website URL is required!').notEmpty().isURL().withMessage('Website URL is not valid!'),
 	validation,
