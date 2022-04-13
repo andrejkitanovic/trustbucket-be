@@ -43,6 +43,7 @@ exports.postTrustbucketReviews = async (req, res, next) => {
 			id: newRating._id,
 			name,
 			email,
+			slug,
 		});
 
 		res.json({

@@ -193,7 +193,7 @@
                                     style="line-height: 175%; text-align: left"
                                     align="left"
                                   >
-                                    <b>Hi ${firstName},</b><br /><br />
+                                    <b>Hi ${name},</b><br /><br />
 
                                     We’re super happy that you took your time to
                                     leave a review.  Click the link below to
@@ -295,7 +295,7 @@
                                         "
                                       >
                                         <a
-                                          href="https://admin.trustbucket.io/confirm-review?id=${id}"
+                                          href="https://reviews.trustbucket.io/confirm-review?id=${id}&slug=${slug}"
                                           style="
                                             color: #00a4bd;
                                             font-size: 16px;
@@ -307,7 +307,7 @@
                                             display: block;
                                           "
                                           target="_blank"
-                                          data-saferedirecturl="https://admin.trustbucket.io/confirm-email?id=${id}"
+                                          data-saferedirecturl="https://reviews.trustbucket.io/confirm-email?id=${id}&slug=${slug}"
                                         >
                                           <strong
                                             style="

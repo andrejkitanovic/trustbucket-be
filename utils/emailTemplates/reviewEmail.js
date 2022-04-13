@@ -1,4 +1,4 @@
-module.exports = ({ id, name }) => {
+module.exports = ({ id, name, slug }) => {
 	return `<!DOCTYPE html>
   <html lang="en">
     <head>
@@ -296,7 +296,7 @@ module.exports = ({ id, name }) => {
                                           "
                                         >
                                           <a
-                                            href="https://admin.trustbucket.io/confirm-review?id=${id}"
+                                            href="https://reviews.trustbucket.io/confirm-review?id=${id}&slug=${slug}"
                                             style="
                                               color: #00a4bd;
                                               font-size: 16px;
@@ -308,7 +308,7 @@ module.exports = ({ id, name }) => {
                                               display: block;
                                             "
                                             target="_blank"
-                                            data-saferedirecturl="https://admin.trustbucket.io/confirm-email?id=${id}"
+                                            data-saferedirecturl="https://reviews.trustbucket.io/confirm-email?id=${id}&slug=${slug}"
                                           >
                                             <strong
                                               style="
