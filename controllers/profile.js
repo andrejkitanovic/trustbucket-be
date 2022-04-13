@@ -68,7 +68,7 @@ const calculateOverallRating = (ratings) => {
 			if (!current.rating) return prev;
 			return prev + current.rating * current.ratingCount;
 		}, 0) / ratingCount;
-		
+
 	const overall = {
 		type: 'overall',
 		rating: isNaN(rating) ? null : rating,
@@ -80,83 +80,77 @@ const calculateOverallRating = (ratings) => {
 
 // ROUTES
 
-exports.getProfile = (req, res, next) => {
-	(async function () {
-		try {
-			const auth = getIdAndTypeFromAuth(req, res, next);
-			if (!auth) {
-				const error = new Error('Not Authorized!');
-				error.statusCode = 401;
-				next(error);
-			}
-			const { id } = auth;
-
-			const profile = await User.findById(id);
-			await profile.populate('selectedCompany');
-			await profile.populate('companies', '_id name websiteURL address.name');
-			res.status(200).json({
-				data: profile,
-			});
-		} catch (err) {
-			next(err);
+exports.getProfile = async (req, res, next) => {
+	try {
+		const auth = getIdAndTypeFromAuth(req, res, next);
+		if (!auth) {
+			const error = new Error('Not Authorized!');
+			error.statusCode = 401;
+			next(error);
 		}
-	})();
+		const { id } = auth;
+
+		const profile = await User.findById(id);
+		await profile.populate('selectedCompany');
+		await profile.populate('companies', '_id name websiteURL address.name');
+		res.status(200).json({
+			data: profile,
+		});
+	} catch (err) {
+		next(err);
+	}
 };
 
-exports.updateProfile = (req, res, next) => {
-	(async function () {
-		try {
-			const auth = getIdAndTypeFromAuth(req, res, next);
-			if (!auth) {
-				const error = new Error('Not Authorized!');
-				error.statusCode = 401;
-				next(error);
-			}
-			const { id } = auth;
-
-			const updatedUser = await User.findOneAndUpdate(
-				{ _id: id },
-				{
-					...req.body,
-				},
-				{ new: true }
-			);
-
-			await updatedUser.populate('selectedCompany', '_id name image websiteURL ratings');
-			await updatedUser.populate('companies', '_id name');
-			res.status(200).json({
-				data: updatedUser,
-				message: 'Profile successfully updated!',
-			});
-		} catch (err) {
-			next(err);
+exports.updateProfile = async (req, res, next) => {
+	try {
+		const auth = getIdAndTypeFromAuth(req, res, next);
+		if (!auth) {
+			const error = new Error('Not Authorized!');
+			error.statusCode = 401;
+			next(error);
 		}
-	})();
+		const { id } = auth;
+
+		const updatedUser = await User.findOneAndUpdate(
+			{ _id: id },
+			{
+				...req.body,
+			},
+			{ new: true }
+		);
+
+		await updatedUser.populate('selectedCompany', '_id name image websiteURL ratings');
+		await updatedUser.populate('companies', '_id name');
+		res.status(200).json({
+			data: updatedUser,
+			message: 'Profile successfully updated!',
+		});
+	} catch (err) {
+		next(err);
+	}
 };
 
-exports.deleteProfile = (req, res, next) => {
-	(async function () {
-		try {
-			const auth = getIdAndTypeFromAuth(req, res, next);
-			if (!auth) {
-				const error = new Error('Not Authorized!');
-				error.statusCode = 401;
-				next(error);
-			}
-			const { id } = auth;
-
-			const userDeleted = await User.deleteOne({ _id: id });
-			if (!userDeleted) {
-				const error = new Error('Profile not found!');
-				error.statusCode = 404;
-				return next(error);
-			}
-
-			res.status(200).json({
-				message: 'Profile successfully deleted!',
-			});
-		} catch (err) {
-			next(err);
+exports.deleteProfile = async (req, res, next) => {
+	try {
+		const auth = getIdAndTypeFromAuth(req, res, next);
+		if (!auth) {
+			const error = new Error('Not Authorized!');
+			error.statusCode = 401;
+			next(error);
 		}
-	})();
+		const { id } = auth;
+
+		const userDeleted = await User.deleteOne({ _id: id });
+		if (!userDeleted) {
+			const error = new Error('Profile not found!');
+			error.statusCode = 404;
+			return next(error);
+		}
+
+		res.status(200).json({
+			message: 'Profile successfully deleted!',
+		});
+	} catch (err) {
+		next(err);
+	}
 };
