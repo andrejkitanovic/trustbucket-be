@@ -7,7 +7,7 @@ const auth = async (req, res, next) => {
 			let authorization = req.headers.authorization.split(' ')[1];
 			let decoded = jwt.verify(authorization, process.env.DECODE_KEY);
 
-			const { id, type, selectedCompany } = decoded;
+			const { id, type } = decoded;
 
 			const user = await User.findById(id);
 			if (!user) {
@@ -17,7 +17,7 @@ const auth = async (req, res, next) => {
 			req.auth = {
 				id,
 				type,
-				selectedCompany,
+				selectedCompany: user.selectedCompany,
 			};
 		}
 	} catch (err) {
