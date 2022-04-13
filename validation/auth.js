@@ -59,6 +59,7 @@ exports.register = [
 		.custom(async (value, { req }) => {
 			try {
 				const userExists = await User.findOne({ email: req.body.email });
+				console.log(userExists, value);
 
 				if (Boolean(userExists)) {
 					new Error('Email is in use!');
