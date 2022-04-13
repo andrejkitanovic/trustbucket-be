@@ -1,7 +1,6 @@
 const cheerio = require('cheerio');
 
 const { useRp } = require('../../utils/request-promise');
-const { getIdAndTypeFromAuth } = require('../auth');
 const { updateRatingHandle } = require('../profile');
 const { getCluster } = require('../../utils/puppeteer');
 
@@ -12,13 +11,6 @@ exports.searchHittaProfile = async (req, res, next) => {
 		if (!url || !url.includes('hitta.se/')) {
 			const error = new Error('Not Valid URL!');
 			error.statusCode = 422;
-			next(error);
-		}
-
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
 			next(error);
 		}
 
@@ -50,13 +42,7 @@ exports.saveHittaProfile = async (req, res, next) => {
 			next(error);
 		}
 
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 
 		const result = await useRp(url);
 		const $ = cheerio.load(result);

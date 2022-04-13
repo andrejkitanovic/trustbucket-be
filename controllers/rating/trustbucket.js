@@ -2,7 +2,6 @@ const Company = require('../../models/company');
 const Rating = require('../../models/rating');
 const UnconfirmedRating = require('../../models/unconfirmedRating');
 const { updateRatingHandle } = require('../profile');
-const { getIdAndTypeFromAuth } = require('../auth');
 const { confirmReview } = require('../../utils/mailer');
 
 exports.getTrustbucketReviews = async (req, res, next) => {
@@ -71,13 +70,6 @@ exports.postTrustbucketReviews = async (req, res, next) => {
 };
 
 exports.postTrustbucketReply = async (req, res, next) => {
-	const auth = getIdAndTypeFromAuth(req, res, next);
-	if (!auth) {
-		const error = new Error('Not Authorized!');
-		error.statusCode = 401;
-		next(error);
-	}
-
 	try {
 		const { id, reply } = req.body;
 
@@ -93,13 +85,6 @@ exports.postTrustbucketReply = async (req, res, next) => {
 
 exports.deleteTrustbucketReply = async (req, res, next) => {
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-
 		const { id } = req.params;
 
 		await Rating.findByIdAndUpdate(id, { reply: null });

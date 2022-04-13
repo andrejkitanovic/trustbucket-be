@@ -1,7 +1,6 @@
 const cheerio = require('cheerio');
 
 const { useRp } = require('../../utils/request-promise');
-const { getIdAndTypeFromAuth } = require('../auth');
 const { updateRatingHandle } = require('../profile');
 const { getCluster } = require('../../utils/puppeteer');
 
@@ -9,13 +8,6 @@ exports.searchFreshaProfile = async (req, res, next) => {
 	const { q: url } = req.body;
 
 	try {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-
 		const result = await useRp(url);
 		const $ = cheerio.load(result);
 		const json = await JSON.parse($('script[type="application/ld+json"]').html());
@@ -43,13 +35,7 @@ exports.saveFreshaProfile = async (req, res, next) => {
 			next(error);
 		}
 
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 
 		const result = await useRp(url);
 		const $ = cheerio.load(result);

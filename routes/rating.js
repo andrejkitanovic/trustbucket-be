@@ -7,7 +7,9 @@ const recoseRatingController = require('../controllers/rating/recose');
 const bookingRatingController = require('../controllers/rating/booking');
 const trustpilotController = require('../controllers/rating/trustpilot');
 const bokadirektController = require('../controllers/rating/bokadirekt');
-const hittaController = require('../controllers/rating/hitta')
+const hittaController = require('../controllers/rating/hitta');
+
+const auth = require('../helpers/auth');
 // const airbnbController = require('../controllers/rating/airbnb');
 
 const router = express.Router();
@@ -23,34 +25,34 @@ router.post('/list/:slug', ratingsController.companyRatings);
 // TRUSTBUCKET - DOING
 router.get('/trustbucket/:slug', trustbucketController.getTrustbucketReviews);
 router.post('/trustbucket', trustbucketController.postTrustbucketReviews);
-router.post('/trustbucket/reply', trustbucketController.postTrustbucketReply);
-router.delete('/trustbucket/reply/:id', trustbucketController.deleteTrustbucketReply);
+router.post('/trustbucket/reply', auth, trustbucketController.postTrustbucketReply);
+router.delete('/trustbucket/reply/:id', auth, trustbucketController.deleteTrustbucketReply);
 
 // GOOGLE - DONE
-router.post('/google/search', googleRatingController.getGoogleProfile);
-router.post('/google', googleRatingController.saveGoogleRating);
+router.post('/google/search', auth, googleRatingController.getGoogleProfile);
+router.post('/google', auth, googleRatingController.saveGoogleRating);
 
 // TRUSTPILOT - DONE
-router.post('/trustpilot/search', trustpilotController.searchTrustpilotProfile);
-router.post('/trustpilot', trustpilotController.saveTrustpilotProfile);
+router.post('/trustpilot/search', auth, trustpilotController.searchTrustpilotProfile);
+router.post('/trustpilot', auth, trustpilotController.saveTrustpilotProfile);
 
 // FRESHA - DONE
-router.post('/fresha/search', freshaRatingController.searchFreshaProfile);
-router.post('/fresha', freshaRatingController.saveFreshaProfile);
+router.post('/fresha/search', auth, freshaRatingController.searchFreshaProfile);
+router.post('/fresha', auth, freshaRatingController.saveFreshaProfile);
 
 // BOOKING - DONE
-router.post('/booking/search', bookingRatingController.searchBookingProfile);
-router.post('/booking', bookingRatingController.saveBookingProfile);
+router.post('/booking/search', auth, bookingRatingController.searchBookingProfile);
+router.post('/booking', auth, bookingRatingController.saveBookingProfile);
 
 // RECOSE - DONE
-router.post('/recose/search', recoseRatingController.searchRecoseProfile);
-router.post('/recose', recoseRatingController.saveRecoseProfile);
+router.post('/recose/search', auth, recoseRatingController.searchRecoseProfile);
+router.post('/recose', auth, recoseRatingController.saveRecoseProfile);
 
 // BOKADIREKT - DONE
-router.post('/bokadirekt/search', bokadirektController.searchBokadirektProfile);
-router.post('/bokadirekt', bokadirektController.saveBokadirektProfile);
+router.post('/bokadirekt/search', auth, bokadirektController.searchBokadirektProfile);
+router.post('/bokadirekt', auth, bokadirektController.saveBokadirektProfile);
 
-// HITA - DOING
+// HITTA - DOING
 router.post('/hitta/search', hittaController.searchHittaProfile);
 router.post('/hitta', hittaController.saveHittaProfile);
 

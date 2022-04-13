@@ -1,7 +1,6 @@
 const axios = require('axios');
 
 const Company = require('../../models/company');
-const { getIdAndTypeFromAuth } = require('../auth');
 const { addAddress } = require('../company');
 const { updateRatingHandle } = require('../profile');
 const { getCluster } = require('../../utils/puppeteer');
@@ -20,13 +19,6 @@ exports.getGoogleProfile = async (req, res, next) => {
 		const textquery = req.body.q;
 		const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=${fields}&input=${textquery}&inputtype=textquery&key=${process.env.API_KEY_GOOGLE}`;
 
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-
 		const { data } = await axios.get(url);
 
 		res.json(data);
@@ -43,13 +35,7 @@ exports.saveGoogleRating = async (req, res, next) => {
 		const placeId = req.body.placeId;
 		const url = `https://maps.googleapis.com/maps/api/place/details/json?fields=${fields}&place_id=${placeId}&key=${process.env.API_KEY_GOOGLE}`;
 
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 
 		const { data } = await axios.get(url);
 

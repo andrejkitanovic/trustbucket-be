@@ -1,7 +1,6 @@
 const cheerio = require('cheerio');
 
 const { useRp } = require('../../utils/request-promise');
-const { getIdAndTypeFromAuth } = require('../auth');
 const { updateRatingHandle } = require('../profile');
 const { getCluster, options } = require('../../utils/puppeteer');
 
@@ -16,13 +15,6 @@ exports.searchAirbnbProfile = async (req, res, next) => {
 		if (!url || !url.includes('www.airbnb.com/rooms')) {
 			const error = new Error('Not Valid URL!');
 			error.statusCode = 422;
-			next(error);
-		}
-
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
 			next(error);
 		}
 
@@ -62,13 +54,7 @@ exports.saveAirbnbProfile = async (req, res, next) => {
 			next(error);
 		}
 
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
-		const { selectedCompany } = auth;
+		const { selectedCompany } = req.auth;
 
 		const browser = await puppeteer.launch(options);
 		const page = await browser.newPage();
