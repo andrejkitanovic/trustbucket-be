@@ -25,6 +25,7 @@ router.post('/list/:slug', ratingsController.companyRatings);
 // TRUSTBUCKET - DOING
 router.get('/trustbucket/:slug', trustbucketController.getTrustbucketReviews);
 router.post('/trustbucket', trustbucketController.postTrustbucketReviews);
+router.post('/trustbucket/confirm/:id', trustbucketController.confirmTrustbucketReview);
 router.post('/trustbucket/reply', auth, trustbucketController.postTrustbucketReply);
 router.delete('/trustbucket/reply/:id', auth, trustbucketController.deleteTrustbucketReply);
 

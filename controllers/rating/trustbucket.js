@@ -69,6 +69,45 @@ exports.postTrustbucketReviews = async (req, res, next) => {
 	}
 };
 
+exports.confirmTrustbucketReview = async (req, res, next) => {
+	try {
+		const { id } = req.params;
+
+		const uncofirmedRating = await UnconfirmedRating.findById(id);
+
+		const newRating = new Rating({
+			company: uncofirmedRating.company,
+			type: 'trustbucket',
+			rating: uncofirmedRating.rating,
+			title: uncofirmedRating.title,
+			description: uncofirmedRating.description,
+			image: uncofirmedRating.image,
+			name: uncofirmedRating.name,
+			date: uncofirmedRating.date,
+		});
+		await newRating.save();
+		await uncofirmedRating.remove();
+
+		const company = await Company.findById(uncofirmedRating.company);
+
+		const allRatings = await Rating.find({ company: company._id, type: 'trustbucket' }).select('rating');
+		const avarageRating = allRatings.reduce((total, el) => total + el.rating, 0);
+		const totalRatingCount = await Rating.countDocuments({ company: company._id, type: 'trustbucket' });
+
+		updateRatingHandle(company._id, {
+			type: 'trustbucket',
+			rating: avarageRating / totalRatingCount,
+			ratingCount: totalRatingCount,
+		});
+
+		res.json({
+			message: 'Review verified!',
+		});
+	} catch (err) {
+		next(err);
+	}
+};
+
 exports.postTrustbucketReply = async (req, res, next) => {
 	try {
 		const { id, reply } = req.body;
