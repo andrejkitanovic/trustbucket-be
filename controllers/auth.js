@@ -12,7 +12,7 @@ exports.getCurrentUser = async (req, res, next) => {
 
 	try {
 		const currentUser = await User.findById(id);
-		await currentUser.populate('selectedCompany', '_id name image websiteURL ratings');
+		await currentUser.populate('selectedCompany');
 		await currentUser.populate('companies', '_id name');
 		res.status(200).json({
 			data: currentUser,
@@ -46,7 +46,7 @@ exports.updateEmail = async (req, res, next) => {
 		loginUser.email = newEmail;
 		const savedUser = await loginUser.save();
 
-		await savedUser.populate('selectedCompany', '_id image name websiteURL ratings');
+		await savedUser.populate('selectedCompany');
 		await savedUser.populate('companies', '_id name');
 		res.status(200).json({
 			data: savedUser,
@@ -83,7 +83,7 @@ exports.updatePassword = async (req, res, next) => {
 		loginUser.password = hashedPassword;
 		const savedUser = await loginUser.save();
 
-		await savedUser.populate('selectedCompany', '_id image name websiteURL ratings');
+		await savedUser.populate('selectedCompany');
 		await savedUser.populate('companies', '_id name');
 		res.status(200).json({
 			data: savedUser,
@@ -127,7 +127,7 @@ exports.login = async (req, res, next) => {
 			}
 		);
 
-		await loginUser.populate('selectedCompany', '_id image name websiteURL ratings');
+		await loginUser.populate('selectedCompany');
 		await loginUser.populate('companies', '_id name');
 		res.status(200).json({
 			token,
@@ -224,7 +224,7 @@ exports.googleLogin = async (req, res, next) => {
 			}
 		);
 
-		await loginUser.populate('selectedCompany', '_id name websiteURL ratings');
+		await loginUser.populate('selectedCompany');
 		await loginUser.populate('companies', '_id name');
 		res.status(200).json({
 			token,

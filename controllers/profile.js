@@ -106,7 +106,7 @@ exports.updateProfile = async (req, res, next) => {
 			{ new: true }
 		);
 
-		await updatedUser.populate('selectedCompany', '_id name image websiteURL ratings');
+		await updatedUser.populate('selectedCompany');
 		await updatedUser.populate('companies', '_id name');
 		res.status(200).json({
 			data: updatedUser,
