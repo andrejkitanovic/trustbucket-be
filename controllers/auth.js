@@ -20,28 +20,26 @@ const getIdAndTypeFromAuth = (req, res, next) => {
 	return null;
 };
 
-exports.getCurrentUser = (req, res, next) => {
-	(async function () {
-		const auth = getIdAndTypeFromAuth(req, res, next);
-		if (!auth) {
-			const error = new Error('Not Authorized!');
-			error.statusCode = 401;
-			next(error);
-		}
+exports.getCurrentUser = async (req, res, next) => {
+	const auth = getIdAndTypeFromAuth(req, res, next);
+	if (!auth) {
+		const error = new Error('Not Authorized!');
+		error.statusCode = 401;
+		next(error);
+	}
 
-		const { id } = auth;
+	const { id } = auth;
 
-		try {
-			const currentUser = await User.findById(id);
-			await currentUser.populate('selectedCompany', '_id name image websiteURL ratings');
-			await currentUser.populate('companies', '_id name');
-			res.status(200).json({
-				data: currentUser,
-			});
-		} catch (err) {
-			next(err);
-		}
-	})();
+	try {
+		const currentUser = await User.findById(id);
+		await currentUser.populate('selectedCompany', '_id name image websiteURL ratings');
+		await currentUser.populate('companies', '_id name');
+		res.status(200).json({
+			data: currentUser,
+		});
+	} catch (err) {
+		next(err);
+	}
 };
 
 exports.updateEmail = (req, res, next) => {
@@ -314,8 +312,8 @@ exports.register = (req, res, next) => {
 				],
 				subscription: {
 					plan: 'trial',
-					ends: dayjs().add(7, 'day')
-				}
+					ends: dayjs().add(7, 'day'),
+				},
 			});
 			const invitationSettingsObject = new InvitationSettings({
 				company: companyObject._id,

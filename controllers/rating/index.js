@@ -171,13 +171,14 @@ exports.stats = (req, res, next) => {
 	(async function () {
 		try {
 			const auth = getIdAndTypeFromAuth(req, res, next);
-			const { from, to } = req.query;
+		
 			if (!auth) {
 				const error = new Error('Not Authorized!');
 				error.statusCode = 401;
 				next(error);
 			}
 			const { selectedCompany } = auth;
+			const { from, to } = req.query;
 
 			const company = await Company.findById(selectedCompany);
 			console.log(company)
