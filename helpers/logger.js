@@ -11,10 +11,11 @@ module.exports = (app) => {
 		}
 
 		const { method, _parsedUrl } = req;
-		const auth = req.auth;
+
 		next();
 
 		res.on('finish', () => {
+			const auth = req.auth;
 			const { statusCode } = res;
 
 			const logObject = {
