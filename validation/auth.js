@@ -4,7 +4,20 @@ const User = require('../models/user');
 const Company = require('../models/company');
 
 exports.updateEmail = [
-	body('newEmail', 'Email is required!').notEmpty().isEmail().normalizeEmail().withMessage('Email is not valid!'),
+	body('newEmail', 'Email is required!')
+		.notEmpty()
+		.isEmail()
+		.normalizeEmail()
+		.withMessage('Email is not valid!')
+		.custom(async (value) => {
+			const userExists = await User.findOne({ email: value });
+
+			if (Boolean(userExists)) {
+				throw new Error('Email is in use!');
+			}
+
+			return true;
+		}),
 	body('password', 'Password is required!')
 		.not()
 		.isEmpty()
