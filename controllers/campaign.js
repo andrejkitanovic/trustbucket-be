@@ -3,6 +3,7 @@ const { defaultEmailTemplates } = require('./emailTemplate');
 const EmailTemplate = require('../models/emailTemplate');
 const Campaign = require('../models/campaign');
 const Company = require('../models/company');
+const User = require('../models/user');
 const InvitationSettings = require('../models/invitationSettings');
 
 exports.getCampaigns = async (req, res, next) => {
@@ -51,7 +52,7 @@ exports.getCampaignStats = async (req, res, next) => {
 
 exports.postCampaign = async (req, res, next) => {
 	try {
-		const { selectedCompany } = req.auth;
+		const { id, selectedCompany } = req.auth;
 
 		const { templateId, reminder, recievers } = req.body;
 
@@ -62,8 +63,10 @@ exports.postCampaign = async (req, res, next) => {
 		});
 
 		let template;
+		const company = await Company.findById(selectedCompany);
+		const user = User.findById(id);
+
 		if (templateId.includes('default')) {
-			const company = await Company.findById(selectedCompany);
 			template = defaultEmailTemplates(company.name, company.slug).find((template) => template._id === templateId);
 		} else {
 			template = await EmailTemplate.findById(templateId).select('subject content linkUrl');
@@ -72,7 +75,8 @@ exports.postCampaign = async (req, res, next) => {
 		const campaign = await campaignObject.save();
 
 		const invitation = await InvitationSettings.findOne({ company: selectedCompany });
-		await sendEmail(template, recievers, campaign._id, invitation);
+
+		await sendEmail(template, recievers, campaign._id, invitation, company.name, user.firstName);
 
 		res.status(200).json({
 			campaign: campaignObject,

@@ -14,6 +14,14 @@ const campaignSchema = new Schema({
 		type: Boolean,
 		default: false,
 	},
+	verifiedReviews: {
+		type: Number,
+		default: 0,
+	},
+	trustbucketRating: {
+		type: Number,
+		default: 0,
+	},
 	recievers: [
 		{
 			firstName: {

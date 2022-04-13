@@ -15,16 +15,23 @@ exports.getCampaignOverview = async () => {
 	return result.Data;
 };
 
-exports.sendEmail = async (template, recievers, campaignId, invitation) => {
+exports.sendEmail = async (template, recievers, campaignId, invitation, companyName, firstNameofUser) => {
 	try {
 		const { subject, content, linkUrl } = template;
 
 		const { body: result } = await mailjet.post('send', { version: 'v3.1' }).request({
 			Messages: recievers.map((reciever) => {
+				let personalizedLinkUrl = linkUrl;
+				personalizedLinkUrl = personalizedLinkUrl.replace(/{campaignId}/g, campaignId);
+				personalizedLinkUrl = personalizedLinkUrl.replace(/{firstName}/g, reciever.firstName);
+				personalizedLinkUrl = personalizedLinkUrl.replace(/{email}/g, reciever.email);
+
 				let personalizedContent = content;
 				personalizedContent = personalizedContent.replace(/{firstName}/g, reciever.firstName);
 				personalizedContent = personalizedContent.replace(/{lastName}/g, reciever.lastName);
 				personalizedContent = personalizedContent.replace(/{email}/g, reciever.email);
+				personalizedContent = personalizedContent.replace(/{firstNameofUser}/g, firstNameofUser);
+				personalizedContent = personalizedContent.replace(/{companyName}/g, companyName);
 
 				let button = null;
 				if (/{review_link:(.*?)}/g.test(personalizedContent)) {
@@ -33,7 +40,7 @@ exports.sendEmail = async (template, recievers, campaignId, invitation) => {
 
 					button = {
 						text: buttonText.trim(),
-						url: linkUrl,
+						url: personalizedLinkUrl,
 					};
 				}
 

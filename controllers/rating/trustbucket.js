@@ -1,5 +1,6 @@
 const Company = require('../../models/company');
 const Rating = require('../../models/rating');
+const Campaign = require('../../models/campaign');
 const UnconfirmedRating = require('../../models/unconfirmedRating');
 const { updateRatingHandle } = require('../profile');
 const { confirmReview } = require('../../utils/mailer');
@@ -29,26 +30,54 @@ exports.postTrustbucketReviews = async (req, res, next) => {
 				$regex: new RegExp(slug, 'i'),
 			},
 		});
-		const newRating = new UnconfirmedRating({
-			company: company._id,
-			rating,
-			title,
-			description,
-			image,
-			name,
-			date: new Date(),
-		});
-		await newRating.save();
-		await confirmReview({
-			id: newRating._id,
-			name,
-			email,
-			slug,
-		});
 
-		res.json({
-			message: 'Verification Email Sent!',
-		});
+		if (!req.body.campaignId) {
+			const newUncofirmedRating = new UnconfirmedRating({
+				company: company._id,
+				rating,
+				title,
+				description,
+				image,
+				name,
+				date: new Date(),
+			});
+			await newUncofirmedRating.save();
+			await confirmReview({
+				id: newUncofirmedRating._id,
+				name,
+				email,
+				slug,
+			});
+
+			res.json({
+				message: 'Verification Email Sent!',
+			});
+		} else {
+			const campaignId = req.body.campaignId;
+
+			const campaign = await Campaign.findById(campaignId);
+
+			const newRating = new Rating({
+				company: company._id,
+				type: 'trustbucket',
+				rating,
+				title,
+				description,
+				image,
+				name,
+				date: new Date(),
+			});
+			await newRating.save();
+
+			campaign.trustbucketRating =
+				(campaign.trustbucketRating * campaign.verifiedReviews + rating) / campaign.verifiedReviews + 1;
+			campaign.verifiedReviews = campaign.verifiedReviews + 1;
+			await campaign.save();
+
+			res.json({
+				message: 'Review posted!',
+			});
+		}
 	} catch (err) {
 		next(err);
 	}
