@@ -8,12 +8,12 @@ const validation = async (req, res, next) => {
 	}
 
 	if (!errors.isEmpty()) {
-		const firstErrors = errors.array({ onlyFirstError: true })
-		const errorsToString = firstErrors.map((error) => error.msg).join(', ')
+		const firstErrors = errors.array({ onlyFirstError: true });
+		const errorsToString = firstErrors.map((error) => error.msg).join(', ');
 		const capitalizeError = errorsToString.charAt(0).toUpperCase() + errorsToString.slice(1);
-		
+
 		return res.status(400).json({
-			message: capitalizeError
+			message: capitalizeError + '!',
 		});
 	}
 
