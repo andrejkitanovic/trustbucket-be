@@ -12,7 +12,7 @@ const auth = async (req, res, next) => {
 			const user = await User.findById(user);
 
 			if (!user) {
-				res.status(401).send('User not found!');
+				return res.status(401).send('User not found!');
 			}
 
 			req.auth = {
