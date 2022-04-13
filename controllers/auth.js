@@ -59,7 +59,7 @@ exports.updateEmail = async (req, res, next) => {
 		loginUser.email = newEmail;
 		const savedUser = await loginUser.save();
 
-		await savedUser.populate('selectedCompany', '_id name websiteURL ratings');
+		await savedUser.populate('selectedCompany', '_id image name websiteURL ratings');
 		await savedUser.populate('companies', '_id name');
 		res.status(200).json({
 			data: savedUser,
@@ -96,7 +96,7 @@ exports.updatePassword = async (req, res, next) => {
 		loginUser.password = hashedPassword;
 		const savedUser = await loginUser.save();
 
-		await savedUser.populate('selectedCompany', '_id name image websiteURL ratings');
+		await savedUser.populate('selectedCompany', '_id image name websiteURL ratings');
 		await savedUser.populate('companies', '_id name');
 		res.status(200).json({
 			data: savedUser,
@@ -140,7 +140,7 @@ exports.login = async (req, res, next) => {
 			}
 		);
 
-		await loginUser.populate('selectedCompany', '_id name websiteURL ratings');
+		await loginUser.populate('selectedCompany', '_id image name websiteURL ratings');
 		await loginUser.populate('companies', '_id name');
 		res.status(200).json({
 			token,
@@ -295,10 +295,7 @@ exports.register = async (req, res, next) => {
 		await confirmEmail({ id: userObject._id, firstName, lastName, email });
 
 		if (userCreated && companyCreated) {
-			await userObject.populate('selectedCompany', '_id name image websiteURL ratings');
-			await userObject.populate('companies', '_id name');
 			res.status(200).json({
-				data: userObject,
 				message: 'Please confirm your email address!',
 			});
 		}

@@ -78,7 +78,6 @@ exports.register = [
 
 			return true;
 		}),
-
 	body('websiteURL', 'Website URL is required!').notEmpty().isURL().withMessage('Website URL is not valid!'),
 	validation,
 ];
