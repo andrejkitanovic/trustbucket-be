@@ -69,7 +69,6 @@ exports.postCampaign = async (req, res, next) => {
 			template = await EmailTemplate.findById(templateId).select('subject content linkUrl');
 			campaignObject.emailTemplate = templateId;
 		}
-		console.log(campaign);
 		const campaign = await campaignObject.save();
 
 		const invitation = await InvitationSettings.findOne({ company: selectedCompany });

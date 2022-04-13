@@ -9,7 +9,6 @@ const campaignSchema = new Schema({
 	emailTemplate: {
 		type: Schema.Types.ObjectID,
 		ref: 'Email Template',
-		required: false,
 	},
 	reminder: {
 		type: Boolean,
