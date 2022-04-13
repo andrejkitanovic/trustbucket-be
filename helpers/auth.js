@@ -9,9 +9,9 @@ const auth = async (req, res, next) => {
 
 			const { id, type, selectedCompany } = decoded;
 
-			const user = await User.findById(user);
+			const user = await User.findById(id);
 			if (!user) {
-				return res.status(401).send({ message: 'User not found!' });
+				return res.status(401).json({ message: 'User not found!' });
 			}
 
 			req.auth = {
@@ -21,7 +21,7 @@ const auth = async (req, res, next) => {
 			};
 		}
 	} catch (err) {
-		return res.status(401).send({ message: 'Not Authorized' });
+		return res.status(401).json({ message: 'Not Authorized' });
 	}
 
 	return next();
