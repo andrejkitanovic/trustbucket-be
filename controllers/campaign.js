@@ -33,6 +33,11 @@ exports.getCampaignStats = async (req, res, next) => {
 		const allCampaignsOverview = await getCampaignOverview();
 		const result = allCampaignsOverview.filter((campaign) => campaignsId.includes(campaign.Title));
 
+		const verifiedReviewsCount = campaigns.reduce((sum, single) => sum + single.verifiedReviews, 0);
+		const trustbucketRating =
+			campaigns.reduce((sum, single) => sum + single.trustbucketRating * single.verifiedReviews, 0) /
+			verifiedReviewsCount;
+			
 		const stats = {
 			campaignCount: result.length,
 			invitationsCount: result.reduce((sum, single) => sum + single.DeliveredCount, 0),
@@ -40,7 +45,8 @@ exports.getCampaignStats = async (req, res, next) => {
 			openCount: result.reduce((sum, single) => sum + single.OpenedCount, 0),
 			clickCount: result.reduce((sum, single) => sum + single.ClickedCount, 0),
 			processCount: result.reduce((sum, single) => sum + single.ProcessedCount, 0),
-			verifiedReviewsCount: campaigns.reduce((sum, single) => sum + single.verifiedReviews, 0),
+			verifiedReviewsCount: verifiedReviewsCount,
+			trustbucketRating: trustbucketRating,
 		};
 
 		res.status(200).json({
