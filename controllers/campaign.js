@@ -26,7 +26,7 @@ exports.getCampaignStats = async (req, res, next) => {
 	try {
 		const { selectedCompany } = req.auth;
 
-		const campaigns = await Campaign.find({ company: selectedCompany }).select('id recievers');
+		const campaigns = await Campaign.find({ company: selectedCompany });
 		const campaignsId = campaigns.map((campaign) => campaign._id.toString());
 		const campaignsEmails = campaigns.map((campaign) => campaign.recievers.map((reciever) => reciever.email)).flat();
 
@@ -40,6 +40,7 @@ exports.getCampaignStats = async (req, res, next) => {
 			openCount: result.reduce((sum, single) => sum + single.OpenedCount, 0),
 			clickCount: result.reduce((sum, single) => sum + single.ClickedCount, 0),
 			processCount: result.reduce((sum, single) => sum + single.ProcessedCount, 0),
+			verifiedReviewsCount: campaigns.reduce((sum, single) => sum + single.verifiedReviews, 0),
 		};
 
 		res.status(200).json({
