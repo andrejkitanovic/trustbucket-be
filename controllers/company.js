@@ -8,11 +8,11 @@ const { isAbsoluteURL } = require('../helpers/utils');
 const products = {
 	monthly: {
 		start: 'price_1Kmo1FA7vheuEVbY2CcFOZ4d',
-		pro: 'price_1KoRDmA7vheuEVbY8p5Ax9hF',
+		pro: 'price_1KoRDmA7vheuEVbYRvLMht7n',
 	},
 	yearly: {
 		start: 'price_1KoRBdA7vheuEVbYSfTdoQMK',
-		pro: 'price_1KoRDmA7vheuEVbYRvLMht7n',
+		pro: 'price_1KoRDmA7vheuEVbY8p5Ax9hF',
 	},
 };
 
