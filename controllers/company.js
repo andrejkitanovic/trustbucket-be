@@ -207,6 +207,7 @@ exports.subscribeSession = async (req, res, next) => {
 			line_items: [{ price: products[type][plan], quantity: 1 }],
 			customer: company.stripeId,
 			customer_update: {
+				name: 'auto',
 				address: 'auto',
 			},
 			tax_id_collection: {
