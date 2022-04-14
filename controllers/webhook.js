@@ -1,6 +1,18 @@
 // const stripe = require('../utils/stripe')
 // const endpointSecret = process.env.STRIPE_SECRET_KEY;
+const { products } = require('./company');
 const Company = require('../models/company');
+
+const parsedProducts = {};
+Object.keys(products).forEach((type) =>
+	Object.keys(products[type]).forEach(
+		(product) =>
+			(parsedProducts[products[type][product]] = {
+				type,
+				product,
+			})
+	)
+);
 
 exports.webhook = async (req, res, next) => {
 	// console.log('Webhook called', req.body);
@@ -42,6 +54,7 @@ exports.webhook = async (req, res, next) => {
 			break;
 		case 'invoice.paid':
 			company.billingInfo.interval = payment.lines.data[0].plan.interval;
+			company.subscription.plan = parsedProducts[payment.lines.data[0].plan.id].product;
 
 			await company.save();
 
