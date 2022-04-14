@@ -206,6 +206,9 @@ exports.subscribeSession = async (req, res, next) => {
 			payment_method_types: ['card'],
 			line_items: [{ price: products[type][plan], quantity: 1 }],
 			customer: company.stripeId,
+			custoemr_update: {
+				address: 'auto'
+			},
 			mode: 'subscription',
 			success_url: 'https://admin.trustbucket.io/settings/plans',
 			cancel_url: 'https://admin.trustbucket.io/settings/plans',
