@@ -5,6 +5,17 @@ const User = require('../models/user');
 const Company = require('../models/company');
 const { isAbsoluteURL } = require('../helpers/utils');
 
+const products = {
+	monthly: {
+		start: 'price_1Kmo1FA7vheuEVbY2CcFOZ4d',
+		pro: 'price_1KoRDmA7vheuEVbY8p5Ax9hF',
+	},
+	yearly: {
+		start: 'price_1KoRBdA7vheuEVbYSfTdoQMK',
+		pro: 'price_1KoRDmA7vheuEVbYRvLMht7n',
+	},
+};
+
 const addAddress = async (address, selectedCompany) => {
 	try {
 		const company = await Company.findById(selectedCompany);
@@ -190,16 +201,7 @@ exports.subscribeSession = async (req, res, next) => {
 
 		const { type, plan } = req.body;
 
-		const paymentId = {
-			monthly: {
-				start: 'price_1Kmo1FA7vheuEVbY2CcFOZ4d',
-				pro: 'price_1Kmo1FA7vheuEVbY2CcFOZ4d',
-			},
-			yearly: {
-				start: 'price_1Kmo1FA7vheuEVbY2CcFOZ4d',
-				pro: 'price_1Kmo1FA7vheuEVbY2CcFOZ4d',
-			},
-		};
+		
 
 		const session = await stripe.checkout.sessions.create({
 			billing_address_collection: 'auto',
@@ -218,3 +220,5 @@ exports.subscribeSession = async (req, res, next) => {
 		next(err);
 	}
 };
+
+exports.products = products
