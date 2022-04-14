@@ -206,7 +206,7 @@ exports.subscribeSession = async (req, res, next) => {
 		const session = await stripe.checkout.sessions.create({
 			billing_address_collection: 'auto',
 			payment_method_types: ['card'],
-			line_items: [{ price: paymentId[type][plan], quantity: 1 }],
+			line_items: [{ price: products[type][plan], quantity: 1 }],
 			customer: company.stripeId,
 			mode: 'subscription',
 			success_url: 'https://admin.trustbucket.io/settings/plans',
