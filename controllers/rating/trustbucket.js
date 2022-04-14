@@ -70,7 +70,7 @@ exports.postTrustbucketReviews = async (req, res, next) => {
 			await newRating.save();
 
 			campaign.trustbucketRating =
-				(campaign.trustbucketRating * campaign.verifiedReviews + rating) / campaign.verifiedReviews + 1;
+				(campaign.trustbucketRating * campaign.verifiedReviews + rating) / (campaign.verifiedReviews + 1);
 			campaign.verifiedReviews = campaign.verifiedReviews + 1;
 			await campaign.save();
 
