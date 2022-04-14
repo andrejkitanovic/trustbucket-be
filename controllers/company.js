@@ -201,8 +201,6 @@ exports.subscribeSession = async (req, res, next) => {
 
 		const { type, plan } = req.body;
 
-		
-
 		const session = await stripe.checkout.sessions.create({
 			billing_address_collection: 'auto',
 			payment_method_types: ['card'],
@@ -211,6 +209,9 @@ exports.subscribeSession = async (req, res, next) => {
 			mode: 'subscription',
 			success_url: 'https://admin.trustbucket.io/settings/plans',
 			cancel_url: 'https://admin.trustbucket.io/settings/plans',
+			automatic_tax: {
+				enabled: true,
+			},
 		});
 
 		res.status(200).json({
@@ -221,4 +222,4 @@ exports.subscribeSession = async (req, res, next) => {
 	}
 };
 
-exports.products = products
+exports.products = products;
