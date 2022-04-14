@@ -55,7 +55,7 @@ exports.webhook = async (req, res, next) => {
 		case 'invoice.paid':
 			company.billingInfo.interval = payment.lines.data[0].plan.interval;
 			company.subscription.plan = parsedProducts[payment.lines.data[0].plan.id].product;
-			company.subscription.ends = (payment.lines.data[0].period.ends + 86400) * 1000;
+			company.subscription.ends = new Date((payment.lines.data[0].period.end + 86400) * 1000);
 
 			await company.save();
 
