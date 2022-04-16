@@ -272,8 +272,8 @@ exports.updatePaymentInfoSession = async (req, res, next) => {
 				address: 'auto',
 			},
 			mode: 'setup',
-			success_url: 'https://admin.trustbucket.io/settings/plans',
-			cancel_url: 'https://admin.trustbucket.io/settings/plans',
+			success_url: 'https://admin.trustbucket.io/settings/billing',
+			cancel_url: 'https://admin.trustbucket.io/settings/billing',
 		});
 
 		res.status(200).json({

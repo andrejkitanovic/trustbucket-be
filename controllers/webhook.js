@@ -39,19 +39,29 @@ exports.webhook = async (req, res, next) => {
 	if (!company) return;
 
 	switch (event.type) {
-		case 'payment_intent.succeeded':
-			const { charges } = payment;
-			company.billingInfo.card = {
-				provider: charges.data[0].payment_method_details.card.brand,
-				last4digits: charges.data[0].payment_method_details.card.last4,
-				expires:
-					charges.data[0].payment_method_details.card.exp_month +
-					' / ' +
-					charges.data[0].payment_method_details.card.exp_year,
-			};
-			await company.save();
+		case 'payment_method.attached':
+			const { card } = payment;
 
+			company.billingInfo.card = {
+				provider: card.brand,
+				last4digits: card.last4,
+				expires: card.exp_month + ' / ' + card.exp_year,
+			};
+
+			await company.save();
 			break;
+		// case 'payment_intent.succeeded':
+		// 	const { charges } = payment;
+		// 	company.billingInfo.card = {
+		// 		provider: charges.data[0].payment_method_details.card.brand,
+		// 		last4digits: charges.data[0].payment_method_details.card.last4,
+		// 		expires:
+		// 			charges.data[0].payment_method_details.card.exp_month +
+		// 			' / ' +
+		// 			charges.data[0].payment_method_details.card.exp_year,
+		// 	};
+
+		// 	break;
 		case 'invoice.paid':
 			company.billingInfo.interval = payment.lines.data[0].plan.interval;
 			company.subscription.plan = parsedProducts[payment.lines.data[0].plan.id].product;
