@@ -1,5 +1,6 @@
 
 module.exports = (app) => {
+	require('../controllers/cron')
 	const authRoutes = require('./auth');
 	const userRoutes = require('./user');
 	const profileRoutes = require('./profile');

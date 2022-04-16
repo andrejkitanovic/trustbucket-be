@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const Company = require('../models/company');
+const Rating = require('../models/rating')
 
 exports.changeDownloadingState = async (selectedCompany, type, state) => {
 	try {
@@ -42,9 +43,12 @@ exports.updateRatingHandle = async (selectedCompany, rating) => {
 	}
 };
 
-exports.deleteRatingHandle = async (company, type) => {
+exports.deleteRatingHandle = async (selectedCompany, type) => {
 	try {
+		const company = await Company.findById(selectedCompany);
 		const ratings = company.ratings;
+
+		await Rating.deleteMany({company: selectedCompany, type});
 
 		let updatedRatings = ratings.filter((single) => single.type !== type);
 		updatedRatings = calculateOverallRating(updatedRatings);

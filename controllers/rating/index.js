@@ -128,7 +128,7 @@ exports.deleteRating = async (req, res, next) => {
 
 		const company = await Company.findById(selectedCompany);
 
-		await deleteRatingHandle(company, type);
+		await deleteRatingHandle(selectedCompany, type);
 		await Rating.deleteMany({ company: selectedCompany, type });
 
 		res.status(200).json({

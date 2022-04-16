@@ -54,8 +54,8 @@ router.post('/bokadirekt/search', auth, bokadirektController.searchBokadirektPro
 router.post('/bokadirekt', auth, bokadirektController.saveBokadirektProfile);
 
 // HITTA - DOING
-router.post('/hitta/search', hittaController.searchHittaProfile);
-router.post('/hitta', hittaController.saveHittaProfile);
+router.post('/hitta/search', auth, hittaController.searchHittaProfile);
+router.post('/hitta', auth, hittaController.saveHittaProfile);
 
 // AIRBNB - ON HOLD
 // router.get('/airbnb/search', airbnbController.searchAirbnbProfile);

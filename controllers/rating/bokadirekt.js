@@ -1,7 +1,7 @@
 const cheerio = require('cheerio');
 
 const { useRp } = require('../../utils/request-promise');
-const { updateRatingHandle } = require('../profile');
+const { updateRatingHandle, deleteRatingHandle } = require('../profile');
 const { getCluster } = require('../../utils/puppeteer');
 
 exports.searchBokadirektProfile = async (req, res, next) => {
@@ -72,5 +72,45 @@ exports.saveBokadirektProfile = async (req, res, next) => {
 		res.json(rating);
 	} catch (err) {
 		next(err);
+	}
+};
+
+exports.cronBokadirektProfile = async (url, selectedCompany, previousRatings) => {
+	try {
+		if (!url || !url.includes('www.bokadirekt.se/places/')) {
+			const error = new Error('Not Valid URL!');
+			error.statusCode = 422;
+			next(error);
+		}
+
+		const result = await useRp(url);
+		const $ = cheerio.load(result);
+
+		const name = $('h1[itemprop=name]').first().text().trim();
+		const ratingText = $('span[itemprop=ratingValue]').first().text();
+		const ratingCountText = $('span[itemprop=ratingCount]').text();
+
+		const rating = {
+			type: 'bokadirekt',
+			name: name,
+			rating: ratingText ? Number(ratingText.trim()) : null,
+			ratingCount: ratingCountText ? Number(ratingCountText.trim()) : 0,
+			url,
+		};
+
+		if (previousRatings < rating.ratingCount) {
+			await deleteRatingHandle(selectedCompany, 'bokadirekt');
+			await updateRatingHandle(selectedCompany, rating);
+			const cluster = await getCluster();
+			await cluster.queue({
+				url: url,
+				type: 'bokadirekt',
+				selectedCompany,
+			});
+
+			console.log(rating);
+		} else console.log('Same bokadirekt reviews as previous');
+	} catch (err) {
+		console.log(err);
 	}
 };
