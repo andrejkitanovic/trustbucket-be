@@ -22,6 +22,27 @@ exports.getCampaigns = async (req, res, next) => {
 	}
 };
 
+exports.getInvitationsDelivered = async (req, res, next) => {
+	try {
+		const { selectedCompany } = req.auth;
+
+		const campaigns = await Campaign.find({ company: selectedCompany });
+		const campaignsId = campaigns.map((campaign) => campaign._id.toString());
+		const allCampaignsOverview = await getCampaignOverview();
+		const result = allCampaignsOverview.filter((campaign) => campaignsId.includes(campaign.Title));
+
+		const stats = {
+			invitationsCount: result.reduce((sum, single) => sum + single.DeliveredCount, 0),
+		};
+
+		res.status(200).json({
+			stats,
+		});
+	} catch (err) {
+		next(err);
+	}
+};
+
 exports.getCampaignStats = async (req, res, next) => {
 	try {
 		const { selectedCompany } = req.auth;
@@ -37,7 +58,7 @@ exports.getCampaignStats = async (req, res, next) => {
 		const trustbucketRating =
 			campaigns.reduce((sum, single) => sum + single.trustbucketRating * single.verifiedReviews, 0) /
 			verifiedReviewsCount;
-			
+
 		const stats = {
 			campaignCount: result.length,
 			invitationsCount: result.reduce((sum, single) => sum + single.DeliveredCount, 0),
