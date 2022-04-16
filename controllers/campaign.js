@@ -31,12 +31,10 @@ exports.getInvitationsDelivered = async (req, res, next) => {
 		const allCampaignsOverview = await getCampaignOverview();
 		const result = allCampaignsOverview.filter((campaign) => campaignsId.includes(campaign.Title));
 
-		const stats = {
-			invitationsCount: result.reduce((sum, single) => sum + single.DeliveredCount, 0),
-		};
+		const invitationsCount = result.reduce((sum, single) => sum + single.DeliveredCount, 0);
 
 		res.status(200).json({
-			stats,
+			invitationsCount,
 		});
 	} catch (err) {
 		next(err);
