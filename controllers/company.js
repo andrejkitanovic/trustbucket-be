@@ -273,9 +273,6 @@ exports.updatePaymentInfoSession = async (req, res, next) => {
 				name: 'auto',
 				address: 'auto',
 			},
-			tax_id_collection: {
-				enabled: true,
-			},
 			mode: 'setup',
 			success_url: 'https://admin.trustbucket.io/settings/plans',
 			cancel_url: 'https://admin.trustbucket.io/settings/plans',
