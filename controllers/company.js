@@ -202,7 +202,7 @@ exports.updateCompanyBillingInfo = async (req, res, next) => {
 			...company.billingInfo,
 			...req.body
 		}
-		await company.update()
+		const companyUpdated = await company.update()
 		// const companyUpdated = await Company.findOneAndUpdate(
 		// 	{ _id: selectedCompany },
 		// 	{
