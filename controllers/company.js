@@ -263,8 +263,6 @@ exports.updatePaymentInfoSession = async (req, res, next) => {
 
 		const company = await Company.findById(selectedCompany);
 
-		const { type, plan } = req.body;
-
 		const session = await stripe.checkout.sessions.create({
 			billing_address_collection: 'auto',
 			payment_method_types: ['card'],
@@ -273,12 +271,12 @@ exports.updatePaymentInfoSession = async (req, res, next) => {
 				name: 'auto',
 				address: 'auto',
 			},
+			tax_id_collection: {
+				enabled: true,
+			},
 			mode: 'setup',
 			success_url: 'https://admin.trustbucket.io/settings/plans',
 			cancel_url: 'https://admin.trustbucket.io/settings/plans',
-			automatic_tax: {
-				enabled: true,
-			},
 		});
 
 		res.status(200).json({
