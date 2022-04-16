@@ -193,6 +193,34 @@ exports.updateCompany = async (req, res, next) => {
 	}
 };
 
+exports.updateCompanyBillingInfo = async (req, res, next) => {
+	try {
+		const { id, selectedCompany } = req.auth;
+
+		const companyUpdated = await Company.findOneAndUpdate(
+			{ _id: selectedCompany },
+			{
+				billingInfo: {
+					...req.body,
+				},
+			},
+			{ new: true }
+		);
+
+		const profile = await User.findById(id);
+		if (companyUpdated) {
+			await profile.populate('selectedCompany');
+			await profile.populate('companies', '_id name websiteURL address.name');
+			res.status(200).json({
+				data: profile,
+				message: `Updated company!`,
+			});
+		}
+	} catch (err) {
+		next(err);
+	}
+};
+
 exports.subscribeSession = async (req, res, next) => {
 	try {
 		const { selectedCompany } = req.auth;

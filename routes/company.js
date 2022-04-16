@@ -9,6 +9,7 @@ router.get('/invoices', auth, companyController.getInvoices);
 router.post('/', auth, companyValidation.postCompany, companyController.postCompany);
 router.post('/select', auth, companyValidation.selectCompany, companyController.selectCompany);
 router.put('/', auth, companyController.updateCompany);
+router.put('/billing-info', auth, companyController.updateCompanyBillingInfo);
 router.put('/address', auth, companyController.putAddress);
 router.post('/subscribe-session', auth, companyController.subscribeSession);
 
