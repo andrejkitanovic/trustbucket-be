@@ -12,5 +12,6 @@ router.put('/', auth, companyController.updateCompany);
 router.put('/billing-info', auth, companyController.updateCompanyBillingInfo);
 router.put('/address', auth, companyController.putAddress);
 router.post('/subscribe-session', auth, companyController.subscribeSession);
+router.post('/update-payment-session', auth, companyController.updatePaymentInfoSession);
 
 module.exports = router;

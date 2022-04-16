@@ -257,4 +257,39 @@ exports.subscribeSession = async (req, res, next) => {
 	}
 };
 
+exports.updatePaymentInfoSession = async (req, res, next) => {
+	try {
+		const { selectedCompany } = req.auth;
+
+		const company = await Company.findById(selectedCompany);
+
+		const { type, plan } = req.body;
+
+		const session = await stripe.checkout.sessions.create({
+			billing_address_collection: 'auto',
+			payment_method_types: ['card'],
+			customer: company.stripeId,
+			customer_update: {
+				name: 'auto',
+				address: 'auto',
+			},
+			tax_id_collection: {
+				enabled: true,
+			},
+			mode: 'setup',
+			success_url: 'https://admin.trustbucket.io/settings/plans',
+			cancel_url: 'https://admin.trustbucket.io/settings/plans',
+			automatic_tax: {
+				enabled: true,
+			},
+		});
+
+		res.status(200).json({
+			url: session.url,
+		});
+	} catch (err) {
+		next(err);
+	}
+};
+
 exports.products = products;
