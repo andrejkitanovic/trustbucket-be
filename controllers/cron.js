@@ -12,7 +12,7 @@ const { cronHittaProfile } = require('./rating/hitta');
 schedule.scheduleJob('0 0 0 * * ?', async function () {
 	try {
 		const allCompanies = await Company.find({
-			$or: [{ 'subscription.plan': 'pro' }, { 'subscription.plan': 'start' }],
+			$or: [{ 'subscription.plan': 'pro' }, { 'subscription.plan': 'start' }, { 'subscription.plan': 'trial' }],
 		}).select('ratings');
 
 		for (const company of allCompanies) {
