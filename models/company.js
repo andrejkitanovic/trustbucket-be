@@ -65,6 +65,11 @@ const companySchema = new Schema(
 				type: Date,
 			},
 		},
+		reviewsPageLanguage: {
+			type: String,
+			enum: ['en', 'se'],
+			default: 'en',
+		},
 		ratings: [
 			{
 				placeId: {
