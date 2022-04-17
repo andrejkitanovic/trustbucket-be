@@ -197,15 +197,12 @@ exports.updateCompanyBillingInfo = async (req, res, next) => {
 	try {
 		const { id, selectedCompany } = req.auth;
 
-		const company = Company.findById(selectedCompany);
-		company.billingInfo = {
-			...company.billingInfo,
-			...req.body,
-		};
+		const { address, email } = req.body;
 		const companyUpdated = await Company.findOneAndUpdate(
 			{ _id: selectedCompany },
 			{
-				...company,
+				'billingInfo.address': address,
+				'billingInfo.email': email,
 			},
 			{ new: true }
 		);
