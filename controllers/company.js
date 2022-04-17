@@ -196,8 +196,10 @@ exports.updateCompany = async (req, res, next) => {
 exports.updateCompanyBillingInfo = async (req, res, next) => {
 	try {
 		const { id, selectedCompany } = req.auth;
-
 		const { address, email } = req.body;
+
+		const customer = await Company.findById(selectedCompany).select('stripeId');
+
 		const companyUpdated = await Company.findOneAndUpdate(
 			{ _id: selectedCompany },
 			{
@@ -206,6 +208,11 @@ exports.updateCompanyBillingInfo = async (req, res, next) => {
 			},
 			{ new: true }
 		);
+
+		await stripe.customers.update.create(customer.stripeId, {
+			email,
+			address,
+		});
 
 		const profile = await User.findById(id);
 		if (companyUpdated) {
