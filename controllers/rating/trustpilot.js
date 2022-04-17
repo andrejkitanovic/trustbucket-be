@@ -100,7 +100,7 @@ exports.cronTrustpilotProfile = async (url, selectedCompany, previousRatings) =>
 				type: 'trustpilot',
 				selectedCompany,
 			});
-	
+
 			console.log(rating);
 		} else console.log('Same trustpilot reviews as previous');
 	} catch (err) {

@@ -18,7 +18,7 @@ const emailTemplateSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	linkUrl: String
+	linkUrl: String,
 });
 
 module.exports = mongoose.model('Email Template', emailTemplateSchema);

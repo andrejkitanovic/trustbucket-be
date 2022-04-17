@@ -49,7 +49,7 @@ const companySchema = new Schema(
 			card: {
 				provider: String,
 				last4digits: String,
-				expires: String
+				expires: String,
 			},
 			vatNumber: String,
 			address: String,

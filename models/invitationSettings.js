@@ -13,7 +13,7 @@ const invitationSettingsSchema = new Schema({
 	replyTo: {
 		type: String,
 		required: true,
-	}
+	},
 });
 
 module.exports = mongoose.model('Invitation Setting', invitationSettingsSchema);

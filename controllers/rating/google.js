@@ -76,8 +76,6 @@ exports.saveGoogleRating = async (req, res, next) => {
 
 exports.cronGoogleProfile = async (placeId, selectedCompany, previousRatings) => {
 	try {
-	
-
 		const fields = ['name', 'rating', 'user_ratings_total', 'url', 'formatted_address', 'geometry', 'photos'].join(
 			'%2C'
 		);
