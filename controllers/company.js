@@ -211,7 +211,6 @@ exports.updateCompanyBillingInfo = async (req, res, next) => {
 
 		await stripe.customers.update(customer.stripeId, {
 			email,
-			address,
 		});
 
 		const profile = await User.findById(id);
