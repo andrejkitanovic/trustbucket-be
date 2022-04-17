@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Company = require('../models/company');
 
 exports.getUsers = async (req, res, next) => {
 	try {
@@ -38,24 +39,12 @@ exports.filterUsers = async (req, res, next) => {
 
 exports.deleteUser = async (req, res, next) => {
 	try {
-		const { id } = req.auth;
+		const userId = req.query.id;
 
-		const findId = req.query.id;
-
-		const userDeleted = await User.deleteOne({ _id: findId });
-
-		if (!userDeleted) {
-			const error = new Error('User not found!');
-			error.statusCode = 404;
-			return next(error);
-		}
-
-		const users = await User.find({ _id: { $ne: id } });
-		const count = await User.countDocuments({ _id: { $ne: id } });
+		const userDeleted = await User.deleteOne({ _id: userId });
+		const companies = await Company.find({ user: userId });
 
 		res.status(200).json({
-			data: users,
-			total: count,
 			message: 'User successfully deleted!',
 		});
 	} catch (err) {
