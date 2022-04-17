@@ -197,21 +197,18 @@ exports.updateCompanyBillingInfo = async (req, res, next) => {
 	try {
 		const { id, selectedCompany } = req.auth;
 
-		const company = Company.findById(selectedCompany)
+		const company = Company.findById(selectedCompany);
 		company.billingInfo = {
 			...company.billingInfo,
-			...req.body
-		}
-		const companyUpdated = await company.update()
-		// const companyUpdated = await Company.findOneAndUpdate(
-		// 	{ _id: selectedCompany },
-		// 	{
-		// 		billingInfo: {
-		// 			...req.body,
-		// 		},
-		// 	},
-		// 	{ new: true }
-		// );
+			...req.body,
+		};
+		const companyUpdated = await Company.findOneAndUpdate(
+			{ _id: selectedCompany },
+			{
+				...company,
+			},
+			{ new: true }
+		);
 
 		const profile = await User.findById(id);
 		if (companyUpdated) {
