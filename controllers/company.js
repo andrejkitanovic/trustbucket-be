@@ -209,7 +209,7 @@ exports.updateCompanyBillingInfo = async (req, res, next) => {
 			{ new: true }
 		);
 
-		await stripe.customers.update.create(customer.stripeId, {
+		await stripe.customers.update(customer.stripeId, {
 			email,
 			address,
 		});
