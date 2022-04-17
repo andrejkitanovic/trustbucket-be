@@ -25,9 +25,8 @@ exports.filterUsers = async (req, res, next) => {
 		const users = await User.find({ _id: { $ne: id } })
 			.sort([[sortField, sortOrder === 'asc' ? 1 : -1]])
 			.skip(Number((pageNumber - 1) * pageSize))
-			.limit(Number(pageSize));
-
-		await users.populate('companies');
+			.limit(Number(pageSize))
+			.populate('companies');
 		const count = await User.countDocuments({ _id: { $ne: id } });
 
 		res.status(200).json({
