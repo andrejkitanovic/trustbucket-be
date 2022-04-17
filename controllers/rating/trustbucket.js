@@ -13,7 +13,7 @@ exports.getTrustbucketReviews = async (req, res, next) => {
 			slug: {
 				$regex: new RegExp(slug, 'i'),
 			},
-		}).select('image name websiteURL email phone address socialLinks ratings');
+		}).select('image name websiteURL email phone address socialLinks ratings reviewsPageLanguage');
 
 		res.json(company);
 	} catch (err) {
