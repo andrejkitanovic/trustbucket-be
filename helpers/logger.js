@@ -3,7 +3,7 @@ const geoip = require('geoip-lite');
 
 module.exports = (app) => {
 	app.use((req, res, next) => {
-		const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.connection.remoteAddress;
+		const ip = req.headers['x-real-ip'];
 		let location = {};
 
 		if (ip) {
