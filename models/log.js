@@ -30,8 +30,11 @@ const logSchema = new Schema(
 			type: Schema.Types.ObjectID,
 			ref: 'User',
 		},
+		createdAt: {
+			type: Date,
+			default: Date.now,
+		}
 	},
-	{ timestamps: true }
 );
 
 logSchema.index({ createdAt: 1 }, { expireAfterSeconds: 120 });
