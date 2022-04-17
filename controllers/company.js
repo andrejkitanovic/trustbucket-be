@@ -30,6 +30,27 @@ const addAddress = async (address, selectedCompany) => {
 
 exports.addAddress = addAddress;
 
+exports.filterCompanies = async (req, res, next) => {
+	try {
+		const { pageNumber, pageSize, sortField, sortOrder } = req.body.queryParams;
+		const { selectedCompany } = req.auth;
+
+		const companies = await Company.find({ _id: { $ne: selectedCompany } })
+			.sort([[sortField, sortOrder === 'asc' ? 1 : -1]])
+			.skip(Number((pageNumber - 1) * pageSize))
+			.limit(Number(pageSize))
+			.populate('user');
+		const count = await Company.countDocuments({ _id: { $ne: id } });
+
+		res.status(200).json({
+			data: companies,
+			total: count,
+		});
+	} catch (err) {
+		next(err);
+	}
+};
+
 exports.getInvoices = async (req, res, next) => {
 	try {
 		const { selectedCompany } = req.auth;

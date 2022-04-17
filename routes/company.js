@@ -5,6 +5,7 @@ const auth = require('../helpers/auth');
 
 const router = express.Router();
 
+router.post('/filter', auth, companyController.filterCompanies);
 router.get('/invoices', auth, companyController.getInvoices);
 router.post('/', auth, companyValidation.postCompany, companyController.postCompany);
 router.post('/select', auth, companyValidation.selectCompany, companyController.selectCompany);
