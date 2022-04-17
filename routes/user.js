@@ -4,9 +4,9 @@ const auth = require('../helpers/auth');
 
 const router = express.Router();
 
-router.get('/', auth, userController.getUsers);
-router.post('/filter', auth, userController.filterUsers);
+router.get('/', auth.adminAuth, userController.getUsers);
+router.post('/filter', auth.adminAuth, userController.filterUsers);
 // Should be auth admin
-router.delete('/', auth, userController.deleteUser);
+router.delete('/', auth.adminAuth, userController.deleteUser);
 
 module.exports = router;

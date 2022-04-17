@@ -14,5 +14,6 @@ router.post('/reset-password', authValidation.resetPassword, authController.rese
 router.post('/google-login', authController.googleLogin);
 router.post('/register', authValidation.register, authController.register);
 router.post('/confirm-email', authController.confirmEmail);
+router.post('/deactivate-account', auth, authController.deactivateAccount);
 
 module.exports = router;

@@ -8,9 +8,9 @@ const { confirmEmail, forgotPassword } = require('../utils/mailer');
 const dayjs = require('dayjs');
 
 exports.getCurrentUser = async (req, res, next) => {
-	const { id } = req.auth;
-
 	try {
+		const { id } = req.auth;
+
 		const currentUser = await User.findById(id);
 		await currentUser.populate('selectedCompany');
 		await currentUser.populate('companies', '_id name');
@@ -286,6 +286,22 @@ exports.register = async (req, res, next) => {
 				message: 'Please confirm your email address!',
 			});
 		}
+	} catch (err) {
+		next(err);
+	}
+};
+
+exports.deactivateAccount = async (req, res, next) => {
+	try {
+		const { id } = req.auth;
+
+		await User.findByIdAndUpdate(id, {
+			deactivated: true,
+		});
+
+		res.status(200).json({
+			message: 'Successfully deactivated account!',
+		});
 	} catch (err) {
 		next(err);
 	}

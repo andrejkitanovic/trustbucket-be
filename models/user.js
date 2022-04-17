@@ -43,6 +43,10 @@ const userSchema = new Schema(
 				ref: 'Company',
 			},
 		],
+		deactivated: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{ timestamps: true }
 );
