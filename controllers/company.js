@@ -40,7 +40,7 @@ exports.filterCompanies = async (req, res, next) => {
 			.skip(Number((pageNumber - 1) * pageSize))
 			.limit(Number(pageSize))
 			.populate('user');
-		const count = await Company.countDocuments({ _id: { $ne: id } });
+		const count = await Company.countDocuments({ _id: { $ne: selectedCompany } });
 
 		res.status(200).json({
 			data: companies,
