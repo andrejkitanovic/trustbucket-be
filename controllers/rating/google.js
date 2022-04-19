@@ -113,6 +113,9 @@ exports.cronGoogleProfile = async (placeId, selectedCompany, previousRatings) =>
 		if (rating.rating === 'undefined') {
 			rating.rating = 0;
 		}
+		if (rating.ratingCount === 'undefined') {
+			rating.ratingCount = 0;
+		}
 
 		if (previousRatings < rating.ratingCount) {
 			await deleteRatingHandle(selectedCompany, 'google');
