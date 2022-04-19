@@ -64,6 +64,11 @@ const companySchema = new Schema(
 				enum: ['trial', 'free', 'start', 'pro'],
 				default: 'free',
 			},
+			nextPlan: {
+				type: String,
+				enum: ['trial', 'free', 'start', 'pro'],
+				default: 'free',
+			},
 			ends: {
 				type: Date,
 			},
