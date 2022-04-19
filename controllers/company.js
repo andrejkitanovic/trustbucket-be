@@ -248,27 +248,6 @@ exports.updateCompanyBillingInfo = async (req, res, next) => {
 	}
 };
 
-exports.changePlanSession = async (req, res, next) => {
-	try {
-		const { selectedCompany } = req.auth;
-
-		const company = await Company.findById(selectedCompany);
-
-		// const { type, plan } = req.body;
-
-		const subscriptionId = company.subscription.id;
-		console.log(company);
-		const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-		console.log(subscription);
-
-		res.status(200).json({
-			message: 'test',
-		});
-	} catch (err) {
-		next(err);
-	}
-};
-
 exports.subscribeSession = async (req, res, next) => {
 	try {
 		const { selectedCompany } = req.auth;
@@ -326,6 +305,37 @@ exports.updatePaymentInfoSession = async (req, res, next) => {
 
 		res.status(200).json({
 			url: session.url,
+		});
+	} catch (err) {
+		next(err);
+	}
+};
+
+exports.changePlanSession = async (req, res, next) => {
+	try {
+		const { selectedCompany } = req.auth;
+
+		const company = await Company.findById(selectedCompany);
+
+		const { type, plan } = req.body;
+
+		const subscriptionId = company.subscription.id;
+
+		const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+
+		stripe.subscriptions.update(subscriptionId, {
+			cancel_at_period_end: false,
+			proration_behavior: 'create_prorations',
+			items: [
+				{
+					id: subscription.items.data[0].id,
+					price: products[type][plan],
+				},
+			],
+		});
+
+		res.status(200).json({
+			message: 'Update subscription',
 		});
 	} catch (err) {
 		next(err);
