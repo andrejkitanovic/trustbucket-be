@@ -98,7 +98,7 @@ const companySchema = new Schema(
 					type: Number,
 					set: function (v) {
 						if (v !== null) {
-							return v.toLocaleString('en-US', {
+							return (v || 0).toLocaleString('en-US', {
 								maximumFractionDigits: 1,
 							});
 						}
