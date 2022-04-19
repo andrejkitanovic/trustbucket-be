@@ -64,6 +64,13 @@ exports.saveGoogleRating = async (req, res, next) => {
 		};
 		await updateRatingHandle(selectedCompany, rating);
 
+		if (!isNaN(rating.rating)) {
+			rating.rating = 0;
+		}
+		if (!isNaN(rating.ratingCount)) {
+			rating.ratingCount = 0;
+		}
+
 		if (rating.ratingCount) {
 			const cluster = await getCluster();
 			await cluster.queue({
@@ -110,13 +117,6 @@ exports.cronGoogleProfile = async (placeId, selectedCompany, previousRatings) =>
 			url: data.result.url,
 		};
 
-		if (!isNaN(rating.rating)) {
-			rating.rating = 0;
-		}
-		if (!isNaN(rating.ratingCount)) {
-			rating.ratingCount = 0;
-		}
-
 		if (previousRatings < rating.ratingCount) {
 			await deleteRatingHandle(selectedCompany, 'google');
 			await updateRatingHandle(selectedCompany, rating);
@@ -126,8 +126,6 @@ exports.cronGoogleProfile = async (placeId, selectedCompany, previousRatings) =>
 				type: 'google',
 				selectedCompany,
 			});
-
-			console.log(rating);
 		} else console.log('Same google reviews as previous');
 	} catch (err) {
 		console.log(err);
