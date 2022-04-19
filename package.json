@@ -37,7 +37,8 @@
 		"request": "^2.88.2",
 		"request-promise": "^4.2.6",
 		"socket.io": "^4.1.2",
-		"stripe": "^8.216.0"
+		"stripe": "^8.216.0",
+		"utf8": "^3.0.0"
 	},
 	"devDependencies": {
 		"nodemon": "^2.0.15",
