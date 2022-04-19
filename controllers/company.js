@@ -331,10 +331,10 @@ exports.changePlanSession = async (req, res, next) => {
 				},
 			],
 		});
+		console.log(subscriptionUpdate.items.data)
 		company.billingInfo.interval = subscriptionUpdate.plan.interval;
 		company.subscription.plan = plan;
 		company.subscription.ends = new Date((subscriptionUpdate.current_period_end + 86400) * 1000);
-		console.log('company:',company)
 		await company.save();
 
 		res.status(200).json({
