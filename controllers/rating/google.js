@@ -17,7 +17,7 @@ exports.getGoogleProfile = async (req, res, next) => {
 			'icon',
 		].join('%2C');
 		const textquery = req.body.q;
-		const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=${fields}&input=${textquery}&inputtype=textquery&key=${process.env.API_KEY_GOOGLE}`;
+		const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=${fields}&input=${textquery.toString('utf-8')}&inputtype=textquery&key=${process.env.API_KEY_GOOGLE}`;
 
 		const { data } = await axios.get(url);
 
