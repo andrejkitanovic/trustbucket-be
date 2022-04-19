@@ -323,7 +323,7 @@ exports.changePlanSession = async (req, res, next) => {
 		const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 		const subscriptionUpdate = await stripe.subscriptions.update(subscriptionId, {
 			cancel_at_period_end: false,
-			proration_behavior: 'create_prorations',
+			proration_behavior: 'none',
 			items: [
 				{
 					id: subscription.items.data[0].id,
