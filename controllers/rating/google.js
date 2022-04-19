@@ -105,8 +105,8 @@ exports.cronGoogleProfile = async (placeId, selectedCompany, previousRatings) =>
 			placeId,
 			type: 'google',
 			name: data.result.name,
-			rating: data.result.rating,
-			ratingCount: data.result.user_ratings_total,
+			rating: data.result.rating || 0,
+			ratingCount: data.result.user_ratings_total || 0,
 			url: data.result.url,
 		};
 
