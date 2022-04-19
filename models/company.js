@@ -97,7 +97,7 @@ const companySchema = new Schema(
 				rating: {
 					type: Number,
 					set: function (v) {
-						if (v !== null) {
+						if (v !== null && v !== undefined) {
 							return v.toLocaleString('en-US', {
 								maximumFractionDigits: 1,
 							});
