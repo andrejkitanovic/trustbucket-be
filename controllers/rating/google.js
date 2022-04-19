@@ -19,7 +19,9 @@ exports.getGoogleProfile = async (req, res, next) => {
 		].join('%2C');
 		const textquery = req.body.q;
 
-		const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=${fields}&input=${utf8.encode(textquery)}&inputtype=textquery&key=${process.env.API_KEY_GOOGLE}`;
+		const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=${fields}&input=${utf8.encode(
+			textquery
+		)}&inputtype=textquery&key=${process.env.API_KEY_GOOGLE}`;
 
 		const { data } = await axios.get(url);
 
@@ -61,12 +63,15 @@ exports.saveGoogleRating = async (req, res, next) => {
 			url: data.result.url,
 		};
 		await updateRatingHandle(selectedCompany, rating);
-		const cluster = await getCluster();
-		await cluster.queue({
-			url: data.result.url,
-			type: 'google',
-			selectedCompany,
-		});
+
+		if (rating.ratingCount) {
+			const cluster = await getCluster();
+			await cluster.queue({
+				url: data.result.url,
+				type: 'google',
+				selectedCompany,
+			});
+		}
 
 		await addAddress({ name: data.result.formatted_address, position: data.result.geometry.location }, selectedCompany);
 

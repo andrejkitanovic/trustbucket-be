@@ -150,13 +150,18 @@ exports.getCluster = async () => {
 			default:
 				break;
 		}
-		console.log('LOADED REVIEWS:' + items.length);
-		items = items.filter((item) => item.name && item.rating && item.date);
-		console.log('VALID REVIEWS:' + items.length);
 
-		await Rating.insertMany(items);
+		if (items.length) {
+			console.log('LOADED REVIEWS:' + items.length);
+			items = items.filter((item) => item.name && item.rating && item.date);
+			console.log('VALID REVIEWS:' + items.length);
 
-		await changeDownloadingState(selectedCompany, type, false);
+			await Rating.insertMany(items);
+
+			await changeDownloadingState(selectedCompany, type, false);
+		} else {
+			await changeDownloadingState(selectedCompany, type, false);
+		}
 	});
 
 	return cluster;
