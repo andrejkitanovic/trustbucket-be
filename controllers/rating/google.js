@@ -64,10 +64,10 @@ exports.saveGoogleRating = async (req, res, next) => {
 		};
 		await updateRatingHandle(selectedCompany, rating);
 
-		if (!isNaN(rating.rating)) {
+		if (!rating.rating || !isNaN(rating.rating)) {
 			rating.rating = 0;
 		}
-		if (!isNaN(rating.ratingCount)) {
+		if (!rating.ratingCount || !isNaN(rating.ratingCount)) {
 			rating.ratingCount = 0;
 		}
 
