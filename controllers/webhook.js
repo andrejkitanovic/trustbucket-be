@@ -55,22 +55,11 @@ exports.webhook = async (req, res, next) => {
 
 			await company.save();
 			break;
-		// case 'payment_intent.succeeded':
-		// 	const { charges } = payment;
-		// 	company.billingInfo.card = {
-		// 		provider: charges.data[0].payment_method_details.card.brand,
-		// 		last4digits: charges.data[0].payment_method_details.card.last4,
-		// 		expires:
-		// 			charges.data[0].payment_method_details.card.exp_month +
-		// 			' / ' +
-		// 			charges.data[0].payment_method_details.card.exp_year,
-		// 	};
-
-		// 	break;
 		case 'invoice.paid':
 			company.billingInfo.interval = payment.lines.data[0].plan.interval;
 			company.subscription.plan = parsedProducts[payment.lines.data[0].plan.id].product;
 			company.subscription.ends = new Date((payment.lines.data[0].period.end + 86400) * 1000);
+			company.subscription.id = payment.subscription;
 			company.billingInfo.vatNumber = payment.customer_tax_ids.length ? payment.customer_tax_ids[0].value : null;
 
 			await company.save();

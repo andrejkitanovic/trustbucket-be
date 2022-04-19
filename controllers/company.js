@@ -248,6 +248,27 @@ exports.updateCompanyBillingInfo = async (req, res, next) => {
 	}
 };
 
+exports.changePlanSession = async (req, res, next) => {
+	try {
+		const { selectedCompany } = req.auth;
+
+		const company = await Company.findById(selectedCompany);
+
+		// const { type, plan } = req.body;
+
+		const subscriptionId = company.subscription.id;
+		console.log(company);
+		const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+		console.log(subscription);
+
+		res.status(200).json({
+			message: 'test',
+		});
+	} catch (err) {
+		next(err);
+	}
+};
+
 exports.subscribeSession = async (req, res, next) => {
 	try {
 		const { selectedCompany } = req.auth;

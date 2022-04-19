@@ -56,6 +56,9 @@ const companySchema = new Schema(
 			email: String,
 		},
 		subscription: {
+			id: {
+				type: String,
+			},
 			plan: {
 				type: String,
 				enum: ['trial', 'free', 'start', 'pro'],
