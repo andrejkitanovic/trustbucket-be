@@ -110,10 +110,10 @@ exports.cronGoogleProfile = async (placeId, selectedCompany, previousRatings) =>
 			url: data.result.url,
 		};
 
-		if (rating.rating === 'undefined') {
+		if (!isNaN(rating.rating)) {
 			rating.rating = 0;
 		}
-		if (rating.ratingCount === 'undefined') {
+		if (!isNaN(rating.ratingCount)) {
 			rating.ratingCount = 0;
 		}
 
