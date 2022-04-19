@@ -39,7 +39,7 @@ exports.saveGoogleRating = async (req, res, next) => {
 
 		const { data } = await axios.get(url);
 
-		if (data.result.photos.length) {
+		if (data.result.photos && data.result.photos.length) {
 			const photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${data.result.photos[0].photo_reference}&key=${process.env.API_KEY_GOOGLE}`;
 
 			const { request } = await axios.get(photoUrl);
