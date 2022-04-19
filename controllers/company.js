@@ -337,7 +337,7 @@ exports.changePlanSession = async (req, res, next) => {
 		company.subscription.plan = plan;
 		company.subscription.ends = new Date((subscriptionUpdate.current_period_end + 86400) * 1000);
 
-		await company.update()
+		await company.save();
 
 		res.status(200).json({
 			message: 'Updated subscription',
