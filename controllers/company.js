@@ -320,9 +320,7 @@ exports.changePlanSession = async (req, res, next) => {
 		const { type, plan } = req.body;
 
 		const subscriptionId = company.subscription.id;
-
 		const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-
 		const subscriptionUpdate = await stripe.subscriptions.update(subscriptionId, {
 			cancel_at_period_end: false,
 			proration_behavior: 'create_prorations',
@@ -336,7 +334,7 @@ exports.changePlanSession = async (req, res, next) => {
 		company.billingInfo.interval = subscriptionUpdate.plan.interval;
 		company.subscription.plan = plan;
 		company.subscription.ends = new Date((subscriptionUpdate.current_period_end + 86400) * 1000);
-
+		console.log('company:',company)
 		await company.save();
 
 		res.status(200).json({
