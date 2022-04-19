@@ -333,8 +333,11 @@ exports.changePlanSession = async (req, res, next) => {
 				},
 			],
 		});
-		
-		console.log(subscriptionUpdate);
+		company.billingInfo.interval = subscriptionUpdate.plan.interval;
+		company.subscription.plan = plan;
+		company.subscription.ends = new Date((subscriptionUpdate.current_period_end + 86400) * 1000);
+
+		await company.update()
 
 		res.status(200).json({
 			message: 'Updated subscription',
