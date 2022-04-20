@@ -336,7 +336,7 @@ exports.changePlanSession = async (req, res, next) => {
 			company.subscription.nextPlan = plan;
 		} else {
 			company.subscription.plan = plan;
-			company.subscription.nextPlan = 'free';
+			company.subscription.nextPlan = plan;
 			company.billingInfo.interval = subscriptionUpdate.plan.interval;
 			company.subscription.ends = new Date((subscriptionUpdate.current_period_end + 86400) * 1000);
 		}
