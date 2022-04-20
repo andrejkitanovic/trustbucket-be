@@ -12,6 +12,8 @@ const auth = async (req, res, next) => {
 			const user = await User.findById(id);
 			if (!user) {
 				return res.status(403).json({ message: 'User not found!' });
+			} else if (user.deactivated) {
+				return res.status(403).json({ message: 'User is deactivated!' });
 			}
 
 			req.auth = {
@@ -38,7 +40,7 @@ const adminAuth = async (req, res, next) => {
 			const user = await User.findById(id);
 			if (!user) {
 				return res.status(403).json({ message: 'User not found!' });
-			} else if (!type) {
+			} else if (!type === 'admin') {
 				return res.status(403).json({ message: 'User is not authorized!' });
 			}
 
