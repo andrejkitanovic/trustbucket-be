@@ -64,6 +64,8 @@ exports.webhook = async (req, res, next) => {
 				company.subscription.id = payment.subscription;
 				company.billingInfo.vatNumber = payment.customer_tax_ids.length ? payment.customer_tax_ids[0].value : null;
 
+				console.log(company)
+
 				await company.save();
 			}
 
