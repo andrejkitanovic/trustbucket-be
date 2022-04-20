@@ -321,27 +321,29 @@ exports.changePlanSession = async (req, res, next) => {
 
 		const subscriptionId = company.subscription.id;
 		const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-		const subscriptionUpdate = await stripe.subscriptions.update(subscriptionId, {
-			billing_cycle_anchor: plan === 'start' ? 'unchanged' : 'now',
-			cancel_at_period_end: false,
-			proration_behavior: plan === 'start' ? 'none' : 'create_prorations',
-			items: [
-				{
-					id: subscription.items.data[0].id,
-					price: products[type][plan],
-				},
-			],
-		});
 
-		if (plan === 'start') {
-			company.subscription.nextPlan = plan;
+		if (plan === 'free') {
+			await stripe.subscriptions.update(subscriptionId, { cancel_at_period_end: true });
 		} else {
-			company.subscription.plan = plan;
-			company.subscription.nextPlan = plan;
-			company.billingInfo.interval = subscriptionUpdate.plan.interval;
-			company.subscription.ends = new Date((subscriptionUpdate.current_period_end + 86400) * 1000);
+			const subscriptionUpdate = await stripe.subscriptions.update(subscriptionId, {
+				billing_cycle_anchor: plan === 'start' ? 'unchanged' : 'now',
+				cancel_at_period_end: false,
+				proration_behavior: plan === 'start' ? 'none' : 'create_prorations',
+				items: [
+					{
+						id: subscription.items.data[0].id,
+						price: products[type][plan],
+					},
+				],
+			});
+
+			if (plan !== 'start') {
+				company.subscription.plan = plan;
+				company.billingInfo.interval = subscriptionUpdate.plan.interval;
+				company.subscription.ends = new Date((subscriptionUpdate.current_period_end + 86400) * 1000);
+			}
 		}
-		console.log(company);
+		company.subscription.nextPlan = plan;
 
 		await company.save();
 
