@@ -56,13 +56,15 @@ exports.webhook = async (req, res, next) => {
 			await company.save();
 			break;
 		case 'invoice.paid':
-			company.billingInfo.interval = payment.lines.data[0].plan.interval;
-			company.subscription.plan = parsedProducts[payment.lines.data[0].plan.id].product;
-			company.subscription.ends = new Date((payment.lines.data[0].period.end + 86400) * 1000);
-			company.subscription.id = payment.subscription;
-			company.billingInfo.vatNumber = payment.customer_tax_ids.length ? payment.customer_tax_ids[0].value : null;
+			if (!payment.billing_reason === 'subscription_update') {
+				company.billingInfo.interval = payment.lines.data[0].plan.interval;
+				company.subscription.plan = parsedProducts[payment.lines.data[0].plan.id].product;
+				company.subscription.ends = new Date((payment.lines.data[0].period.end + 86400) * 1000);
+				company.subscription.id = payment.subscription;
+				company.billingInfo.vatNumber = payment.customer_tax_ids.length ? payment.customer_tax_ids[0].value : null;
 
-			await company.save();
+				await company.save();
+			}
 
 			break;
 		default:
