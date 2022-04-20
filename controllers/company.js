@@ -322,6 +322,7 @@ exports.changePlanSession = async (req, res, next) => {
 		const subscriptionId = company.subscription.id;
 		const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 		const subscriptionUpdate = await stripe.subscriptions.update(subscriptionId, {
+			billing_cycle_anchor: plan === 'start' ? 'now' : new Date(company.subscription.ends).getTime() - 86400 * 1000,
 			cancel_at_period_end: false,
 			proration_behavior: plan === 'start' ? 'none' : 'create_prorations',
 			items: [
@@ -340,7 +341,7 @@ exports.changePlanSession = async (req, res, next) => {
 			company.billingInfo.interval = subscriptionUpdate.plan.interval;
 			company.subscription.ends = new Date((subscriptionUpdate.current_period_end + 86400) * 1000);
 		}
-		console.log(company)
+		console.log(company);
 
 		await company.save();
 
