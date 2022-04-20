@@ -62,10 +62,10 @@ exports.saveGoogleRating = async (req, res, next) => {
 			ratingCount: data.result.user_ratings_total,
 			url: data.result.url,
 		};
-		if (!rating.rating || !isNaN(rating.rating)) {
+		if (!rating.rating || isNaN(rating.rating)) {
 			rating.rating = 0;
 		}
-		if (!rating.ratingCount || !isNaN(rating.ratingCount)) {
+		if (!rating.ratingCount || isNaN(rating.ratingCount)) {
 			rating.ratingCount = 0;
 		}
 		
