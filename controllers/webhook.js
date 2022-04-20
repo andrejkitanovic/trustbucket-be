@@ -56,6 +56,7 @@ exports.webhook = async (req, res, next) => {
 			await company.save();
 			break;
 		case 'invoice.paid':
+			console.log(payment.billing_reason)
 			if (!payment.billing_reason === 'subscription_update') {
 				company.billingInfo.interval = payment.lines.data[0].plan.interval;
 				company.subscription.plan = parsedProducts[payment.lines.data[0].plan.id].product;
