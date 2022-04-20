@@ -41,7 +41,22 @@ exports.updatePassword = [
 ];
 
 exports.login = [
-	body('email', 'email is required').notEmpty().isEmail().normalizeEmail().withMessage('email is not valid'),
+	body('email', 'email is required')
+		.notEmpty()
+		.isEmail()
+		.normalizeEmail()
+		.withMessage('email is not valid')
+		.custom(async (value) => {
+			const user = await User.findOne({ email: value });
+
+			if (!Boolean(user)) {
+				throw new Error('user not found');
+			} else if (user.deactivated === true) {
+				throw new Error('user is deactivated');
+			}
+
+			return true;
+		}),
 	body('password', 'password is required')
 		.not()
 		.isEmpty()
