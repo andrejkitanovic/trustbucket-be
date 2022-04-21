@@ -225,19 +225,15 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 				type: 'google',
 				name: $el('a[target=_blank]>div:first-child>span').text(),
 				description: removeAfter($el('span[jsan*=-text]').text().trim(), '(Original)'),
-				date: reverseFromNow($el('span[class*=-date]').text().trim()),
 			};
 
 			if ($el(el).exists('span[aria-label*=stars]')) {
+				object.date = reverseFromNow($el('span[aria-label*=stars] + span').text().trim())
 				object.rating = parseInt($el('span[aria-label*=stars]').attr('aria-label').trim('').charAt(0));
 			}
 
 			if ($el(el).exists('div[class*=-text]') && $el('div[class*=-text]').text().trim()) {
 				object.reply = { text: removeAfter($el('div[class*=-text]').text().trim(), '(Original)') };
-			}
-
-			if (object.date) {
-				items.push(object);
 			}
 		});
 		console.log(items)
