@@ -367,7 +367,7 @@ exports.uploadPhoto = async (req, res, next) => {
 			image = req.file.path;
 		}
 
-		company.image = image;
+		company.image = 'https://backend.trustbucket.io' + image;
 		await company.save();
 
 		res.status(200).json({
