@@ -109,3 +109,22 @@ exports.register = [
 	body('websiteURL', 'website URL is required').notEmpty().isURL().withMessage('website URL is not valid'),
 	validation,
 ];
+
+exports.googleLogin = [
+	body('email', 'email is required')
+		.notEmpty()
+		.isEmail()
+		.normalizeEmail()
+		.withMessage('email is not valid')
+		.custom(async (value) => {
+			const user = await User.findOne({ email: value });
+
+			if (!Boolean(user)) {
+				throw new Error('user not found');
+			} else if (user.deactivated === true) {
+				throw new Error('user is deactivated');
+			}
+
+			return true;
+		}),
+];

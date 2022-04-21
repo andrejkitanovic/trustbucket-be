@@ -199,12 +199,6 @@ exports.googleLogin = async (req, res, next) => {
 		const { email } = req.body;
 		const loginUser = await User.findOne({ email });
 
-		if (!loginUser) {
-			const error = new Error('User not found!');
-			error.statusCode = 404;
-			return next(error);
-		}
-
 		if (!loginUser.confirmed) {
 			loginUser.confirmed = true;
 			await loginUser.save();
