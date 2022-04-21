@@ -15,5 +15,6 @@ router.put('/address', auth, companyController.putAddress);
 router.post('/subscribe-session', auth, companyController.subscribeSession);
 router.post('/update-payment-session', auth, companyController.updatePaymentInfoSession);
 router.post('/change-plan', auth, companyController.changePlanSession)
+router.post('/upload-photo', auth, companyController.uploadPhoto)
 
 module.exports = router;
