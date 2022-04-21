@@ -172,7 +172,7 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 		await page.waitForNetworkIdle();
 		await page.click('button[jsaction*=moreReviews]');
 
-		const scrollableDiv = 'div.section-scrollbox';
+		const scrollableDiv = 'div[role=main] > div:nth-child(2)';
 
 		let previous = 0;
 		let loadMore = true;
