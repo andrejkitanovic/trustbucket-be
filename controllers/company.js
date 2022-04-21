@@ -343,8 +343,8 @@ exports.changePlanSession = async (req, res, next) => {
 				company.subscription.ends = new Date((subscriptionUpdate.current_period_end + 86400) * 1000);
 			}
 		}
-		company.subscription.nextPlan = plan === 'yearly' ? 'year' : 'month';
-		company.billingInfo.nextPlanInterval = type;
+		company.subscription.nextPlan = plan;
+		company.billingInfo.nextPlanInterval = type.replace('ly', '');
 
 		await company.save();
 
