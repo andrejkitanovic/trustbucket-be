@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const stripe = require('../utils/stripe');
 const User = require('../models/user');
 const Company = require('../models/company');
+const InvitationSettings = require('../models/invitationSettings')
 const { isAbsoluteURL } = require('../helpers/utils');
 
 const products = {
@@ -98,6 +99,13 @@ exports.postCompany = async (req, res, next) => {
 				{ type: 'trustbucket', rating: null, ratingCount: 0 },
 			],
 		});
+
+		const invitationSettingsObject = new InvitationSettings({
+			company: companyObject._id,
+			senderName: companyName,
+			replyTo: profile.email,
+		});
+		await invitationSettingsObject.save();
 
 		profile.selectedCompany = companyObject._id;
 		profile.companies = [...profile.companies, companyObject._id];
