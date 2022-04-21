@@ -344,6 +344,7 @@ exports.changePlanSession = async (req, res, next) => {
 			}
 		}
 		company.subscription.nextPlan = plan;
+		company.billingInfo.nextPlanInterval = type;
 
 		await company.save();
 
