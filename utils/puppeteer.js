@@ -240,6 +240,7 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 				items.push(object);
 			}
 		});
+		console.log(items)
 
 		return items;
 	} catch (err) {
