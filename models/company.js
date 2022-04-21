@@ -45,6 +45,7 @@ const companySchema = new Schema(
 		],
 		stripeId: String,
 		billingInfo: {
+			nextPlanInterval: String,
 			interval: String,
 			card: {
 				provider: String,

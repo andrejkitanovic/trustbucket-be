@@ -24,6 +24,7 @@ exports.sendEmail = async (template, recievers, campaignId, invitation, companyN
 				let personalizedLinkUrl = linkUrl;
 				personalizedLinkUrl = personalizedLinkUrl.replace(/{campaignId}/g, campaignId);
 				personalizedLinkUrl = personalizedLinkUrl.replace(/{firstName}/g, reciever.firstName);
+				personalizedLinkUrl = personalizedLinkUrl.replace(/{lastName}/g, reciever.lastName);
 				personalizedLinkUrl = personalizedLinkUrl.replace(/{email}/g, reciever.email);
 
 				let personalizedContent = content;

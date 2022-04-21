@@ -6,7 +6,7 @@ const defaultEmailTemplates = (companyName, slug) => [
 		_id: `default-trustbucket-review`,
 		content:
 			"\n<h3>Hi {firstName}</h3>\n<p></p>\n<p>Thank you so much for choosing us!</p>\n<p></p>\n<p>We truly appreciate every customer's opinion and we want to hear all about your experience with us at {companyName}</p>\n<p></p>\n<p>Thank you for helping us,</p>\n<p>{firstNameofUser} at {companyName}</p>\n<p>{review_link: Click here to submit your review}</p>\n",
-		linkUrl: `https://reviews.trustbucket.io/write-review/${slug}?campaignId={campaignId}&firstName={firstName}&lastName={lastName}&email={email}`,
+		linkUrl: `https://reviews.trustbucket.io/write-review/${slug}?campaignId={campaignId}&name={firstName}%20{lastName}&email={email}`,
 		name: 'Review us on Trustbucket',
 		subject: `How was your experience with ${companyName}`,
 		default: true,
