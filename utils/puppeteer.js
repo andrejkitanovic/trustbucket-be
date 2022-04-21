@@ -235,6 +235,8 @@ const getGoogleReviews = async ({ page, url, selectedCompany }) => {
 			if ($el(el).exists('div[class*=-text]') && $el('div[class*=-text]').text().trim()) {
 				object.reply = { text: removeAfter($el('div[class*=-text]').text().trim(), '(Original)') };
 			}
+
+			items.push(object);
 		});
 		console.log(items)
 
