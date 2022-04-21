@@ -22,6 +22,7 @@ const uncofirmedRatingSchema = new Schema({
 		type: Date,
 		required: true,
 	},
+	email: String
 });
 
 module.exports = mongoose.model('Uncofirmed Rating', uncofirmedRatingSchema);

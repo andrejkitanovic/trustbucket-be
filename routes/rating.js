@@ -9,6 +9,8 @@ const trustpilotController = require('../controllers/rating/trustpilot');
 const bokadirektController = require('../controllers/rating/bokadirekt');
 const hittaController = require('../controllers/rating/hitta');
 
+const trustbucketValidation = require('../validation/rating/trustbucket');
+
 const auth = require('../helpers/auth');
 // const airbnbController = require('../controllers/rating/airbnb');
 
@@ -24,7 +26,7 @@ router.post('/list/:slug', ratingsController.companyRatings);
 
 // TRUSTBUCKET - DOING
 router.get('/trustbucket/:slug', trustbucketController.getTrustbucketReviews);
-router.post('/trustbucket', trustbucketController.postTrustbucketReviews);
+router.post('/trustbucket', trustbucketValidation.postTrustbucketReviews, trustbucketController.postTrustbucketReviews);
 router.post('/trustbucket/confirm/:id', trustbucketController.confirmTrustbucketReview);
 router.post('/trustbucket/reply', auth, trustbucketController.postTrustbucketReply);
 router.delete('/trustbucket/reply/:id', auth, trustbucketController.deleteTrustbucketReply);

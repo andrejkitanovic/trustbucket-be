@@ -40,6 +40,7 @@ exports.postTrustbucketReviews = async (req, res, next) => {
 				image,
 				name,
 				date: new Date(),
+				email,
 			});
 			await newUncofirmedRating.save();
 			await confirmReview({
@@ -66,6 +67,7 @@ exports.postTrustbucketReviews = async (req, res, next) => {
 				image,
 				name,
 				date: new Date(),
+				email,
 			});
 			await newRating.save();
 
@@ -98,6 +100,7 @@ exports.confirmTrustbucketReview = async (req, res, next) => {
 			image: uncofirmedRating.image,
 			name: uncofirmedRating.name,
 			date: uncofirmedRating.date,
+			email: uncofirmedRating.email,
 		});
 		await newRating.save();
 		await uncofirmedRating.remove();

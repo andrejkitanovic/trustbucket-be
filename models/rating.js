@@ -34,6 +34,7 @@ const ratingSchema = new Schema({
 		type: Boolean,
 		default: false,
 	},
+	email: String
 });
 
 module.exports = mongoose.model('Rating', ratingSchema);
