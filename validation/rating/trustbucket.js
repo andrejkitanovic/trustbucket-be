@@ -1,5 +1,5 @@
 const { body } = require('express-validator');
-const validation = require('../helpers/validation');
+const validation = require('../../helpers/validation');
 const Rating = require('../../models/rating');
 const UncofirmedRating = require('../../models/unconfirmedRating');
 const Company = require('../../models/company');
