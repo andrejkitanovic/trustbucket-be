@@ -66,6 +66,7 @@ exports.sendEmail = async (template, recievers, campaignId, invitation, companyN
 			}),
 		});
 
+		console.log(result);
 		return result.Data;
 	} catch (err) {
 		console.log(err);

@@ -356,4 +356,26 @@ exports.changePlanSession = async (req, res, next) => {
 	}
 };
 
+exports.uploadPhoto = async (req, res, next) => {
+	try {
+		const { selectedCompany } = req.auth;
+
+		const company = await Company.findById(selectedCompany);
+
+		let image = null;
+		if (req.file && req.file.path) {
+			image = req.file.path;
+		}
+
+		company.image = image;
+		await company.save();
+
+		res.status(200).json({
+			message: 'Updated company image',
+		});
+	} catch (err) {
+		next(err);
+	}
+};
+
 exports.products = products;
