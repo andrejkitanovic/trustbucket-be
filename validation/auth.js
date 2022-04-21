@@ -51,7 +51,7 @@ exports.login = [
 
 			if (!Boolean(user)) {
 				throw new Error('user not found');
-			} else if (user.deactivated === true) {
+			} else if (user.deactivated) {
 				throw new Error('user is deactivated');
 			}
 
@@ -121,10 +121,11 @@ exports.googleLogin = [
 
 			if (!Boolean(user)) {
 				throw new Error('user not found');
-			} else if (user.deactivated === true) {
+			} else if (user.deactivated) {
 				throw new Error('user is deactivated');
 			}
 
 			return true;
 		}),
+	validation,
 ];
