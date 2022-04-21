@@ -76,6 +76,16 @@ exports.postTrustbucketReviews = async (req, res, next) => {
 			campaign.verifiedReviews = campaign.verifiedReviews + 1;
 			await campaign.save();
 
+			const allRatings = await Rating.find({ company: company._id, type: 'trustbucket' }).select('rating');
+			const avarageRating = allRatings.reduce((total, el) => total + el.rating, 0);
+			const totalRatingCount = await Rating.countDocuments({ company: company._id, type: 'trustbucket' });
+
+			updateRatingHandle(company._id, {
+				type: 'trustbucket',
+				rating: avarageRating / totalRatingCount,
+				ratingCount: totalRatingCount,
+			});
+
 			res.json({
 				message: 'Review posted!',
 			});
