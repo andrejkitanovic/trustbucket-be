@@ -284,7 +284,9 @@ const getFreshaReviews = async ({ page, url, selectedCompany }) => {
     await $('div[data-qa=reviews-list] li').map((index, el) => {
       const $el = cheerio.load(el)
 
-      $el.prototype.count = (selector) => this.find(selector).length
+      $el.prototype.count = function (selector) {
+        this.find(selector).length
+      }
       const object = {
         company: selectedCompany,
         type: 'fresha',
@@ -323,7 +325,9 @@ const getTrustpilotReviews = async ({ page, url, selectedCompany }) => {
       await $('article[class*=reviewCard]').map((index, el) => {
         const $el = cheerio.load(el)
 
-        $el.prototype.exists = (selector) => this.find(selector).length > 0
+        $el.prototype.exists = function (selector) {
+          this.find(selector).length > 0
+        }
         const object = {
           company: selectedCompany,
           type: 'trustpilot',
@@ -418,8 +422,12 @@ const getRecoseReviews = async ({ page, url, selectedCompany }) => {
     await $('.review-card').forEach((index, el) => {
       const $el = cheerio.load(el)
 
-      $el.prototype.count = (selector) => this.find(selector).length
-      $el.prototype.exists = (selector) => this.find(selector).length > 0
+      $el.prototype.count = function (selector) {
+        this.find(selector).length
+      }
+      $el.prototype.exists = function (selector) {
+        this.find(selector).length > 0
+      }
 
       const object = {
         company: selectedCompany,
