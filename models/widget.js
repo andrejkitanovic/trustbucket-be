@@ -1,17 +1,17 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
-const { Schema } = mongoose;
+const { Schema } = mongoose
 
 const widgetSchema = new Schema(
-  {
-    selectedCompany: {
-      type: Schema.Types.ObjectID,
-      ref: 'Company',
+    {
+        selectedCompany: {
+            type: Schema.Types.ObjectID,
+            ref: 'Company',
+        },
+        attributes: {},
+        object: {},
     },
-    attributes: {},
-    object: {},
-  },
-  { timestamps: true },
-);
+    { timestamps: true }
+)
 
-module.exports = mongoose.model('Widget', widgetSchema);
+module.exports = mongoose.model('Widget', widgetSchema)

@@ -1,11 +1,11 @@
-const { query } = require('express-validator');
-const validation = require('../helpers/validation');
+const { query } = require('express-validator')
+const validation = require('../helpers/validation')
 // const Company = require('../models/company');
 
 exports.getWidget = [
-  query('id', 'widget id is required').notEmpty(),
-  validation,
-];
+    query('id', 'widget id is required').notEmpty(),
+    validation,
+]
 
 // exports.selectCompany = [
 //   body('companyId', 'company is required')

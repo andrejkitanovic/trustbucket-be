@@ -215,7 +215,9 @@ module.exports = ({ subject, content, button }) => `<!DOCTYPE html>
                       </div>
                     </div>
                   </div>
-                  ${button ? `
+                  ${
+                      button
+                          ? `
                   <div
                     id="m_-5072298247928332435section-2"
                     class="m_-5072298247928332435hse-section"
@@ -337,7 +339,9 @@ module.exports = ({ subject, content, button }) => `<!DOCTYPE html>
                       </div>
                     </div>
                   </div>
-                  ` : ''}
+                  `
+                          : ''
+                  }
                   <div
                     style="
                       text-align: center;
@@ -465,4 +469,4 @@ module.exports = ({ subject, content, button }) => `<!DOCTYPE html>
     </body>
   </html>
   
-    `;
+    `

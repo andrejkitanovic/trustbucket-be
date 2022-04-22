@@ -497,4 +497,4 @@ module.exports = ({ id, firstName }) => `<!DOCTYPE html>
     </body>
   </html>
   
-    `;
+    `

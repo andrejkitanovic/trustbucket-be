@@ -1,33 +1,33 @@
-const Feedback = require('../models/feedback');
+const Feedback = require('../models/feedback')
 
 exports.getFeedbacks = async (req, res, next) => {
-  try {
-    const feedbacks = await Feedback.find().populate('company');
-    const count = await Feedback.countDocuments();
+    try {
+        const feedbacks = await Feedback.find().populate('company')
+        const count = await Feedback.countDocuments()
 
-    res.status(200).json({
-      data: feedbacks,
-      total: count,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
+        res.status(200).json({
+            data: feedbacks,
+            total: count,
+        })
+    } catch (err) {
+        next(err)
+    }
+}
 
 exports.postFeedback = async (req, res, next) => {
-  try {
-    const { selectedCompany } = req.auth;
+    try {
+        const { selectedCompany } = req.auth
 
-    const feedbackObject = new Feedback({
-      company: selectedCompany,
-      ...req.body,
-    });
-    await feedbackObject.save();
+        const feedbackObject = new Feedback({
+            company: selectedCompany,
+            ...req.body,
+        })
+        await feedbackObject.save()
 
-    res.status(200).json({
-      message: 'Feedback sent!',
-    });
-  } catch (err) {
-    next(err);
-  }
-};
+        res.status(200).json({
+            message: 'Feedback sent!',
+        })
+    } catch (err) {
+        next(err)
+    }
+}
