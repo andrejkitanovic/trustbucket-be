@@ -1,5 +1,4 @@
-module.exports = ({ id, name, slug }) => {
-	return `<!DOCTYPE html>
+module.exports = ({ id, name, slug }) => `<!DOCTYPE html>
   <html lang="en">
     <head>
       <meta charset="UTF-8" />
@@ -197,7 +196,8 @@ module.exports = ({ id, name, slug }) => {
                                       <b>Hi ${name},</b><br /><br />
   
                                       We’re super happy that you took your time to
-                                      leave a review.  Click the link below to
+                                      leave a review. 
+Click the link below to
                                       publish your review.
                                     </p>
                                   </div>
@@ -437,7 +437,4 @@ module.exports = ({ id, name, slug }) => {
         </tbody>
       </table>
     </body>
-  </html>
-  
-    `;
-};
+  </html>`;

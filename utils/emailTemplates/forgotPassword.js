@@ -1,5 +1,4 @@
-module.exports = ({ id, firstName }) => {
-	return `<!DOCTYPE html>
+module.exports = ({ id, firstName }) => `<!DOCTYPE html>
   <html lang="en">
     <head>
       <meta charset="UTF-8" />
@@ -499,4 +498,3 @@ module.exports = ({ id, firstName }) => {
   </html>
   
     `;
-};

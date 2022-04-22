@@ -4,23 +4,23 @@ const validation = require('../helpers/validation');
 const Template = require('../models/emailTemplate');
 
 exports.postCampaign = [
-	body('templateId', 'template is required')
-		.notEmpty()
-		.custom(async (value) => {
-			let templateExists = false;
+  body('templateId', 'template is required')
+    .notEmpty()
+    .custom(async (value) => {
+      let templateExists = false;
 
-			if (value.includes('default')) {
-				templateExists = defaultEmailTemplates('', '').find((template) => template._id === value);
-			} else {
-				templateExists = await Template.findById(value);
-			}
+      if (value.includes('default')) {
+        templateExists = defaultEmailTemplates('', '').find((template) => template._id === value);
+      } else {
+        templateExists = await Template.findById(value);
+      }
 
-			if (!Boolean(templateExists)) {
-				throw new Error("template doesn't exist");
-			}
+      if (!templateExists) {
+        throw new Error("template doesn't exist");
+      }
 
-			return true;
-		}),
-	body('recievers', 'list of validated email addresses is required').notEmpty(),
-	validation,
+      return true;
+    }),
+  body('recievers', 'list of validated email addresses is required').notEmpty(),
+  validation,
 ];
