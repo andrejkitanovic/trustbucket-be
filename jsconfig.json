@@ -1,15 +1,15 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "target": "es6",
-        "baseUrl": ".",
-        "paths": {
-            "helpers": ["./helpers"],
-            "controllers": ["./controllers"],
-            "models": ["./models"],
-            "routes": ["./routes"],
-            "utils": ["./utils"]
-        }
-    },
-    "exclude": ["node_modules"]
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "baseUrl": ".",
+    "paths": {
+      "helpers": ["./helpers"],
+      "controllers": ["./controllers"],
+      "models": ["./models"],
+      "routes": ["./routes"],
+      "utils": ["./utils"]
+    }
+  },
+  "exclude": ["node_modules"]
 }

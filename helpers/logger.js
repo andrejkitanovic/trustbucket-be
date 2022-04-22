@@ -2,33 +2,33 @@ const geoip = require('geoip-lite')
 const logController = require('../controllers/log')
 
 module.exports = (app) => {
-    app.use((req, res, next) => {
-        const ip = req.headers['x-real-ip']
-        let location = {}
+  app.use((req, res, next) => {
+    const ip = req.headers['x-real-ip']
+    let location = {}
 
-        if (ip) {
-            location = geoip.lookup(ip)
-        }
+    if (ip) {
+      location = geoip.lookup(ip)
+    }
 
-        const { method, _parsedUrl } = req
+    const { method, _parsedUrl } = req
 
-        next()
+    next()
 
-        res.on('finish', () => {
-            const { auth } = req
-            const { statusCode } = res
+    res.on('finish', () => {
+      const { auth } = req
+      const { statusCode } = res
 
-            const logObject = {
-                method,
-                ip,
-                location,
-                endpoint: _parsedUrl.pathname,
-                status: statusCode,
-                authenticated: !!auth,
-                user: auth && auth.id,
-            }
+      const logObject = {
+        method,
+        ip,
+        location,
+        endpoint: _parsedUrl.pathname,
+        status: statusCode,
+        authenticated: !!auth,
+        user: auth && auth.id,
+      }
 
-            logController.postLog(logObject)
-        })
+      logController.postLog(logObject)
     })
+  })
 }

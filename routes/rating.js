@@ -27,23 +27,23 @@ router.post('/list/:slug', ratingsController.companyRatings)
 // TRUSTBUCKET - DOING
 router.get('/trustbucket/:slug', trustbucketController.getTrustbucketReviews)
 router.post(
-    '/trustbucket',
-    trustbucketValidation.postTrustbucketReviews,
-    trustbucketController.postTrustbucketReviews
+  '/trustbucket',
+  trustbucketValidation.postTrustbucketReviews,
+  trustbucketController.postTrustbucketReviews
 )
 router.post(
-    '/trustbucket/confirm/:id',
-    trustbucketController.confirmTrustbucketReview
+  '/trustbucket/confirm/:id',
+  trustbucketController.confirmTrustbucketReview
 )
 router.post(
-    '/trustbucket/reply',
-    auth,
-    trustbucketController.postTrustbucketReply
+  '/trustbucket/reply',
+  auth,
+  trustbucketController.postTrustbucketReply
 )
 router.delete(
-    '/trustbucket/reply/:id',
-    auth,
-    trustbucketController.deleteTrustbucketReply
+  '/trustbucket/reply/:id',
+  auth,
+  trustbucketController.deleteTrustbucketReply
 )
 
 // GOOGLE - DONE
@@ -52,9 +52,9 @@ router.post('/google', auth, googleRatingController.saveGoogleRating)
 
 // TRUSTPILOT - DONE
 router.post(
-    '/trustpilot/search',
-    auth,
-    trustpilotController.searchTrustpilotProfile
+  '/trustpilot/search',
+  auth,
+  trustpilotController.searchTrustpilotProfile
 )
 router.post('/trustpilot', auth, trustpilotController.saveTrustpilotProfile)
 
@@ -64,9 +64,9 @@ router.post('/fresha', auth, freshaRatingController.saveFreshaProfile)
 
 // BOOKING - DONE
 router.post(
-    '/booking/search',
-    auth,
-    bookingRatingController.searchBookingProfile
+  '/booking/search',
+  auth,
+  bookingRatingController.searchBookingProfile
 )
 router.post('/booking', auth, bookingRatingController.saveBookingProfile)
 
@@ -76,9 +76,9 @@ router.post('/recose', auth, recoseRatingController.saveRecoseProfile)
 
 // BOKADIREKT - DONE
 router.post(
-    '/bokadirekt/search',
-    auth,
-    bokadirektController.searchBokadirektProfile
+  '/bokadirekt/search',
+  auth,
+  bokadirektController.searchBokadirektProfile
 )
 router.post('/bokadirekt', auth, bokadirektController.saveBokadirektProfile)
 

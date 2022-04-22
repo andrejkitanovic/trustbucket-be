@@ -3,15 +3,15 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const widgetSchema = new Schema(
-    {
-        selectedCompany: {
-            type: Schema.Types.ObjectID,
-            ref: 'Company',
-        },
-        attributes: {},
-        object: {},
+  {
+    selectedCompany: {
+      type: Schema.Types.ObjectID,
+      ref: 'Company',
     },
-    { timestamps: true }
+    attributes: {},
+    object: {},
+  },
+  { timestamps: true }
 )
 
 module.exports = mongoose.model('Widget', widgetSchema)

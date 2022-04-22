@@ -2,57 +2,55 @@ const Widget = require('../models/widget')
 const Rating = require('../models/rating')
 
 exports.getWidget = async (req, res, next) => {
-    try {
-        const { id } = req.query
+  try {
+    const { id } = req.query
 
-        const widget = await Widget.findById(id)
-        const companyId = widget.selectedCompany
-        await widget.populate('selectedCompany')
+    const widget = await Widget.findById(id)
+    const companyId = widget.selectedCompany
+    await widget.populate('selectedCompany')
 
-        const params = {}
-        if (
-            widget.object &&
-            widget.object.reviewSources &&
-            widget.object.reviewSources !== 'all'
-        ) {
-            params.type = widget.object.reviewSources
-        }
-
-        const ratings = await Rating.find({ company: companyId }).limit(10)
-
-        res.status(200).json({ widget, ratings })
-    } catch (err) {
-        next(err)
+    const params = {}
+    if (
+      widget.object &&
+      widget.object.reviewSources &&
+      widget.object.reviewSources !== 'all'
+    ) {
+      params.type = widget.object.reviewSources
     }
+
+    const ratings = await Rating.find({ company: companyId }).limit(10)
+
+    res.status(200).json({ widget, ratings })
+  } catch (err) {
+    next(err)
+  }
 }
 
 exports.postWidget = async (req, res, next) => {
-    try {
-        const { object, attributes } = req.body
+  try {
+    const { object, attributes } = req.body
 
-        const { selectedCompany } = req.auth
+    const { selectedCompany } = req.auth
 
-        const widgetObject = new Widget({
-            selectedCompany,
-            object,
-            attributes,
-        })
+    const widgetObject = new Widget({
+      selectedCompany,
+      object,
+      attributes,
+    })
 
-        const widget = await widgetObject.save()
+    const widget = await widgetObject.save()
 
-        const attributesToValues = Object.keys(attributes).map(
-            (attribute) => `${attribute}="${attributes[attribute]}"`
-        )
+    const attributesToValues = Object.keys(attributes).map(
+      (attribute) => `${attribute}="${attributes[attribute]}"`
+    )
 
-        res.status(200).json({
-            link: `<iframe ${attributesToValues.join(
-                ' '
-            )} src="https://admin.trustbucket.io/widget/${
-                widget._id
-            }"></iframe>`,
-            message: 'Successfully created!',
-        })
-    } catch (err) {
-        next(err)
-    }
+    res.status(200).json({
+      link: `<iframe ${attributesToValues.join(
+        ' '
+      )} src="https://admin.trustbucket.io/widget/${widget._id}"></iframe>`,
+      message: 'Successfully created!',
+    })
+  } catch (err) {
+    next(err)
+  }
 }
