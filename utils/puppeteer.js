@@ -415,7 +415,7 @@ const getRecoseReviews = async ({ page, url, selectedCompany }) => {
     const $ = cheerio.load(result)
 
     const items = []
-    await $('.review-card').map((index, el) => {
+    await $('.review-card').forEach((index, el) => {
       const $el = cheerio.load(el)
 
       $el.prototype.count = (selector) => this.find(selector).length
