@@ -15,7 +15,7 @@ exports.searchRecoseProfile = async (req, res, next) => {
     const items = []
     await $('div.media.clfx')
       .slice(0, 3)
-      .forEach((index, el) => {
+      .map((index, el) => {
         const $el = cheerio.load(el)
 
         const object = {

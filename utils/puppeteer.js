@@ -281,7 +281,7 @@ const getFreshaReviews = async ({ page, url, selectedCompany }) => {
     const $ = cheerio.load(result)
 
     const items = []
-    await $('div[data-qa=reviews-list] li').forEach((index, el) => {
+    await $('div[data-qa=reviews-list] li').map((index, el) => {
       const $el = cheerio.load(el)
 
       $el.prototype.count = (selector) => this.find(selector).length
@@ -320,7 +320,7 @@ const getTrustpilotReviews = async ({ page, url, selectedCompany }) => {
     const loadReviews = async (items, result) => {
       const $ = cheerio.load(result)
 
-      await $('article[class*=reviewCard]').forEach((index, el) => {
+      await $('article[class*=reviewCard]').map((index, el) => {
         const $el = cheerio.load(el)
 
         $el.prototype.exists = (selector) => this.find(selector).length > 0

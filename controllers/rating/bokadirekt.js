@@ -15,7 +15,7 @@ exports.searchBokadirektProfile = async (req, res, next) => {
     const items = []
     await $('.card')
       .slice(0, 3)
-      .forEach((index, el) => {
+      .map((index, el) => {
         const $el = cheerio.load(el)
 
         const object = {
