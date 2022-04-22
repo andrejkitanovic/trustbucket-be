@@ -285,7 +285,7 @@ const getFreshaReviews = async ({ page, url, selectedCompany }) => {
       const $el = cheerio.load(el)
 
       $el.prototype.count = function (selector) {
-        this.find(selector).length
+        return this.find(selector).length
       }
       const object = {
         company: selectedCompany,
@@ -326,7 +326,7 @@ const getTrustpilotReviews = async ({ page, url, selectedCompany }) => {
         const $el = cheerio.load(el)
 
         $el.prototype.exists = function (selector) {
-          this.find(selector).length > 0
+          return this.find(selector).length > 0
         }
         const object = {
           company: selectedCompany,
@@ -423,10 +423,10 @@ const getRecoseReviews = async ({ page, url, selectedCompany }) => {
       const $el = cheerio.load(el)
 
       $el.prototype.count = function (selector) {
-        this.find(selector).length
+        return this.find(selector).length
       }
       $el.prototype.exists = function (selector) {
-        this.find(selector).length > 0
+        return this.find(selector).length > 0
       }
 
       const object = {
