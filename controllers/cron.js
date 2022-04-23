@@ -55,3 +55,27 @@ schedule.scheduleJob('0 0 0 * * ?', async () => {
     console.log(err)
   }
 })
+
+schedule.scheduleJob('0 0 0 * * ?', async () => {
+  try {
+    const companies = await Company.find({
+      'subscription.ends': { $lt: new Date() },
+      'subscription.plan': ['trial', 'start', 'pro'],
+    })
+
+    console.log(companies.length + ' company reverted to free plan')
+
+    companies.forEach(async (company) => {
+      company.subscription.plan = 'free'
+      company.subscription.nextPlan = 'free'
+      company.subscription.ends = null
+
+      company.billingInfo.interval = null
+      company.billingInfo.nextPlanInterval = null
+
+      await company.save()
+    })
+  } catch (err) {
+    console.log(err)
+  }
+})
