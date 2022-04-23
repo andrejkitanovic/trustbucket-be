@@ -8,7 +8,7 @@ const forgotPassword = require('./emailTemplates/forgotPassword')
 const reviewEmail = require('./emailTemplates/reviewEmail')
 
 const From = {
-  Email: 'kitanovicandrej213@gmail.com',
+  Email: 'no-reply@trustbucket.io',
   Name: 'Trustbucket IO',
 }
 

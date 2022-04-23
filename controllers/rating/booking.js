@@ -77,12 +77,6 @@ exports.saveBookingProfile = async (req, res, next) => {
 
 exports.cronBookingProfile = async (url, selectedCompany, previousRatings) => {
   try {
-    // if (!url || !url.includes('booking.com/hotel/')) {
-    //   const error = new Error('Not Valid URL!');
-    //   error.statusCode = 422;
-    //   next(error);
-    // }
-
     const result = await useRp(url)
     const $ = cheerio.load(result)
     const json = await JSON.parse(

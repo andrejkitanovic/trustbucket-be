@@ -1,12 +1,6 @@
-// const stripe = require('../utils/stripe')
 // const endpointSecret = process.env.STRIPE_SECRET_KEY;
 const { products } = require('./company')
 const Company = require('../models/company')
-
-// const dayjs = require('dayjs');
-
-// console.log(new Date(dayjs().add(10, 'second')));
-// console.log(new Date())
 
 const parsedProducts = {}
 Object.keys(products).forEach((type) =>

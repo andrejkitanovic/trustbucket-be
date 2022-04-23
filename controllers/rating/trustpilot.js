@@ -71,7 +71,6 @@ exports.saveTrustpilotProfile = async (req, res, next) => {
       selectedCompany,
     })
 
-    // downloadTrustpilotReviewsHandle(selectedCompany, url);
     res.json(rating)
   } catch (err) {
     next(err)
@@ -84,12 +83,6 @@ exports.cronTrustpilotProfile = async (
   previousRatings
 ) => {
   try {
-    // if (!url || !url.includes('trustpilot.com/review/')) {
-    //   const error = new Error('Not Valid URL!');
-    //   error.statusCode = 422;
-    //   next(error);
-    // }
-
     const result = await useRp(url)
     const $ = cheerio.load(result)
     const jsonParse = await JSON.parse(

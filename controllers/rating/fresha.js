@@ -68,12 +68,6 @@ exports.saveFreshaProfile = async (req, res, next) => {
 
 exports.cronFreshaProfile = async (url, selectedCompany, previousRatings) => {
   try {
-    // if (!url || !url.includes('www.fresha.com/')) {
-    //   const error = new Error('Not Valid URL!');
-    //   error.statusCode = 422;
-    //   next(error);
-    // }
-
     const result = await useRp(url)
     const $ = cheerio.load(result)
     const json = await JSON.parse(

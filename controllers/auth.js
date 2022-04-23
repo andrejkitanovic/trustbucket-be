@@ -321,5 +321,3 @@ exports.deactivateAccount = async (req, res, next) => {
     next(err)
   }
 }
-
-// exports.googleRegister = (req, res, next) => {};

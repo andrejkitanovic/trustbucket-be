@@ -1,5 +1,4 @@
 const User = require('../models/user')
-// const Company = require('../models/company');
 
 exports.getUsers = async (req, res, next) => {
   try {

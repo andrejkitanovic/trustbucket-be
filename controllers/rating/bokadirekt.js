@@ -67,8 +67,6 @@ exports.saveBokadirektProfile = async (req, res, next) => {
       selectedCompany,
     })
 
-    // downloadBokadirektReviewsHandle(selectedCompany, url);
-
     res.json(rating)
   } catch (err) {
     next(err)
@@ -81,12 +79,6 @@ exports.cronBokadirektProfile = async (
   previousRatings
 ) => {
   try {
-    // if (!url || !url.includes('www.bokadirekt.se/places/')) {
-    //   const error = new Error('Not Valid URL!');
-    //   error.statusCode = 422;
-    //   next(error);
-    // }
-
     const result = await useRp(url)
     const $ = cheerio.load(result)
 

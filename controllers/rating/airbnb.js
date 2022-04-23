@@ -2,7 +2,6 @@ const cheerio = require('cheerio')
 
 const puppeteer = require('puppeteer-extra')
 const StealthPlugin = require('puppeteer-extra-plugin-stealth')
-// const { useRp } = require('../../utils/request-promise');
 const { updateRatingHandle } = require('../profile')
 const { getCluster, options } = require('../../utils/puppeteer')
 

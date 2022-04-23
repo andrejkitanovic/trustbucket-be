@@ -75,12 +75,6 @@ exports.saveHittaProfile = async (req, res, next) => {
 
 exports.cronHittaProfile = async (url, selectedCompany, previousRatings) => {
   try {
-    // if (!url || !url.includes('hitta.se/')) {
-    //   const error = new Error('Not Valid URL!');
-    //   error.statusCode = 422;
-    //   next(error);
-    // }
-
     const result = await useRp(url)
     const $ = cheerio.load(result)
     const json = await JSON.parse(
