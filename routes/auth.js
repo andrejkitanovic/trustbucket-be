@@ -2,40 +2,83 @@ const express = require('express')
 const authController = require('../controllers/auth')
 const authValidation = require('../validation/auth')
 const auth = require('../helpers/auth')
+const defineRoute = require('../helpers/defineRoute')
 
 const router = express.Router()
 
-router.get('/me', auth, authController.getCurrentUser)
-router.put(
-  '/update-email',
-  auth,
-  authValidation.updateEmail,
-  authController.updateEmail
+router.get(
+  ...defineRoute({
+    route: '/me',
+    auth,
+    validator: null,
+    controller: authController.getCurrentUser,
+  })
 )
 router.put(
-  '/update-password',
-  auth,
-  authValidation.updatePassword,
-  authController.updatePassword
+  ...defineRoute({
+    route: '/update-email',
+    auth,
+    validator: authValidation.updateEmail,
+    controller: authController.updateEmail,
+  })
 )
-router.post('/login', authValidation.login, authController.login)
+router.put(
+  ...defineRoute({
+    route: '/update-password',
+    auth,
+    validator: authValidation.updatePassword,
+    controller: authController.updatePassword,
+  })
+)
 router.post(
-  '/forgot-password',
-  authValidation.forgotPassword,
-  authController.forgotPassword
+  ...defineRoute({
+    route: '/login',
+    validator: authValidation.login,
+    controller: authController.login,
+  })
 )
 router.post(
-  '/reset-password',
-  authValidation.resetPassword,
-  authController.resetPassword
+  ...defineRoute({
+    route: '/forgot-password',
+    validator: authValidation.forgotPassword,
+    controller: authController.forgotPassword,
+  })
 )
 router.post(
-  '/google-login',
-  authValidation.googleLogin,
-  authController.googleLogin
+  ...defineRoute({
+    route: '/reset-password',
+    validator: authValidation.resetPassword,
+    controller: authController.resetPassword,
+  })
 )
-router.post('/register', authValidation.register, authController.register)
-router.post('/confirm-email', authController.confirmEmail)
-router.post('/deactivate-account', auth, authController.deactivateAccount)
+router.post(
+  ...defineRoute({
+    route: '/google-login',
+    validator: authValidation.googleLogin,
+    controller: authController.googleLogin,
+  })
+)
+router.post(
+  ...defineRoute({
+    route: '/register',
+    validator: authValidation.register,
+    controller: authController.register,
+  })
+)
+router.post(
+  ...defineRoute({
+    route: '/confirm-email',
+    validator: null,
+    controller: authController.confirmEmail,
+  })
+)
+router.post(
+  ...defineRoute({
+    route: '/deactivate-account',
+    auth,
+    validator: null,
+    controller: authController.deactivateAccount,
+  })
+)
 
 module.exports = router

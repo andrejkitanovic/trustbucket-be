@@ -1,9 +1,21 @@
 const helperValidation = require('./validation')
 
 module.exports = ({ route, auth, validator, controller }) => {
-  if (validator) {
-    validator.push(helperValidation)
+  if (!route || !controller) {
+    throw new Error('Missing essential route information!')
   }
 
-  return [route, auth, validator, controller]
+  const list = [route]
+
+  if (auth) {
+    list.push(auth)
+  }
+
+  if (validator) {
+    list.push(validator)
+    list.push(helperValidation)
+  }
+
+  list.push(controller)
+  return list
 }

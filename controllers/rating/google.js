@@ -153,3 +153,47 @@ exports.cronGoogleProfile = async (
     console.log(err)
   }
 }
+
+exports.getGoogleReviewsAPI = async (req, res, next) => {
+  try {
+    const { googleId, accessToken } = req.body
+    const selectedCompany = req.auth
+
+    const { data: locationsData } = await axios.get(
+      `https://mybusiness.googleapis.com/v4/accounts/${googleId}/locations`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+    const { locations } = locationsData
+    const { name } = locations[0]
+    const url = locations[0].metadata.mapsUrl
+
+    const { data: reviewsData } = await axios.get(
+      `https://mybusiness.googleapis.com/v4/${name}/reviews`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+    const { reviews } = reviewsData
+
+    const objects = reviews.map((review) => ({
+      company: selectedCompany._id,
+      url,
+      image: review.reviewer.profilePhotoUrl,
+      type: 'google',
+      name: review.reviewer.displayName,
+      description: review.comment,
+      rating: review.starRating,
+      date: new Date(review.createTime),
+    }))
+
+    res.json(objects)
+  } catch (err) {
+    next(err)
+  }
+}
