@@ -154,7 +154,7 @@ exports.cronGoogleProfile = async (
   }
 }
 
-exports.getGoogleReviewsAPI = async (req, res, next) => {
+exports.getGoogleLocations = async (req, res, next) => {
   try {
     const { googleId, accessToken } = req.body
     const selectedCompany = req.auth
@@ -168,31 +168,38 @@ exports.getGoogleReviewsAPI = async (req, res, next) => {
       }
     )
     const { locations } = locationsData
-    const { name } = locations[0]
-    const url = locations[0].metadata.mapsUrl
+    // const { name } = locations[0]
+    // const url = locations[0].metadata.mapsUrl
 
-    const { data: reviewsData } = await axios.get(
-      `https://mybusiness.googleapis.com/v4/${name}/reviews`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    )
-    const { reviews } = reviewsData
+    // const { data: reviewsData } = await axios.get(
+    //   `https://mybusiness.googleapis.com/v4/${name}/reviews`,
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${accessToken}`,
+    //     },
+    //   }
+    // )
+    // const { reviews } = reviewsData
 
-    const objects = reviews.map((review) => ({
-      company: selectedCompany._id,
-      url,
-      image: review.reviewer.profilePhotoUrl,
-      type: 'google',
-      name: review.reviewer.displayName,
-      description: review.comment,
-      rating: review.starRating,
-      date: new Date(review.createTime),
+    // const objects = reviews.map((review) => ({
+    //   company: selectedCompany._id,
+    //   url,
+    //   image: review.reviewer.profilePhotoUrl,
+    //   type: 'google',
+    //   name: review.reviewer.displayName,
+    //   description: review.comment,
+    //   rating: review.starRating,
+    //   date: new Date(review.createTime),
+    // }))
+
+    const parsedLocations = locations.map(location => ({
+      route: location.name,
+      name: location.locationName,
+      website: location.websiteUrl,
+      url: location.metadata.mapsUrl
     }))
 
-    res.json(objects)
+    res.json(parsedLocations)
   } catch (err) {
     next(err)
   }
