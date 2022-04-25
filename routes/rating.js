@@ -49,7 +49,12 @@ router.delete(
 // GOOGLE - DONE
 // router.post('/google/search', auth, googleRatingController.getGoogleProfile)
 // router.post('/google', auth, googleRatingController.saveGoogleRating)
-router.post('/google/locations', auth, googleRatingController.getGoogleLocations)
+router.post(
+  '/google/locations',
+  auth,
+  googleRatingController.getGoogleLocations
+)
+router.post('/google', auth, googleRatingController.saveGoogleReviews)
 
 // TRUSTPILOT - DONE
 router.post(

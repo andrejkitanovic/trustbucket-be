@@ -2,8 +2,13 @@ const axios = require('axios')
 const utf8 = require('utf8')
 
 const Company = require('../../models/company')
+const Rating = require('../../models/rating')
 const { addAddress } = require('../company')
-const { updateRatingHandle, deleteRatingHandle } = require('../profile')
+const {
+  updateRatingHandle,
+  deleteRatingHandle,
+  changeDownloadingState,
+} = require('../profile')
 const { getCluster } = require('../../utils/puppeteer')
 
 exports.getGoogleProfile = async (req, res, next) => {
@@ -157,7 +162,6 @@ exports.cronGoogleProfile = async (
 exports.getGoogleLocations = async (req, res, next) => {
   try {
     const { googleId, accessToken } = req.body
-    const selectedCompany = req.auth
 
     const { data: locationsData } = await axios.get(
       `https://mybusiness.googleapis.com/v4/accounts/${googleId}/locations`,
@@ -168,38 +172,88 @@ exports.getGoogleLocations = async (req, res, next) => {
       }
     )
     const { locations } = locationsData
-    // const { name } = locations[0]
-    // const url = locations[0].metadata.mapsUrl
 
-    // const { data: reviewsData } = await axios.get(
-    //   `https://mybusiness.googleapis.com/v4/${name}/reviews`,
-    //   {
-    //     headers: {
-    //       Authorization: `Bearer ${accessToken}`,
-    //     },
-    //   }
-    // )
-    // const { reviews } = reviewsData
-
-    // const objects = reviews.map((review) => ({
-    //   company: selectedCompany._id,
-    //   url,
-    //   image: review.reviewer.profilePhotoUrl,
-    //   type: 'google',
-    //   name: review.reviewer.displayName,
-    //   description: review.comment,
-    //   rating: review.starRating,
-    //   date: new Date(review.createTime),
-    // }))
-
-    const parsedLocations = locations.map(location => ({
+    const parsedLocations = locations.map((location) => ({
       route: location.name,
       name: location.locationName,
       website: location.websiteUrl,
-      url: location.metadata.mapsUrl
+      url: location.metadata.mapsUrl,
+      placeId: location.locationKey.placeId,
     }))
 
     res.json(parsedLocations)
+  } catch (err) {
+    next(err)
+  }
+}
+
+const wordToNumber = (word) => {
+  switch (word) {
+    case 'ONE':
+      return 1
+    case 'TWO':
+      return 2
+    case 'THREE':
+      return 3
+    case 'FOUR':
+      return 4
+    case 'FIVE':
+      return 5
+  }
+  return 0
+}
+
+exports.saveGoogleReviews = async (req, res, next) => {
+  try {
+    const { route, name, url, accessToken, placeId } = req.body
+    const selectedCompany = req.auth.selectedCompany._id
+
+    const { data: reviewsData } = await axios.get(
+      `https://mybusiness.googleapis.com/v4/${route}/reviews`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+
+    const rating = {
+      placeId,
+      type: 'google',
+      name: name,
+      rating: reviewsData.averageRating,
+      ratingCount: reviewsData.totalReviewCount,
+      url,
+    }
+    await updateRatingHandle(selectedCompany, rating)
+
+    await changeDownloadingState(selectedCompany, 'google', true)
+    const { reviews } = reviewsData
+
+    let items = reviews.map((review) => ({
+      company: selectedCompany._id,
+      url,
+      image: review.reviewer.profilePhotoUrl,
+      type: 'google',
+      name: review.reviewer.displayName,
+      description: review.comment,
+      rating: wordToNumber(review.starRating),
+      date: new Date(review.createTime),
+    }))
+
+    if (items.length) {
+      console.log(`LOADED REVIEWS:${items.length}`)
+      items = items.filter((item) => item.name && item.rating && item.date)
+      console.log(`VALID REVIEWS:${items.length}`)
+
+      await Rating.insertMany(items)
+
+      await changeDownloadingState(selectedCompany, 'google', false)
+    } else {
+      await changeDownloadingState(selectedCompany, 'google', false)
+    }
+
+    res.json(rating)
   } catch (err) {
     next(err)
   }
