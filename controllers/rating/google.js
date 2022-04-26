@@ -4,11 +4,7 @@ const utf8 = require('utf8')
 const Company = require('../../models/company')
 const Rating = require('../../models/rating')
 const { addAddress } = require('../company')
-const {
-  updateRatingHandle,
-  deleteRatingHandle,
-  changeDownloadingState,
-} = require('../profile')
+const { updateRatingHandle, deleteRatingHandle } = require('../profile')
 const { getCluster } = require('../../utils/puppeteer')
 
 exports.getGoogleProfile = async (req, res, next) => {
@@ -173,6 +169,10 @@ exports.getGoogleLocations = async (req, res, next) => {
     )
     const { locations } = locationsData
 
+    if (!locations) {
+      throw new Error('User has no locations!')
+    }
+
     const parsedLocations = locations.map((location) => ({
       route: location.name,
       name: location.locationName,
@@ -227,7 +227,6 @@ exports.saveGoogleReviews = async (req, res, next) => {
     }
     await updateRatingHandle(selectedCompany, rating)
 
-    await changeDownloadingState(selectedCompany, 'google', true)
     const { reviews } = reviewsData
 
     let items = reviews.map((review) => ({
@@ -247,10 +246,6 @@ exports.saveGoogleReviews = async (req, res, next) => {
       console.log(`VALID REVIEWS:${items.length}`)
 
       await Rating.insertMany(items)
-
-      await changeDownloadingState(selectedCompany, 'google', false)
-    } else {
-      await changeDownloadingState(selectedCompany, 'google', false)
     }
 
     res.json(rating)
