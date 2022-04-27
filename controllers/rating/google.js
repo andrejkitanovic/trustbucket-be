@@ -236,12 +236,11 @@ exports.saveGoogleReviews = async (req, res, next) => {
         description = description.split('(Original)')[1]
       }
 
-      let reply = null
+      let reply
 
       if (review.reviewReply && review.reviewReply.comment) {
-        reply = review.reviewReply.comment
+        reply = review.reviewReply.comment.toString()
       }
-      console.log(review && review.reviewReply && review.reviewReply.comment)
       console.log(reply)
 
       return {
