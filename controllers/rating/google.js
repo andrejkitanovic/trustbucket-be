@@ -237,7 +237,7 @@ exports.saveGoogleReviews = async (req, res, next) => {
       }
 
       let reply = null;
-
+      console.log(review && review.reviewReply)
       if(review.reviewReply && review.reviewReply.comment){
         reply = review.reviewReply.comment
       }
