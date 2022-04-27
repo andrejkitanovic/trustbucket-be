@@ -237,11 +237,9 @@ exports.saveGoogleReviews = async (req, res, next) => {
       }
 
       let reply
-
       if (review.reviewReply && review.reviewReply.comment) {
-        reply = review.reviewReply.comment.toString()
+        reply = review.reviewReply.comment
       }
-      console.log(reply)
 
       return {
         company: selectedCompany._id,
@@ -252,7 +250,9 @@ exports.saveGoogleReviews = async (req, res, next) => {
         description,
         rating: wordToNumber(review.starRating),
         date: new Date(review.createTime),
-        reply,
+        reply: {
+          text: reply,
+        },
       }
     })
 
