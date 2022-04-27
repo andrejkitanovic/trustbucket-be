@@ -169,6 +169,7 @@ exports.forgotPassword = async (user) => {
           },
         ],
       })
+    console.log(result)
 
     return result.Data
   } catch (err) {
