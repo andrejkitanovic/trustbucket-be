@@ -229,16 +229,24 @@ exports.saveGoogleReviews = async (req, res, next) => {
 
     const { reviews } = reviewsData
 
-    let items = reviews.map((review) => ({
-      company: selectedCompany._id,
-      url,
-      image: review.reviewer.profilePhotoUrl,
-      type: 'google',
-      name: review.reviewer.displayName,
-      description: review.comment,
-      rating: wordToNumber(review.starRating),
-      date: new Date(review.createTime),
-    }))
+    let items = reviews.map((review) => {
+      let description = review.comment
+
+      if (description.includes('(Original)')) {
+        description = description.split('(Original)')[1]
+      }
+
+      return {
+        company: selectedCompany._id,
+        url,
+        image: review.reviewer.profilePhotoUrl,
+        type: 'google',
+        name: review.reviewer.displayName,
+        description,
+        rating: wordToNumber(review.starRating),
+        date: new Date(review.createTime),
+      }
+    })
 
     if (items.length) {
       console.log(`LOADED REVIEWS:${items.length}`)
