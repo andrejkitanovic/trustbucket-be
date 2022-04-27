@@ -232,7 +232,7 @@ exports.saveGoogleReviews = async (req, res, next) => {
     let items = reviews.map((review) => {
       let description = review.comment
 
-      if (description.includes('(Original)')) {
+      if (description && description.includes('(Original)')) {
         description = description.split('(Original)')[1]
       }
 
