@@ -120,7 +120,7 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                                   Powered by
                                   <img
                                     alt="Group 43"
-                                    src="https://trustbucket.io/wp-content/uploads/2022/05/Group-58.png
+                                    src="https://trustbucket.io/wp-content/uploads/2022/05/Group-58.png"
                                     style="margin-bottom: 6px; margin-left: 8px"
                                     align="middle"
                                     class="CToWUd"
