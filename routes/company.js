@@ -1,7 +1,7 @@
 const express = require('express')
 const companyController = require('../controllers/company')
 const companyValidation = require('../validation/company')
-const auth = require('../helpers/auth')
+const auth = require('../helpers/auth').auth
 
 const router = express.Router()
 

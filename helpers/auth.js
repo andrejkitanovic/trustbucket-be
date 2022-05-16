@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+const Company = require('../models/company')
 
 const auth = async (req, res, next) => {
   try {
@@ -30,7 +31,7 @@ const auth = async (req, res, next) => {
   return next()
 }
 
-const adminAuth = async (req, res, next) => {
+const subscribedAuth = async (req, res, next) => {
   try {
     if (req.headers && req.headers.authorization) {
       const authorization = req.headers.authorization.split(' ')[1]
@@ -42,8 +43,17 @@ const adminAuth = async (req, res, next) => {
       if (!user) {
         return res.status(403).json({ message: 'User not found!' })
       }
-      if (!type === 'admin') {
-        return res.status(403).json({ message: 'User is not authorized!' })
+      if (user.deactivated) {
+        return res.status(403).json({ message: 'User is deactivated!' })
+      }
+
+      const company = await Company.findById(user.selectedCompany)
+
+      if (company.subscription.plan === 'free') {
+        return res.status(403).json({
+          message:
+            'Please renew your subscription you are currently on free plan!',
+        })
       }
 
       req.auth = {
@@ -59,5 +69,5 @@ const adminAuth = async (req, res, next) => {
   return next()
 }
 
-exports.adminAuth = adminAuth
-module.exports = auth
+exports.auth = auth
+exports.subscribedAuth = subscribedAuth

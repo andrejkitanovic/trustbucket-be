@@ -1,6 +1,6 @@
 const express = require('express')
 const feedbackController = require('../controllers/feedback')
-const auth = require('../helpers/auth')
+const auth = require('../helpers/auth').auth
 
 const router = express.Router()
 

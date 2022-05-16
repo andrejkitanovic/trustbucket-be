@@ -1,7 +1,7 @@
 const express = require('express')
 const campaignController = require('../controllers/campaign')
 const campaignValidation = require('../validation/campaign')
-const auth = require('../helpers/auth')
+const auth = require('../helpers/auth').auth
 
 const router = express.Router()
 

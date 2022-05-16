@@ -1,5 +1,6 @@
 const Widget = require('../models/widget')
 const Rating = require('../models/rating')
+const Company = require('../models/company')
 
 exports.getWidget = async (req, res, next) => {
   try {
@@ -7,6 +8,15 @@ exports.getWidget = async (req, res, next) => {
 
     const widget = await Widget.findById(id)
     const companyId = widget.selectedCompany
+
+    const company = await Company.findById(companyId)
+    if (company.subscription.plan === 'free') {
+      res.status(403).json({
+        message:
+          'Please renew your subscription you are currently on free plan!',
+      })
+    }
+
     await widget.populate('selectedCompany')
 
     const params = {}

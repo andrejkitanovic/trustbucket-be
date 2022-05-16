@@ -1,7 +1,7 @@
 const express = require('express')
 const authController = require('../controllers/auth')
 const authValidation = require('../validation/auth')
-const auth = require('../helpers/auth')
+const auth = require('../helpers/auth').auth
 const defineRoute = require('../helpers/defineRoute')
 
 const router = express.Router()

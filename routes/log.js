@@ -1,6 +1,6 @@
 const express = require('express')
 const logController = require('../controllers/log')
-const auth = require('../helpers/auth')
+const auth = require('../helpers/auth').auth
 
 const router = express.Router()
 

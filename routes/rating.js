@@ -11,15 +11,16 @@ const hittaController = require('../controllers/rating/hitta')
 
 const trustbucketValidation = require('../validation/rating/trustbucket')
 
-const auth = require('../helpers/auth')
+const auth = require('../helpers/auth').auth
+const subscribedAuth = require('../helpers/auth').subscribedAuth
 // const airbnbController = require('../controllers/rating/airbnb');
 
 const router = express.Router()
 
-router.get('/', auth, ratingsController.getRatings)
-router.get('/stats', auth, ratingsController.stats)
-router.post('/filter', auth, ratingsController.filterRatings)
-router.delete('/', auth, ratingsController.deleteRating)
+router.get('/', subscribedAuth, ratingsController.getRatings)
+router.get('/stats', subscribedAuth, ratingsController.stats)
+router.post('/filter', subscribedAuth, ratingsController.filterRatings)
+router.delete('/', subscribedAuth, ratingsController.deleteRating)
 
 // GUEST GET COMPANY RATINGS
 router.post('/list/:slug', ratingsController.companyRatings)
