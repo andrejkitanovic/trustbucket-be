@@ -2,7 +2,7 @@ const schedule = require('node-schedule')
 const Company = require('../models/company')
 
 const { cronRecoseProfile } = require('./rating/recose')
-// const { cronGoogleProfile } = require('./rating/google')
+const { cronGoogleProfile } = require('./rating/google')
 const { cronFreshaProfile } = require('./rating/fresha')
 const { cronBokadirektProfile } = require('./rating/bokadirekt')
 const { cronBookingProfile } = require('./rating/booking')
@@ -28,9 +28,19 @@ schedule.scheduleJob('0 0 0 * * ?', async () => {
           case 'recose':
             await cronRecoseProfile(rating.url, id, rating.ratingCount)
             break
-          // case 'google':
-          //   await cronGoogleProfile(rating.placeId, id, rating.ratingCount)
-          //   break
+          case 'google':
+            if (rating.refreshToken) {
+              await cronGoogleProfile(
+                rating.refreshToken,
+                rating.route,
+                rating.url,
+                rating.name,
+                rating.placeId,
+                id,
+                rating.ratingCount
+              )
+            }
+            break
           case 'fresha':
             await cronFreshaProfile(rating.url, id, rating.ratingCount)
             break

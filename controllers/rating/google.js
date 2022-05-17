@@ -4,10 +4,7 @@ const axios = require('axios')
 // const Company = require('../../models/company')
 const Rating = require('../../models/rating')
 // const { addAddress } = require('../company')
-const {
-  updateRatingHandle,
-  //  deleteRatingHandle
-} = require('../profile')
+const { updateRatingHandle, deleteRatingHandle } = require('../profile')
 // const { getCluster } = require('../../utils/puppeteer')
 
 const getRefreshTokenFromCode = async (code) => {
@@ -274,6 +271,7 @@ exports.saveGoogleReviews = async (req, res, next) => {
 
     const rating = {
       placeId,
+      route,
       type: 'google',
       name: name,
       rating: reviewsData.averageRating,
@@ -323,5 +321,83 @@ exports.saveGoogleReviews = async (req, res, next) => {
     res.json(rating)
   } catch (err) {
     next(err)
+  }
+}
+
+exports.cronGoogleProfile = async (
+  refreshToken,
+  route,
+  url,
+  name,
+  placeId,
+  selectedCompany,
+  previousRatings
+) => {
+  try {
+    const accessToken = await getAccessTokenFromRefreshToken(refreshToken)
+
+    const { data: reviewsData } = await axios.get(
+      `https://mybusiness.googleapis.com/v4/${route}/reviews`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+
+    if (previousRatings < reviewsData.totalReviewCount) {
+      await deleteRatingHandle(selectedCompany, 'google')
+
+      const rating = {
+        placeId,
+        route,
+        type: 'google',
+        name: name,
+        rating: reviewsData.averageRating,
+        ratingCount: reviewsData.totalReviewCount,
+        url,
+        refreshToken,
+      }
+      await updateRatingHandle(selectedCompany, rating)
+
+      const { reviews } = reviewsData
+
+      let items = reviews.map((review) => {
+        let description = review.comment
+
+        if (description && description.includes('(Original)')) {
+          description = description.split('(Original)')[1]
+        }
+
+        let reply
+        if (review.reviewReply && review.reviewReply.comment) {
+          reply = review.reviewReply.comment
+        }
+
+        return {
+          company: selectedCompany._id,
+          url,
+          image: review.reviewer.profilePhotoUrl,
+          type: 'google',
+          name: review.reviewer.displayName,
+          description,
+          rating: wordToNumber(review.starRating),
+          date: new Date(review.createTime),
+          reply: {
+            text: reply,
+          },
+        }
+      })
+
+      if (items.length) {
+        console.log(`LOADED REVIEWS:${items.length}`)
+        items = items.filter((item) => item.name && item.rating && item.date)
+        console.log(`VALID REVIEWS:${items.length}`)
+
+        await Rating.insertMany(items)
+      }
+    } else console.log('Same google reviews as previous')
+  } catch (err) {
+    console.log(err)
   }
 }
