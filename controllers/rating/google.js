@@ -15,7 +15,7 @@ const getRefreshTokenFromCode = async (code) => {
     const res = await axios.post('https://oauth2.googleapis.com/token', {
       client_id: process.env.CLIENT_ID_GOOGLE,
       client_secret: process.env.CLIENT_SECRET_GOOGLE,
-      redirect_uri: 'http://localhost:3000',
+      redirect_uri: 'https://admin.trustbucket.io',
       grant_type: 'authorization_code',
       code,
     })
