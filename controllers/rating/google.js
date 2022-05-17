@@ -40,20 +40,21 @@ const getAccessTokenFromRefreshToken = async (refreshToken) => {
   }
 }
 const getGoogleIdFromAccesToken = async (accessToken) => {
-  try{
-    const res = await axios.get('https://mybusiness.googleapis.com/v4/accounts', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
+  try {
+    const res = await axios.get(
+      'https://mybusiness.googleapis.com/v4/accounts',
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
 
-    return res.data.accounts[0].name.replace('accounts/','')
-  } catch(err){
+    return res.data.accounts[0].name.replace('accounts/', '')
+  } catch (err) {
     throw new Error(err)
   }
-
 }
-
 
 // exports.getGoogleProfile = async (req, res, next) => {
 //   try {
@@ -205,11 +206,11 @@ const getGoogleIdFromAccesToken = async (accessToken) => {
 
 exports.getGoogleLocations = async (req, res, next) => {
   try {
-    const { code } = req.body;
+    const { code } = req.body
 
-    const refreshToken = await getRefreshTokenFromCode(code);
+    const refreshToken = await getRefreshTokenFromCode(code)
     const accessToken = await getAccessTokenFromRefreshToken(refreshToken)
-    const googleId = await getGoogleIdFromAccesToken(accessToken);
+    const googleId = await getGoogleIdFromAccesToken(accessToken)
 
     const { data: locationsData } = await axios.get(
       `https://mybusiness.googleapis.com/v4/accounts/${googleId}/locations`,
@@ -231,6 +232,8 @@ exports.getGoogleLocations = async (req, res, next) => {
       website: location.websiteUrl,
       url: location.metadata.mapsUrl,
       placeId: location.locationKey.placeId,
+      refreshToken,
+      accessToken,
     }))
 
     res.json(parsedLocations)
@@ -257,12 +260,8 @@ const wordToNumber = (word) => {
 
 exports.saveGoogleReviews = async (req, res, next) => {
   try {
-    const { route, name, url, code, placeId } = req.body
+    const { route, name, url, refreshToken, accessToken, placeId } = req.body
     const selectedCompany = req.auth.selectedCompany._id
-
-
-    const refreshToken = await getRefreshTokenFromCode(code);
-    const accessToken = await getAccessTokenFromRefreshToken(refreshToken)
 
     const { data: reviewsData } = await axios.get(
       `https://mybusiness.googleapis.com/v4/${route}/reviews`,
@@ -280,7 +279,7 @@ exports.saveGoogleReviews = async (req, res, next) => {
       rating: reviewsData.averageRating,
       ratingCount: reviewsData.totalReviewCount,
       url,
-      refreshToken
+      refreshToken,
     }
     await updateRatingHandle(selectedCompany, rating)
 
