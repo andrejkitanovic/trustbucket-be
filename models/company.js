@@ -82,6 +82,7 @@ const companySchema = new Schema(
     },
     ratings: [
       {
+        refreshToken:String,
         placeId: {
           type: String,
         },
