@@ -17,4 +17,5 @@ require('./helpers/headers')(app)
 require('./routes')(app)
 require('./helpers/error')(app)
 
+require('./utils/mailListener')
 require('./helpers/connection')(app)
