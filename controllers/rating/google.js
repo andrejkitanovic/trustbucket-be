@@ -5,7 +5,6 @@ const axios = require('axios')
 const Rating = require('../../models/rating')
 // const { addAddress } = require('../company')
 const { updateRatingHandle, deleteRatingHandle } = require('../profile')
-// const { getCluster } = require('../../utils/puppeteer')
 
 const getRefreshTokenFromCode = async (code) => {
   try {
@@ -16,7 +15,7 @@ const getRefreshTokenFromCode = async (code) => {
       grant_type: 'authorization_code',
       code,
     })
-    console.log('Refresh token' + res.data.refresh_token)
+    console.log('Refresh token: ' + res.data.refresh_token)
     return res.data.refresh_token
   } catch (err) {
     console.log('Refresh token error', err)
@@ -31,7 +30,7 @@ const getAccessTokenFromRefreshToken = async (refreshToken) => {
       grant_type: 'refresh_token',
       refresh_token: refreshToken,
     })
-    console.log('Access token' + res.data.access_token)
+    console.log('Access token: ' + res.data.access_token)
     return res.data.access_token
   } catch (err) {
     console.log('Access token error', err)
@@ -48,9 +47,10 @@ const getGoogleIdFromAccesToken = async (accessToken) => {
         },
       }
     )
-
+    console.log('Google Account: ', res.data)
     return res.data.accounts[0].name.replace('accounts/', '')
   } catch (err) {
+    console.log('Google Id error', err)
     throw new Error(err)
   }
 }
