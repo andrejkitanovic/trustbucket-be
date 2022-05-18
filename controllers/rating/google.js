@@ -16,7 +16,7 @@ const getRefreshTokenFromCode = async (code) => {
       grant_type: 'authorization_code',
       code,
     })
-
+    console.log('Refresh token' + res.data.refresh_token)
     return res.data.refresh_token
   } catch (err) {
     console.log('Refresh token error', err)
@@ -31,7 +31,7 @@ const getAccessTokenFromRefreshToken = async (refreshToken) => {
       grant_type: 'refresh_token',
       refresh_token: refreshToken,
     })
-
+    console.log('Access token' + res.data.access_token)
     return res.data.access_token
   } catch (err) {
     console.log('Access token error', err)
