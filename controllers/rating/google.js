@@ -15,7 +15,7 @@ const getRefreshTokenFromCode = async (code) => {
       grant_type: 'authorization_code',
       code,
     })
-    console.log('Refresh token: ' + res.data.refresh_token)
+
     return res.data.refresh_token
   } catch (err) {
     console.log('Refresh token error', err)
@@ -30,7 +30,7 @@ const getAccessTokenFromRefreshToken = async (refreshToken) => {
       grant_type: 'refresh_token',
       refresh_token: refreshToken,
     })
-    console.log('Access token: ' + res.data.access_token)
+
     return res.data.access_token
   } catch (err) {
     console.log('Access token error', err)
@@ -40,14 +40,14 @@ const getAccessTokenFromRefreshToken = async (refreshToken) => {
 const getGoogleIdFromAccesToken = async (accessToken) => {
   try {
     const res = await axios.get(
-      'https://mybusiness.googleapis.com/v4/accounts',
+      'https://mybusinessaccountmanagement.googleapis.com/v1/accounts',
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       }
     )
-    console.log('Google Account: ', res.data)
+
     return res.data.accounts[0].name.replace('accounts/', '')
   } catch (err) {
     console.log('Google Id error', err)
