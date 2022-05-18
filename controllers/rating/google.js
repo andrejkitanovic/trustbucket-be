@@ -19,6 +19,7 @@ const getRefreshTokenFromCode = async (code) => {
 
     return res.data.refresh_token
   } catch (err) {
+    console.log('Refresh token error', err)
     throw new Error(err)
   }
 }
@@ -33,6 +34,7 @@ const getAccessTokenFromRefreshToken = async (refreshToken) => {
 
     return res.data.access_token
   } catch (err) {
+    console.log('Access token error', err)
     throw new Error(err)
   }
 }
