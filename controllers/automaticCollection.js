@@ -20,7 +20,12 @@ exports.getAutomaticCollection = async (req, res, next) => {
 exports.postAutomaticCollection = async (req, res, next) => {
   try {
     const { selectedCompany } = req.auth
-    const { template, delay } = req.body
+    const { template: templateId, delay } = req.body
+
+    let template
+    if (!templateId.includes('default')) {
+      template = templateId
+    }
 
     if (await AutomaticCollection.exists({ company: selectedCompany })) {
       await AutomaticCollection.findOneAndUpdate(
