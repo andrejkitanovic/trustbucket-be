@@ -33,25 +33,29 @@ mailListener.on('error', function (err) {
 mailListener.on('mail', function (mail) {
   console.log('[IMAP] MAIL')
 
-//   if (!mail.bcc || !mail.to || !mail.from) return
+  if (!mail.bcc.length || !mail.to.length || !mail.from.length) return
 
   const date = mail.date
-  const from = mail.from.address
-//   const bcc = mail.bcc.address
-  const to = mail.to.address
+  const from = mail.from[0].address
 
-  console.log(mail)
+  let slug
+  mail.bcc.forEach((bcc) => {
+    if (
+      bcc.address.includes('hello+') &&
+      bcc.address.includes('@trustbucket.io')
+    ) {
+      slug = bcc.address.replace('hello+', '').replace('@trustbucket.io', '')
+    }
+  })
 
-//   if (!bcc) return
+  mail.to.forEach((to) => {
+    const finalObject = {
+      slug,
+      date,
+      from,
+      to: to.address,
+    }
 
-//   const id = bcc.replace('hello+','');
-
-  const finalObject = {
-    date,
-    // id,
-    from,
-    to,
-  }
-
-//   console.log('EMAIL:', finalObject)
+    console.log(finalObject)
+  })
 })
