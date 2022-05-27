@@ -10,7 +10,7 @@ const dayjs = require('dayjs')
 
 const currentTime = new Date().getTime()
 const mailListener = new MailListener({
-  username: 'hello@trustbucket.io',
+  username: 'no-reply@trustbucket.io',
   password: 'Plznohack123#',
   host: 'imap.gmail.com',
   port: 993,
@@ -49,10 +49,10 @@ mailListener.on('mail', async function (mail) {
   let slug
   mail.bcc.forEach((bcc) => {
     if (
-      bcc.address.includes('hello+') &&
+      bcc.address.includes('no-reply+') &&
       bcc.address.includes('@trustbucket.io')
     ) {
-      slug = bcc.address.replace('hello+', '').replace('@trustbucket.io', '')
+      slug = bcc.address.replace('no-reply+', '').replace('@trustbucket.io', '')
     }
   })
 
