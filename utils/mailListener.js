@@ -79,7 +79,7 @@ mailListener.on('mail', async function (mail) {
       template = defaultEmailTemplates(company.name, company.slug)[0]
     }
 
-    schedule.scheduleJob(dayjs().add(ac.delay, 'day').toDate(), async () => {
+    // schedule.scheduleJob(dayjs().add(ac.delay, 'day').toDate(), async () => {
       await sendEmail(
         template,
         [reciever],
@@ -88,6 +88,6 @@ mailListener.on('mail', async function (mail) {
         company.name,
         company.user.firstName
       )
-    })
+    // })
   })
 })
