@@ -1,10 +1,12 @@
 const MailListener = require('mail-listener2')
+const schedule = require('node-schedule')
 const { sendEmail } = require('./mailer')
 const { defaultEmailTemplates } = require('../controllers/emailTemplate')
 const AutomaticCollection = require('../models/automaticCollection')
 const InvitationSettings = require('../models/invitationSettings')
 const EmailTemplate = require('../models/emailTemplate')
 const Company = require('../models/company')
+const dayjs = require('dayjs')
 
 const currentTime = new Date().getTime()
 const mailListener = new MailListener({
@@ -77,13 +79,15 @@ mailListener.on('mail', async function (mail) {
       template = defaultEmailTemplates(company.name, company.slug)[0]
     }
 
-    await sendEmail(
-      template,
-      [reciever],
-      ac._id,
-      invitation,
-      company.name,
-      company.user.firstName
-    )
+    schedule.scheduleJob(dayjs().add(ac.delay, 'minute'), async () => {
+      await sendEmail(
+        template,
+        [reciever],
+        ac._id,
+        invitation,
+        company.name,
+        company.user.firstName
+      )
+    })
   })
 })
