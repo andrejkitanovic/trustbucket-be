@@ -5,7 +5,7 @@ exports.getAutomaticCollection = async (req, res, next) => {
   try {
     const { selectedCompany } = req.auth
 
-    const automaticCollection = await AutomaticCollection.find({
+    const automaticCollection = await AutomaticCollection.findOne({
       company: selectedCompany,
     })
 

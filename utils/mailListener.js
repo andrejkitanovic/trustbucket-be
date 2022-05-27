@@ -79,7 +79,7 @@ mailListener.on('mail', async function (mail) {
       template = defaultEmailTemplates(company.name, company.slug)[0]
     }
 
-    schedule.scheduleJob(dayjs().add(ac.delay, 'minute'), async () => {
+    schedule.scheduleJob(dayjs().add(ac.delay, 'minute').toDate(), async () => {
       await sendEmail(
         template,
         [reciever],
