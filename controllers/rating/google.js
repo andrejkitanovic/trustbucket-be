@@ -48,7 +48,8 @@ const getGoogleIdFromAccesToken = async (accessToken) => {
       }
     )
 
-    return res.data.accounts[0].name.replace('accounts/', '')
+    // return res.data.accounts[0].name.replace('accounts/', '')
+    return res.data.accounts[0].name
   } catch (err) {
     console.log('Google Id error', err)
     throw new Error(err)
@@ -212,31 +213,33 @@ exports.getGoogleLocations = async (req, res, next) => {
     const googleId = await getGoogleIdFromAccesToken(accessToken)
 
     const { data: locationsData } = await axios.get(
-      `https://mybusinessbusinessinformation.googleapis.com/v1/accounts/${googleId}/locations`,
+      `https://mybusinessbusinessinformation.googleapis.com/v1/${googleId}/locations?readMask=name,metadata,websiteUri,title`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       }
     )
-    const { locations } = locationsData
+    const { locations } = locationsData;
 
-    if (!locations) {
+    if (!locations || locations === {}) {
       throw new Error('User has no locations!')
     }
 
     const parsedLocations = locations.map((location) => ({
       route: location.name,
-      name: location.locationName,
-      website: location.websiteUrl,
-      url: location.metadata.mapsUrl,
-      placeId: location.locationKey.placeId,
+      name: location.title,
+      website: location.websiteUri,
+      url: location.metadata.mapsUri,
+      placeId: location.metadata.placeId,
       refreshToken,
       accessToken,
+      googleId
     }))
 
     res.json(parsedLocations)
   } catch (err) {
+    console.log(err.response.data)
     next(err)
   }
 }
@@ -259,11 +262,11 @@ const wordToNumber = (word) => {
 
 exports.saveGoogleReviews = async (req, res, next) => {
   try {
-    const { route, name, url, refreshToken, accessToken, placeId } = req.body
+    const { route, name, url, refreshToken, accessToken, placeId, googleId } = req.body
     const selectedCompany = req.auth.selectedCompany._id
 
     const { data: reviewsData } = await axios.get(
-      `https://mybusinessbusinessinformation.googleapis.com/v1/${route}/reviews`,
+      `https://mybusiness.googleapis.com/v4/${googleId}/${route}/reviews`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -322,6 +325,7 @@ exports.saveGoogleReviews = async (req, res, next) => {
 
     res.json(rating)
   } catch (err) {
+    console.log(err.response.data)
     next(err)
   }
 }
@@ -339,7 +343,7 @@ exports.cronGoogleProfile = async (
     const accessToken = await getAccessTokenFromRefreshToken(refreshToken)
 
     const { data: reviewsData } = await axios.get(
-      `https://mybusinessbusinessinformation.googleapis.com/v1/${route}/reviews`,
+      `https://mybusiness.googleapis.com/v4/${route}/reviews`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
