@@ -37,7 +37,7 @@ const companySchema = new Schema(
       {
         media: {
           type: String,
-          enum: ['facebook', 'instagram', 'twitter', 'youtube'],
+          enum: ['facebook', 'instagram', 'twitter', 'youtube', 'tiktok'],
         },
         url: {
           type: String,
@@ -82,7 +82,7 @@ const companySchema = new Schema(
     },
     ratings: [
       {
-        refreshToken:String,
+        refreshToken: String,
         route: String,
         placeId: {
           type: String,

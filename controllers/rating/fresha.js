@@ -52,6 +52,7 @@ exports.saveFreshaProfile = async (req, res, next) => {
       ratingCount: json.aggregateRating.reviewCount,
       url,
     }
+    await deleteRatingHandle(selectedCompany, 'fresha')
     await updateRatingHandle(selectedCompany, rating)
     const cluster = await getCluster()
     await cluster.queue({
