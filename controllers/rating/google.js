@@ -212,7 +212,7 @@ exports.getGoogleLocations = async (req, res, next) => {
     const googleId = await getGoogleIdFromAccesToken(accessToken)
 
     const { data: locationsData } = await axios.get(
-      `https://mybusiness.googleapis.com/v4/accounts/${googleId}/locations`,
+      `https://mybusinessbusinessinformation.googleapis.com/v1/accounts/${googleId}/locations`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -263,7 +263,7 @@ exports.saveGoogleReviews = async (req, res, next) => {
     const selectedCompany = req.auth.selectedCompany._id
 
     const { data: reviewsData } = await axios.get(
-      `https://mybusiness.googleapis.com/v4/${route}/reviews`,
+      `https://mybusinessbusinessinformation.googleapis.com/v1/${route}/reviews`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -339,7 +339,7 @@ exports.cronGoogleProfile = async (
     const accessToken = await getAccessTokenFromRefreshToken(refreshToken)
 
     const { data: reviewsData } = await axios.get(
-      `https://mybusiness.googleapis.com/v4/${route}/reviews`,
+      `https://mybusinessbusinessinformation.googleapis.com/v1/${route}/reviews`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
