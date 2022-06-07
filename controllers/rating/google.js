@@ -239,7 +239,6 @@ exports.getGoogleLocations = async (req, res, next) => {
 
     res.json(parsedLocations)
   } catch (err) {
-    console.log(err.response.data)
     next(err)
   }
 }
@@ -325,7 +324,6 @@ exports.saveGoogleReviews = async (req, res, next) => {
 
     res.json(rating)
   } catch (err) {
-    console.log(err.response.data)
     next(err)
   }
 }
