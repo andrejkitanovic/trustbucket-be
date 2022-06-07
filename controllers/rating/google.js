@@ -223,7 +223,7 @@ exports.getGoogleLocations = async (req, res, next) => {
     const { locations } = locationsData;
 
     if (!locations || locations === {}) {
-      throw new Error('User has no locations!')
+      throw new Error('There is no Google Business Profile connected to this email account - please try with another email')
     }
 
     const parsedLocations = locations.map((location) => ({
