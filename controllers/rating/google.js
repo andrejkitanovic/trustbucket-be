@@ -222,7 +222,7 @@ exports.getGoogleLocations = async (req, res, next) => {
     )
     const { locations } = locationsData;
 
-    if (!locations || locations === {}) {
+    if (!locationsData || !locations || locations === {}) {
       throw new Error('There is no Google Business Profile connected to this email account - please try with another email')
     }
 
