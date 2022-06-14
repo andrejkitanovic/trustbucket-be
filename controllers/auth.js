@@ -7,6 +7,21 @@ const Company = require('../models/company')
 const InvitationSettings = require('../models/invitationSettings')
 const { confirmEmail, forgotPassword } = require('../utils/mailer')
 
+function slugify(text) {
+  return (
+    text
+      .toString() // Cast to string
+      .toLowerCase() // Convert the string to lowercase letters
+      .normalize('NFD') // The normalize() method returns the Unicode Normalization Form of a given string.
+      .trim() // Remove whitespace from both sides of a string
+      .replace(/\s+/g, '-') // Replace spaces with -
+      // eslint-disable-next-line no-useless-escape
+      .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+      // eslint-disable-next-line no-useless-escape
+      .replace(/\-\-+/g, '-')
+  ) // Replace multiple - with single -
+}
+
 exports.getCurrentUser = async (req, res, next) => {
   try {
     const { id } = req.auth
@@ -239,25 +254,68 @@ exports.googleLogin = async (req, res, next) => {
 
 exports.register = async (req, res, next) => {
   try {
-    const {
-      password,
-      firstName,
-      lastName,
-      phone,
-      email,
-      companyName,
-      websiteURL,
-      slug,
-    } = req.body
-    const hashedPassword = await bcrypt.hash(password, 12)
+    const { password, firstName, lastName, email } = req.body
 
     const userObject = new User({
       firstName,
       lastName,
-      phone,
       email,
-      password: hashedPassword,
+      password,
     })
+
+    const userCreated = await userObject.save()
+
+    if (!password) {
+      await confirmEmail({
+        id: userObject._id,
+        firstName,
+        lastName,
+        email,
+      })
+    }
+
+    if (userCreated) {
+      res.status(200).json({
+        message: 'Successfully signed up!',
+        data: { id: userObject._id },
+      })
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
+exports.getWelcome = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const userObject = await User.findById(id)
+
+    res.status(200).json({
+      google: userObject.password === 'google',
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
+exports.postWelcome = async (req, res, next) => {
+  try {
+    const { id, password, companyName, websiteURL } = req.body
+
+    let slug = slugify(companyName)
+
+    const hasSlug = await Company.findOne({ slug })
+    if (hasSlug) {
+      slug = slug + '-' + Math.floor(1000 + Math.random() * 9000)
+    }
+
+    const userObject = await User.findById(id)
+    let hashedPassword
+
+    if (userObject.password === 'google') {
+      hashedPassword = 'google'
+    } else hashedPassword = await bcrypt.hash(password, 12)
+
     const customer = await stripe.customers.create({
       name: companyName,
     })
@@ -279,26 +337,44 @@ exports.register = async (req, res, next) => {
     const invitationSettingsObject = new InvitationSettings({
       company: companyObject._id,
       senderName: companyName,
-      replyTo: email,
+      replyTo: userObject.email,
     })
 
-    userObject.selectedCompany = companyObject._id
-    userObject.companies = [companyObject._id]
-
-    const userCreated = await userObject.save()
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      {
+        password: hashedPassword,
+        selectedCompany: companyObject._id,
+        companies: [companyObject._id],
+        confirmed: true
+      },
+      { new: true }
+    )
     const companyCreated = await companyObject.save()
     await invitationSettingsObject.save()
 
-    await confirmEmail({
-      id: userObject._id,
-      firstName,
-      lastName,
-      email,
-    })
+    const token = jwt.sign(
+      {
+        id: userObject._id,
+        type: userObject.type,
+        selectedCompany: companyObject._id,
+      },
+      process.env.DECODE_KEY,
+      {
+        // expiresIn: "1h",
+      }
+    )
 
-    if (userCreated && companyCreated) {
+    // await welcomeEmail({
+    //   email: userObject.email,
+    // })
+    await updatedUser.populate('selectedCompany')
+    await updatedUser.populate('companies', '_id name')
+    if (companyCreated) {
       res.status(200).json({
-        message: 'Please confirm your email address!',
+        message: 'Successfully created company!',
+        token,
+        data: updatedUser,
       })
     }
   } catch (err) {

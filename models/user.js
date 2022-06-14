@@ -23,7 +23,6 @@ const userSchema = new Schema(
     },
     phone: {
       type: String,
-      required: true,
     },
     email: {
       type: String,
@@ -32,7 +31,6 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
     },
     selectedCompany: {
       type: Schema.Types.ObjectID,

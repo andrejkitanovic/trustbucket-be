@@ -295,7 +295,7 @@ module.exports = ({ id, firstName }) => `<!DOCTYPE html>
                                           "
                                         >
                                           <a
-                                            href="https://admin.trustbucket.io/confirm-email?id=${id}"
+                                            href="https://admin.trustbucket.io/auth/welcome/${id}"
                                             style="
                                               color: #00a4bd;
                                               font-size: 16px;
@@ -307,7 +307,7 @@ module.exports = ({ id, firstName }) => `<!DOCTYPE html>
                                               display: block;
                                             "
                                             target="_blank"
-                                            data-saferedirecturl="https://admin.trustbucket.io/confirm-email?id=${id}"
+                                            data-saferedirecturl="https://admin.trustbucket.io/auth/welcome/${id}"
                                           >
                                             <strong
                                               style="

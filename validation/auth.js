@@ -1,7 +1,7 @@
 const { body } = require('express-validator')
 const validation = require('../helpers/validation')
 const User = require('../models/user')
-const Company = require('../models/company')
+// const Company = require('../models/company')
 
 exports.updateEmail = [
   body('newEmail', 'email is required')
@@ -83,11 +83,6 @@ exports.resetPassword = [
 exports.register = [
   body('firstName', 'first name is required').notEmpty(),
   body('lastName', 'last name is required').notEmpty(),
-  body('password', 'password is required')
-    .notEmpty()
-    .isLength({ min: 3 })
-    .withMessage('password must be longer then 3 characters'),
-  body('companyName', 'company name is required').notEmpty(),
   body('email', 'email is required')
     .notEmpty()
     .isEmail()
@@ -102,22 +97,6 @@ exports.register = [
 
       return true
     }),
-  body('phone', 'phone is required').notEmpty(),
-  body('slug', 'slug is required')
-    .notEmpty()
-    .custom(async (value) => {
-      const slugExists = await Company.findOne({ slug: value })
-
-      if (slugExists) {
-        throw new Error('slug is in use')
-      }
-
-      return true
-    }),
-  body('websiteURL', 'website URL is required')
-    .notEmpty()
-    .isURL()
-    .withMessage('website URL is not valid'),
   validation,
 ]
 

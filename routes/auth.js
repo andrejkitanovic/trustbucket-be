@@ -65,6 +65,20 @@ router.post(
     controller: authController.register,
   })
 )
+router.get(
+  ...defineRoute({
+    route: '/welcome/:id',
+    // validator: authValidation.register,
+    controller: authController.getWelcome,
+  })
+)
+router.post(
+  ...defineRoute({
+    route: '/welcome',
+    // validator: authValidation.register,
+    controller: authController.postWelcome,
+  })
+)
 router.post(
   ...defineRoute({
     route: '/confirm-email',
