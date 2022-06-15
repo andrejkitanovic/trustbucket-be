@@ -6,6 +6,7 @@ const campaignEmail = require('./emailTemplates/campaignEmail')
 const confirmEmail = require('./emailTemplates/confirmEmail')
 const forgotPassword = require('./emailTemplates/forgotPassword')
 const reviewEmail = require('./emailTemplates/reviewEmail')
+const welcomeEmail = require('./emailTemplates/welcomeEmail')
 
 const From = {
   Email: 'no-reply@trustbucket.io',
@@ -116,6 +117,33 @@ exports.sendEmail = async (
       })
 
     console.log(result)
+    return result.Data
+  } catch (err) {
+    console.log(err)
+    return 'Error while sending!'
+  }
+}
+
+exports.welcomeEmail = async (user) => {
+  try {
+    const { body: result } = await mailjet
+      .post('send', { version: 'v3.1' })
+      .request({
+        Messages: [
+          {
+            From,
+            To: [
+              {
+                Email: user.email,
+                Name: `${user.firstName} ${user.lastName}`,
+              },
+            ],
+            Subject: 'Welcome to Trustbucket',
+            HTMLPart: welcomeEmail(user),
+          },
+        ],
+      })
+
     return result.Data
   } catch (err) {
     console.log(err)

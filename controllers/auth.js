@@ -5,7 +5,7 @@ const stripe = require('../utils/stripe')
 const User = require('../models/user')
 const Company = require('../models/company')
 const InvitationSettings = require('../models/invitationSettings')
-const { confirmEmail, forgotPassword } = require('../utils/mailer')
+const { confirmEmail, welcomeEmail, forgotPassword } = require('../utils/mailer')
 
 function slugify(text) {
   return (
@@ -365,9 +365,13 @@ exports.postWelcome = async (req, res, next) => {
       }
     )
 
-    // await welcomeEmail({
-    //   email: userObject.email,
-    // })
+    await welcomeEmail({
+      id: userObject._id,
+      firstName: userObject.firstName,
+      lastName: userObject.lastName,
+      email: userObject.email,
+    })
+
     await updatedUser.populate('selectedCompany')
     await updatedUser.populate('companies', '_id name')
     if (companyCreated) {

@@ -1,12 +1,12 @@
-module.exports = ({ content, button }) => `<!DOCTYPE html>
+module.exports = () => `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trustbucket Campaign</title>
+    <title>Trustbucket | Email Confirmation</title>
   </head>
-  <body style="background: #fff">
+  <body style="background: #ffffff">
     <table
       role="presentation"
       cellpadding="0"
@@ -43,98 +43,6 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
             >
               <div>
                 <div
-                  id="m_-5072298247928332435section-0"
-                  class="m_-5072298247928332435hse-section"
-                  style="
-                    padding-left: 10px;
-                    padding-right: 10px;
-                    padding-top: 20px;
-                  "
-                >
-                  <div
-                    class="m_-5072298247928332435hse-column-container"
-                    style="
-                      min-width: 280px;
-                      max-width: 600px;
-                      width: 100%;
-                      margin-left: auto;
-                      margin-right: auto;
-                      border-collapse: collapse;
-                      border-spacing: 0;
-                      background-color: #ffffff;
-                      padding-bottom: 20px;
-                      padding-top: 20px;
-                    "
-                    bgcolor="#ffffff"
-                  >
-                    <div
-                      id="m_-5072298247928332435column-0-0"
-                      class="m_-5072298247928332435hse-column m_-5072298247928332435hse-size-12"
-                    >
-                      <div
-                        id="m_-5072298247928332435hs_cos_wrapper_module-0-0-0"
-                        style="
-                          color: inherit;
-                          font-size: inherit;
-                          line-height: inherit;
-                        "
-                      >
-                        <table
-                          role="presentation"
-                          width="100%"
-                          cellpadding="0"
-                          cellspacing="0"
-                          style="
-                            border-spacing: 0 !important;
-                            border-collapse: collapse;
-                          "
-                        >
-                          <tbody>
-                            <tr>
-                              <td
-                                align="left"
-                                valign="top"
-                                style="
-                                  border-collapse: collapse;
-                                  font-family: Arial, sans-serif;
-                                  font-weight: 400;
-                                  font-size: 12px;
-                                  line-height: 15px;
-                                  padding: 0 20px;
-                                "
-                              >
-                                <a
-                                  style="
-                                    padding: 10px 0 4px;
-                                    border-top: 1px solid #d6dae4;
-                                    border-bottom: 1px solid #d6dae4;
-                                    color: #99adc1;
-                                    text-decoration: none;
-                                    width: 100%;
-                                    display: block;
-                                  "
-                                  target="_blank"
-                                  href="https://trustbucket.io/"
-                                  data-saferedirecturl="https://trustbucket.io/"
-                                >
-                                  Powered by
-                                  <img
-                                    alt="Group 43"
-                                    src="https://trustbucket.io/wp-content/uploads/2022/05/Group-58.png"
-                                    style="margin-bottom: 6px; margin-left: 8px"
-                                    align="middle"
-                                    class="CToWUd"
-                                  />
-                                </a>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div
                   id="m_-5072298247928332435section-1"
                   class="m_-5072298247928332435hse-section"
                   style="padding-left: 10px; padding-right: 10px"
@@ -150,7 +58,7 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                       border-collapse: collapse;
                       border-spacing: 0;
                       background-color: #ffffff;
-                      padding-bottom: 20px;
+                      padding-bottom: 0;
                     "
                     bgcolor="#ffffff"
                   >
@@ -170,6 +78,15 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                       >
                         <tbody>
                           <tr>
+                            <td style="padding: 30px 20px">
+                              <img
+                                alt="Group 43"
+                                src="https://ci6.googleusercontent.com/proxy/zWL8Y1gU7_oMZ58kICNfw1tOIyFr5_8u07vdnJ2Mtlg1BRGE_dcmFzyDuRwg6YymChjmUGQaogK-rSHSONqWJk05rw4pHLeJIaJFks1D9jt2L1U0jvBcERb740JzwJVQ7uGmZWT9_95BxBm2MGpYg7kn0X9oXVC_rORRpcJ-luhl5DO83fk=s0-d-e1-ft#https://hs-6534445.f.hubspotstarter.net/hub/6534445/hubfs/Group%2043.png?width=422&amp;upscale=true&amp;name=Group%2043.png"
+                                style="width: 150px"
+                              />
+                            </td>
+                          </tr>
+                          <tr>
                             <td
                               class="m_-5072298247928332435hs_padded"
                               style="
@@ -178,7 +95,7 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                                 font-size: 15px;
                                 color: #222d38;
                                 word-break: break-word;
-                                padding: 0px 20px 10px;
+                                padding: 10px 20px;
                               "
                             >
                               <div
@@ -197,12 +114,51 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                                     line-height: inherit;
                                   "
                                 >
-                                  <p
-                                    style="line-height: 175%; text-align: left"
+                                  <div
+                                    style="
+                                      font-weight: 400;
+                                      font-size: 15px;
+                                      line-height: 28px;
+                                      color: #222d38;
+                                      text-align: left;
+                                    "
                                     align="left"
                                   >
-                                    ${content}
-                                  </p>
+                                    Hello there! <br /><br />
+                                    I’m Chris, the founder and CEO of
+                                    Trustbucket, and I’m super excited that you
+                                    have joined us!
+                                    <br /><br />
+                                    There are three quick things that the team
+                                    and I wanted to share with you to make sure
+                                    you get the most out of your free Pro trial:
+                                    <br /><br />
+                                    <ol style="padding-left: 20px">
+                                      <li style="margin-bottom: 12px">
+                                        <a
+                                          href="https://admin.trustbucket.io/connect-platforms"
+                                          target="_blank"
+                                          style="color: #2563eb"
+                                          rel="noopener noreferrer"
+                                          >Connect review</a
+                                        >
+                                        sources to auto-sync all your reviews.
+                                      </li>
+                                      <li style="margin-bottom: 12px">
+                                        Generate and customize your review
+                                        widget to stay on brand.
+                                      </li>
+                                      <li style="margin-bottom: 12px">
+                                        Install the provided script on your
+                                        website.
+                                      </li>
+                                    </ol>
+                                    <br />
+                                    If you have any questions or if there’s
+                                    anything you want us to know, just reply to
+                                    this email and someone from our team will
+                                    get back to you.
+                                  </div>
                                 </div>
                               </div>
                             </td>
@@ -212,7 +168,6 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                     </div>
                   </div>
                 </div>
-                ${ button ? `
                 <div
                   id="m_-5072298247928332435section-2"
                   class="m_-5072298247928332435hse-section"
@@ -245,6 +200,7 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                         style="
                           border-spacing: 0 !important;
                           border-collapse: collapse;
+                          max-width: 100%;
                         "
                       >
                         <tbody>
@@ -257,7 +213,7 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                                 font-size: 15px;
                                 color: #222d38;
                                 word-break: break-word;
-                                padding: 10px 20px;
+                                padding: 0 20px;
                               "
                             >
                               <div
@@ -295,33 +251,30 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                                           word-break: break-word;
                                           border-radius: 3px;
                                           background-color: #2563eb;
+                                          width: 100%;
                                         "
-                                      >
-                                        <a
-                                          href="${button.url}"
+                                      ></td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <p
                                           style="
-                                            color: #00a4bd;
-                                            font-size: 16px;
-                                            font-family: Tahoma, sans-serif;
-                                            margin: 0;
-                                            text-transform: none;
-                                            text-decoration: none;
-                                            padding: 16px;
-                                            display: block;
+                                            margin-top: 24px;
+                                            font-weight: 400;
+                                            font-size: 15px;
+                                            line-height: 28px;
+                                            color: #222d38;
+                                            margin-bottom: 0px;
                                           "
-                                          target="_blank"
-                                          data-saferedirecturl="${button.url}"
                                         >
-                                          <strong
-                                            style="
-                                              color: #ffffff;
-                                              font-weight: normal;
-                                              text-decoration: none;
-                                              font-style: normal;
-                                            "
-                                            >${button.text}</strong
-                                          >
-                                        </a>
+                                          Cheers,
+                                          <br />
+                                          <img
+                                            src="http://trustbucket.io/wp-content/uploads/2022/05/Confirm-your-email-a.png"
+                                            alt="Christian Jebrail"
+                                            style="margin-top: 15px"
+                                          />
+                                        </p>
                                       </td>
                                     </tr>
                                   </tbody>
@@ -334,27 +287,40 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                     </div>
                   </div>
                 </div>
-                ` : '' }
                 <div
                   style="
-                    text-align: left;
                     padding-bottom: 20px;
-                    padding-top: 10px;
-                    margin: 0 40px;
-                    border-top: 1px solid #99adc1;
+                    padding-top: 20px;
+                    margin: 0 35px;
+                    border-top: 1px solid #d6dae4;
                   "
                 >
-                  <p style="font-size: 13px; line-height: 32px; color: #99adc1">
-                    Note: If you want to stop receiving review invitation
-                    emails, please click
-                    <a
-                      style="color: #99adc1"
-                      href="[[UNSUB_LINK]]"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      >unsubscribe.</a
-                    >
-                  </p>
+                  <table style="width: 100%">
+                    <tbody>
+                      <tr>
+                        <td
+                          style="
+                            font-size: 13px;
+                            line-height: 24px;
+                            color: #99adc1;
+                          "
+                        >
+                          You are getting this email because you created an
+                          account on Trustbucket.
+                          <a
+                            style="
+                              font-size: 13px;
+                              line-height: 24px;
+                              text-decoration: underline;
+                              color: #99adc1;
+                            "
+                            href="#"
+                            >Unsubscribe</a
+                          >
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
@@ -364,5 +330,4 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
     </table>
   </body>
 </html>
-
     `
