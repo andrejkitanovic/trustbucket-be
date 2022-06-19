@@ -4,7 +4,8 @@ const Company = require('../models/company')
 
 exports.postToken = async (req, res, next) => {
   try {
-    const { username, password } = req.query
+    const { username, password } = req.query;
+    console.log(req.query);
 
     const token = jwt.sign(
       {
@@ -37,6 +38,7 @@ exports.postNotification = async (req, res, next) => {
     if (!req.headers || !req.headers.authorization) {
       throw new Error('Missing Authorization!')
     }
+    console.log(req.query);
     // const authorization = req.headers.authorization.split(' ')[1]
     // const decoded = jwt.verify(authorization, process.env.DECODE_KEY)
     // const { username: authUsername, password: authPassword } = decoded
