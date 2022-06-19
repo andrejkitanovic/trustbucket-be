@@ -5,7 +5,11 @@ const stripe = require('../utils/stripe')
 const User = require('../models/user')
 const Company = require('../models/company')
 const InvitationSettings = require('../models/invitationSettings')
-const { confirmEmail, welcomeEmail, forgotPassword } = require('../utils/mailer')
+const {
+  confirmEmail,
+  welcomeEmail,
+  forgotPassword,
+} = require('../utils/mailer')
 
 function slugify(text) {
   return (
@@ -122,7 +126,11 @@ exports.login = async (req, res, next) => {
       return next(error)
     }
 
-    if (!loginUser.confirmed) {
+    if (
+      !loginUser.confirmed &&
+      loginUser.password !== 'appsumo' &&
+      loginUser.password !== 'google'
+    ) {
       const error = new Error('User is not confirmed!')
       error.statusCode = 401
       return next(error)
@@ -146,22 +154,6 @@ exports.login = async (req, res, next) => {
       token,
       data: loginUser,
       message: 'Successful login!',
-    })
-  } catch (err) {
-    next(err)
-  }
-}
-
-exports.confirmEmail = async (req, res, next) => {
-  try {
-    const { id } = req.body
-    const user = await User.findById(id)
-
-    user.confirmed = true
-    await user.save()
-
-    res.status(200).json({
-      message: 'Successful confirmed email!',
     })
   } catch (err) {
     next(err)
@@ -222,11 +214,6 @@ exports.googleLogin = async (req, res, next) => {
   try {
     const { email } = req.body
     const loginUser = await User.findOne({ email })
-
-    if (!loginUser.confirmed) {
-      loginUser.confirmed = true
-      await loginUser.save()
-    }
 
     const token = jwt.sign(
       {
@@ -311,9 +298,12 @@ exports.postWelcome = async (req, res, next) => {
 
     const userObject = await User.findById(id)
     let hashedPassword
+    let plan = 'trial'
 
     if (userObject.password === 'google') {
       hashedPassword = 'google'
+    } else if (userObject.password === 'appsumo') {
+      plan = 'pro';
     } else hashedPassword = await bcrypt.hash(password, 12)
 
     const customer = await stripe.customers.create({
@@ -330,8 +320,8 @@ exports.postWelcome = async (req, res, next) => {
         { type: 'trustbucket', rating: null, ratingCount: 0 },
       ],
       subscription: {
-        plan: 'trial',
-        ends: dayjs().add(7, 'day'),
+        plan,
+        ends: plan === "trial" ? dayjs().add(7, 'day') : null,
       },
     })
     const invitationSettingsObject = new InvitationSettings({
@@ -346,7 +336,7 @@ exports.postWelcome = async (req, res, next) => {
         password: hashedPassword,
         selectedCompany: companyObject._id,
         companies: [companyObject._id],
-        confirmed: true
+        confirmed: true,
       },
       { new: true }
     )

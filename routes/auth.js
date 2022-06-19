@@ -81,13 +81,6 @@ router.post(
 )
 router.post(
   ...defineRoute({
-    route: '/confirm-email',
-    validator: null,
-    controller: authController.confirmEmail,
-  })
-)
-router.post(
-  ...defineRoute({
     route: '/deactivate-account',
     auth,
     validator: null,

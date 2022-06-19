@@ -46,6 +46,10 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    // App sumo stuff
+    availableProCompanies: {
+      type: String,
+    },
   },
   { timestamps: true }
 )

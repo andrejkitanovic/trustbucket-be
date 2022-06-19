@@ -90,6 +90,19 @@ exports.postCompany = async (req, res, next) => {
 
     const profile = await User.findById(id)
 
+    let plan = 'free'
+    if (profile.password === 'appsumo') {
+      if (profile.availableProCompanies === 'unlimited') {
+        plan = 'pro'
+      } else {
+        const userCompanies = await Company.find({ user: profile._id })
+
+        if (userCompanies.length >= parseInt(profile.availableProCompanies)) {
+          plan = 'pro'
+        }
+      }
+    }
+
     const companyObject = new Company({
       user: profile._id,
       name: companyName,
@@ -100,6 +113,9 @@ exports.postCompany = async (req, res, next) => {
         { type: 'overall', rating: null, ratingCount: 0 },
         { type: 'trustbucket', rating: null, ratingCount: 0 },
       ],
+      subscription: {
+        plan,
+      },
     })
 
     const invitationSettingsObject = new InvitationSettings({
