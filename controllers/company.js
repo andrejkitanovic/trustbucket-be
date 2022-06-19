@@ -97,7 +97,7 @@ exports.postCompany = async (req, res, next) => {
       } else {
         const userCompanies = await Company.find({ user: profile._id })
 
-        if (userCompanies.length >= parseInt(profile.availableProCompanies)) {
+        if (userCompanies.length < parseInt(profile.availableProCompanies)) {
           plan = 'pro'
         }
       }
