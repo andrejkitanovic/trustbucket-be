@@ -4,8 +4,8 @@ const Company = require('../models/company')
 
 exports.postToken = async (req, res, next) => {
   try {
-    const { username, password } = req.query;
-    console.log(req.query);
+    const { username, password } = req.query
+    console.log(req.query)
 
     const token = jwt.sign(
       {
@@ -49,6 +49,10 @@ exports.postNotification = async (req, res, next) => {
     console.log('Invoice Item UUID: ', invoice_item_uuid)
 
     if (action === 'activate') {
+      const userExists = await User.findOne({ email: activation_email })
+      if (userExists) {
+        throw new Error('Email in use!')
+      };
       const userObject = new User({
         firstName: 'AppSumo',
         lastName: 'User',
