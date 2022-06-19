@@ -10,7 +10,7 @@ const userSchema = new Schema(
     },
     type: {
       type: String,
-      enum: ['basic', 'admin'],
+      enum: ['basic', 'appsumo', 'admin'],
       default: 'basic',
     },
     firstName: {

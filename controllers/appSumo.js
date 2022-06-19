@@ -52,6 +52,7 @@ exports.postNotification = async (req, res, next) => {
       const userObject = new User({
         firstName: 'AppSumo',
         lastName: 'User',
+        type: 'appsumo',
         email: activation_email,
         password: 'appsumo',
         appsumoId: uuid,
