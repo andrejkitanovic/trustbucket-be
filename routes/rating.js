@@ -18,7 +18,7 @@ const subscribedAuth = require('../helpers/auth').subscribedAuth
 const router = express.Router()
 
 router.get('/', subscribedAuth, ratingsController.getRatings)
-router.get('/stats', subscribedAuth, ratingsController.stats)
+router.get('/stats', auth, ratingsController.stats)
 router.post('/filter', subscribedAuth, ratingsController.filterRatings)
 router.delete('/', subscribedAuth, ratingsController.deleteRating)
 
