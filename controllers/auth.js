@@ -284,7 +284,7 @@ exports.getWelcome = async (req, res, next) => {
     } else if (userObject.password === 'appsumo') {
       type = 'appsumo'
     }
-    
+
     res.status(200).json({
       type,
     })
@@ -295,7 +295,8 @@ exports.getWelcome = async (req, res, next) => {
 
 exports.postWelcome = async (req, res, next) => {
   try {
-    const { id, password, companyName, websiteURL } = req.body
+    const { id, firstName, lastName, password, companyName, websiteURL } =
+      req.body
 
     let slug = slugify(companyName)
 
@@ -341,6 +342,8 @@ exports.postWelcome = async (req, res, next) => {
     const updatedUser = await User.findByIdAndUpdate(
       id,
       {
+        firstName: firstName ? firstName : userObject.firstName,
+        lastName: lastName ? lastName : userObject.lastName,
         password: hashedPassword,
         selectedCompany: companyObject._id,
         companies: [companyObject._id],
