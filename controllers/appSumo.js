@@ -61,7 +61,7 @@ exports.postNotification = async (req, res, next) => {
 
       res.status(201).json({
         message: 'product activated',
-        redirect_url: `https://admin.trustbucket.io/login?a=${userCreated._id}&source=appsumo`,
+        redirect_url: `https://admin.trustbucket.io/auth/welcome-appsumo/${userCreated._id}`,
       })
     } else if (action === 'enhance_tier') {
       await User.findOneAndUpdate(

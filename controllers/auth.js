@@ -277,8 +277,16 @@ exports.getWelcome = async (req, res, next) => {
     const { id } = req.params
     const userObject = await User.findById(id)
 
+    let type = 'normal'
+
+    if (userObject.password === 'google') {
+      type = 'google'
+    } else if (userObject.password === 'appsumo') {
+      type = 'appsumo'
+    }
+    
     res.status(200).json({
-      google: userObject.password === 'google',
+      type,
     })
   } catch (err) {
     next(err)
@@ -303,7 +311,7 @@ exports.postWelcome = async (req, res, next) => {
     if (userObject.password === 'google') {
       hashedPassword = 'google'
     } else if (userObject.password === 'appsumo') {
-      plan = 'pro';
+      plan = 'pro'
     } else hashedPassword = await bcrypt.hash(password, 12)
 
     const customer = await stripe.customers.create({
@@ -321,7 +329,7 @@ exports.postWelcome = async (req, res, next) => {
       ],
       subscription: {
         plan,
-        ends: plan === "trial" ? dayjs().add(7, 'day') : null,
+        ends: plan === 'trial' ? dayjs().add(7, 'day') : null,
       },
     })
     const invitationSettingsObject = new InvitationSettings({
