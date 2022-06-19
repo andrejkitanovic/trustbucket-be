@@ -313,6 +313,7 @@ exports.postWelcome = async (req, res, next) => {
       hashedPassword = 'google'
     } else if (userObject.password === 'appsumo') {
       plan = 'pro'
+      hashedPassword = await bcrypt.hash(password, 12)
     } else hashedPassword = await bcrypt.hash(password, 12)
 
     const customer = await stripe.customers.create({
