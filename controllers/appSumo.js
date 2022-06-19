@@ -38,13 +38,12 @@ exports.postNotification = async (req, res, next) => {
     if (!req.headers || !req.headers.authorization) {
       throw new Error('Missing Authorization!')
     }
-    console.log(req);
     // const authorization = req.headers.authorization.split(' ')[1]
     // const decoded = jwt.verify(authorization, process.env.DECODE_KEY)
     // const { username: authUsername, password: authPassword } = decoded
 
     const { action, plan_id, uuid, activation_email, invoice_item_uuid } =
-      req.query
+      req.body
     const availableProCompanies = proCompanies[plan_id]
     console.log('UUID: ', uuid)
     console.log('Invoice Item UUID: ', invoice_item_uuid)
