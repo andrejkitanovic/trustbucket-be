@@ -76,14 +76,16 @@ schedule.scheduleJob('0 0 0 * * ?', async () => {
     console.log(companies.length + ' company reverted to free plan')
 
     companies.forEach(async (company) => {
-      company.subscription.plan = 'free'
-      company.subscription.nextPlan = 'free'
-      company.subscription.ends = null
+      if (company.subscription.ends !== null) {
+        company.subscription.plan = 'free'
+        company.subscription.nextPlan = 'free'
+        company.subscription.ends = null
 
-      company.billingInfo.interval = null
-      company.billingInfo.nextPlanInterval = null
+        company.billingInfo.interval = null
+        company.billingInfo.nextPlanInterval = null
 
-      await company.save()
+        await company.save()
+      }
     })
   } catch (err) {
     console.log(err)
