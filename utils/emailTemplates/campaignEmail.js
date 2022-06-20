@@ -5,6 +5,11 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Trustbucket Campaign</title>
+    <style>
+      p {
+        margin: 6px 0;
+      }
+    </style>
   </head>
   <body style="background: #fff">
     <table
@@ -119,9 +124,13 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                                 >
                                   Powered by
                                   <img
-                                    alt="Group 43"
-                                    src="https://trustbucket.io/wp-content/uploads/2022/05/Group-58.png"
-                                    style="margin-bottom: 6px; margin-left: 8px"
+                                    alt="Trustbucket"
+                                    src="http://trustbucket.io/wp-content/uploads/2022/06/Group-58-2.png"
+                                    style="
+                                      margin-bottom: 6px;
+                                      margin-left: 8px;
+                                      width: 100px;
+                                    "
                                     align="middle"
                                     class="CToWUd"
                                   />
