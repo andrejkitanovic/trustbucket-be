@@ -7,7 +7,10 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
     <title>Trustbucket Campaign</title>
     <style>
       p {
-        margin: 6px 0;
+        margin: 4px 0;
+      }
+      h2,h3 {
+        margin-bottom: 4px;
       }
     </style>
   </head>
@@ -159,7 +162,7 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                       border-collapse: collapse;
                       border-spacing: 0;
                       background-color: #ffffff;
-                      padding-bottom: 20px;
+                      padding-bottom: 15px;
                     "
                     bgcolor="#ffffff"
                   >
