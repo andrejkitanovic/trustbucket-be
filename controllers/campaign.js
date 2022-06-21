@@ -116,15 +116,33 @@ exports.getCampaignStats = async (req, res, next) => {
   }
 }
 
+const appsumoLimit = {
+  0: 3,
+  3: 500,
+  10: 750,
+  30: 1000,
+  unlimited: 2000,
+}
+
 exports.postCampaign = async (req, res, next) => {
   try {
     const { id, selectedCompany } = req.auth
     const { templateId, reminder, recievers } = req.body
 
-    const emailsSent = await sentThisMonth(selectedCompany) + recievers.length;
-    console.log("Emails count:",emailsSent)
-    if (emailsSent > 3) {
-      throw new Error('Exceeded Limit')
+    const user = await User.findById(id)
+    const company = await Company.findById(selectedCompany)
+
+    let limit = null
+    if (company.subscription.plan === 'free') {
+      limit = 3
+    } else if (user.type === 'appsumo') {
+      limit = appsumoLimit[user.availableProCompanies]
+    }
+
+    const emailsSent = (await sentThisMonth(selectedCompany)) + recievers.length
+    console.log('Emails count:', emailsSent)
+    if (limit && emailsSent > limit) {
+      throw new Error(`Exceeded Limit of ${limit} emails per month`)
     }
 
     const campaignObject = new Campaign({
@@ -134,8 +152,6 @@ exports.postCampaign = async (req, res, next) => {
     })
 
     let template
-    const company = await Company.findById(selectedCompany)
-    const user = await User.findById(id)
 
     if (templateId.includes('default')) {
       template = defaultEmailTemplates(company.name, company.slug).find(
