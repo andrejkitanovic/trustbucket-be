@@ -121,8 +121,9 @@ exports.postCampaign = async (req, res, next) => {
     const { id, selectedCompany } = req.auth
     const { templateId, reminder, recievers } = req.body
 
-    const sentThisMonth = await sentThisMonth(selectedCompany) + recievers.length;
-    if (sentThisMonth > 3) {
+    const emailsSent = await sentThisMonth(selectedCompany) + recievers.length;
+    console.log("Emails count:",emailsSent)
+    if (emailsSent > 3) {
       throw new Error('Exceeded Limit')
     }
 
