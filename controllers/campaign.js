@@ -5,6 +5,23 @@ const Campaign = require('../models/campaign')
 const Company = require('../models/company')
 const User = require('../models/user')
 const InvitationSettings = require('../models/invitationSettings')
+const dayjs = require('dayjs')
+
+const sentThisMonth = async (selectedCompany) => {
+  const allCampaignsOverview = await getCampaignOverview()
+
+  const campaigns = await Campaign.find({ company: selectedCompany })
+  const campaignsId = campaigns.map((campaign) => campaign._id.toString())
+
+  const result = allCampaignsOverview.filter((campaign) => {
+    const date = dayjs.unix(campaign.SendTimeStart)
+    const isThisMonth = dayjs().isSame(date, 'month')
+
+    return isThisMonth && campaignsId.includes(campaign.Title)
+  })
+
+  return result.reduce((sum, single) => sum + single.DeliveredCount, 0)
+}
 
 exports.getCampaigns = async (req, res, next) => {
   try {
@@ -102,8 +119,12 @@ exports.getCampaignStats = async (req, res, next) => {
 exports.postCampaign = async (req, res, next) => {
   try {
     const { id, selectedCompany } = req.auth
-
     const { templateId, reminder, recievers } = req.body
+
+    const sentThisMonth = await sentThisMonth(selectedCompany) + recievers.length;
+    if (sentThisMonth > 3) {
+      throw new Error('Exceeded Limit')
+    }
 
     const campaignObject = new Campaign({
       company: selectedCompany,
