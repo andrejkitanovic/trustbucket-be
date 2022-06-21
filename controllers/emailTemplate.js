@@ -5,14 +5,14 @@ const defaultEmailTemplates = (companyName, slug) => [
   {
     _id: 'default-trustbucket-review',
     content: `<h3>Hi {firstName}</h3>
-    <p> </p>
+    <p style="height: 15px;"></p>
     <p>How was your experience with us at {companyName}?</p>
-    <p> </p>
+    <p style="height: 15px;"></p>
     <p>We truly appreciate every customer's opinion and would love to hear all about your experience.</p>
-    <p> </p>
+    <p style="height: 15px;"></p>
     <p>Thank you,</p>
     <p>{firstNameofUser} at {companyName}</p>
-    <p> </p>
+    <p style="height: 15px;"></p>
     <p>{review_link: Click here to submit your review}</p>`,
     linkUrl: `https://reviews.trustbucket.io/write-review/${slug}?campaignId={campaignId}&name={firstName}%20{lastName}&email={email}`,
     name: 'Review us on Trustbucket',
