@@ -50,6 +50,9 @@ const userSchema = new Schema(
     availableProCompanies: {
       type: String,
     },
+    invoceItemUUID: {
+      type: String
+    }
   },
   { timestamps: true }
 )
