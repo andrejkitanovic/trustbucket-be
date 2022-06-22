@@ -287,6 +287,7 @@ exports.getWelcome = async (req, res, next) => {
 
     res.status(200).json({
       type,
+      email: userObject.email
     })
   } catch (err) {
     next(err)
