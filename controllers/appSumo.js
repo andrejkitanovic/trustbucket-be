@@ -52,7 +52,7 @@ exports.postNotification = async (req, res, next) => {
       const userExists = await User.findOne({ email: activation_email })
       if (userExists) {
         throw new Error('Email in use!')
-      };
+      }
       const userObject = new User({
         firstName: 'AppSumo',
         lastName: 'User',
@@ -133,12 +133,15 @@ exports.postNotification = async (req, res, next) => {
       )
 
       const userObject = await User.findOne({ email: activation_email })
-      const userCompanies = await Company.find({ user: userObject._id })
 
-      userCompanies.forEach(async (company) => {
-        company.subscription.plan = 'free'
-        await company.save()
-      })
+      if (userObject) {
+        const userCompanies = await Company.find({ user: userObject._id })
+
+        userCompanies.forEach(async (company) => {
+          company.subscription.plan = 'free'
+          await company.save()
+        })
+      }
 
       res.status(200).json({
         message: 'product refunded',
