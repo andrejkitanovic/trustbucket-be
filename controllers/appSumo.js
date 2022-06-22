@@ -61,7 +61,7 @@ exports.postNotification = async (req, res, next) => {
         password: 'appsumo',
         appsumoId: uuid,
         availableProCompanies,
-        invoceItemUUID: invoice_item_uuid,
+        invioceItemUUID: invoice_item_uuid,
       })
       const userCreated = await userObject.save()
 
@@ -74,7 +74,7 @@ exports.postNotification = async (req, res, next) => {
         { email: activation_email },
         {
           availableProCompanies,
-          invoceItemUUID: invoice_item_uuid,
+          invioceItemUUID: invoice_item_uuid,
         }
       )
 
@@ -109,7 +109,7 @@ exports.postNotification = async (req, res, next) => {
         { email: activation_email },
         {
           availableProCompanies,
-          invoceItemUUID: invoice_item_uuid,
+          invioceItemUUID: invoice_item_uuid,
         }
       )
 
@@ -132,7 +132,7 @@ exports.postNotification = async (req, res, next) => {
         { email: activation_email },
         {
           availableProCompanies: '0',
-          invoceItemUUID: invoice_item_uuid,
+          invioceItemUUID: invoice_item_uuid,
         }
       )
 

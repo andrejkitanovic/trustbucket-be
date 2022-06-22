@@ -50,7 +50,7 @@ const userSchema = new Schema(
     availableProCompanies: {
       type: String,
     },
-    invoceItemUUID: {
+    invioceItemUUID: {
       type: String
     }
   },
