@@ -8,7 +8,7 @@ exports.postTrustbucketReviews = [
   body('email', 'email is required')
     .notEmpty()
     .isEmail()
-    .normalizeEmail()
+    // .normalizeEmail()
     .withMessage('email is not valid')
     .custom(async (value, { req }) => {
       const { slug } = req.body

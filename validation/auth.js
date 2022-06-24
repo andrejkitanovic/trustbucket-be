@@ -7,7 +7,7 @@ exports.updateEmail = [
   body('newEmail', 'email is required')
     .notEmpty()
     .isEmail()
-    .normalizeEmail()
+    // .normalizeEmail()
     .withMessage('email is not valid')
     .custom(async (value) => {
       const userExists = await User.findOne({ email: value })
@@ -44,7 +44,7 @@ exports.login = [
   body('email', 'email is required')
     .notEmpty()
     .isEmail()
-    .normalizeEmail()
+    // .normalizeEmail()
     .withMessage('email is not valid')
     .custom(async (value) => {
       const user = await User.findOne({ email: value })
@@ -69,7 +69,7 @@ exports.forgotPassword = [
   body('email', 'email is required')
     .notEmpty()
     .isEmail()
-    .normalizeEmail()
+    // .normalizeEmail()
     .withMessage('email is not valid'),
   validation,
 ]
@@ -86,7 +86,7 @@ exports.register = [
   body('email', 'email is required')
     .notEmpty()
     .isEmail()
-    .normalizeEmail()
+    // .normalizeEmail()
     .withMessage('email is not valid')
     .custom(async (value) => {
       const userExists = await User.findOne({ email: value })
@@ -104,7 +104,7 @@ exports.googleLogin = [
   body('email', 'email is required')
     .notEmpty()
     .isEmail()
-    .normalizeEmail()
+    // .normalizeEmail()
     .withMessage('email is not valid')
     .custom(async (value) => {
       const user = await User.findOne({ email: value })
