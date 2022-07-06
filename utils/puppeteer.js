@@ -549,76 +549,6 @@ const getBookingReviews = async ({ page, url, selectedCompany }) => {
   }
 }
 
-exports.getG2Reviews = async ({ page, url, selectedCompany }) => {
-  try {
-    await page.waitForNetworkIdle()
-
-    const items = []
-    let result = await page.content()
-
-    const loadReviews = async (items, result) => {
-      const $ = cheerio.load(result)
-
-      await $('div[itemprop=review]').map((index, el) => {
-        const $el = cheerio.load(el)
-
-        const date = $el('meta[itemprop=datePublished]').attr('content')
-
-        $el.prototype.exists = function (selector) {
-          return this.find(selector).length > 0
-        }
-
-        const starsClasses = $el('.stars').attr('class').split(' ')
-        const stars =
-          Number(starsClasses[starsClasses.length - 1].split('-')[1]) / 2
-
-        const object = {
-          company: selectedCompany,
-          type: 'g2',
-          url,
-          name: $el('[itemprop=author]').text().trim(),
-          rating: stars,
-          title: $el('[itemprop=name]').text().trim(),
-          description: $el('[itemprop=reviewBody]').text().trim(),
-          date: dayjs(date, 'YYYY-MM-DD'),
-        }
-
-        if ($el(el).exists('img.avatar__user-image')) {
-          object.image = $el('img.avatar__user-image').attr('src')
-        }
-
-        items.push(object)
-      })
-    }
-
-    await loadReviews(items, result)
-
-    // const loadMore = async () => {
-    //   console.log('load more');
-    //   await page.click('[data-event-options*=next]')
-    //   await page.waitForNetworkIdle()
-
-    //   result = await page.content()
-    //   await loadReviews(items, result)
-
-    //   // const button = await page.$('[data-event-options*=next]')
-    //   // if (button) {
-    //   //   await loadMore()
-    //   // }
-    // }
-
-    // const button = await page.$('[data-event-options*=next]')
-    // if (button) {
-    //   await loadMore()
-    // }
-
-    return items
-  } catch (err) {
-    console.log(err)
-    return []
-  }
-}
-
 // const getAirbnbReviews = async ({ page, url, selectedCompany }) => {
 // 	try {
 // 		await page.waitForNetworkIdle();
@@ -770,13 +700,6 @@ exports.getCluster = async () => {
           selectedCompany,
         })
         break
-      // case 'g2':
-      //   items = await getG2Reviews({
-      //     page,
-      //     url,
-      //     selectedCompany,
-      //   })
-      //   break
       // case 'airbnb':
       // 	items = await getAirbnbReviews({
       // 		page,

@@ -19,7 +19,6 @@ const ratingSchema = new Schema({
       'bokadirekt',
       'hitta',
       'trustpilot',
-      'g2'
     ],
     default: 'trustbucket',
   },

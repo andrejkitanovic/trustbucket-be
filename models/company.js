@@ -100,7 +100,6 @@ const companySchema = new Schema(
             'bokadirekt',
             'trustpilot',
             'hitta',
-            'g2'
           ],
           default: 'overall',
         },
