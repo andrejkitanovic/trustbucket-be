@@ -6,7 +6,7 @@ const auth = require('../helpers/auth').auth
 const router = express.Router()
 
 router.get('/', auth, campaignController.getCampaigns)
-router.get('/:id', auth, campaignController.getSingleCampaign)
+router.get('/recievers', auth, campaignController.getCampaignsRecievers)
 router.get('/stats', auth, campaignController.getCampaignStats)
 router.get(
   '/invitations-delivered',

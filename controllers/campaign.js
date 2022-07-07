@@ -45,21 +45,33 @@ exports.getCampaigns = async (req, res, next) => {
   }
 }
 
-exports.getSingleCampaign = async (req, res, next) => {
+const removeDuplicatesBy = (keyFn, array) => {
+  var mySet = new Set()
+  return array.filter(function (x) {
+    var key = keyFn(x),
+      isNew = !mySet.has(key)
+    if (isNew) mySet.add(key)
+    return isNew
+  })
+}
+exports.getCampaignsRecievers = async (req, res, next) => {
   try {
     const { selectedCompany } = req.auth
-    const { id } = req.params
 
-    const campaign = await Campaign.findOne({
-      _id: id,
-      company: selectedCompany,
-    })
+    const campaigns = await Campaign.find({ company: selectedCompany })
 
-    const recievers = await getRecieversStatstics(campaign.recievers)
+    const listOfRecieversRaw = campaigns
+      .map((campaign) => campaign.recievers)
+      .flat()
+    const listOfRecievers = removeDuplicatesBy(
+      (reciever) => reciever.email,
+      listOfRecieversRaw.filter((reciever) => Boolean(reciever.email))
+    )
+
+    const recievers = await getRecieversStatstics(listOfRecievers)
 
     res.status(200).json({
-      data: campaign,
-      recievers,
+      data: recievers,
     })
   } catch (err) {
     next(err)
