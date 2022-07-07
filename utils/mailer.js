@@ -56,14 +56,9 @@ exports.getRecieversStatstics = async (recievers) => {
       firstName: reciever.firstName,
       lastName: reciever.lastName,
       email: reciever.email,
-      openedCount: findContact?.openedCount ?? 0,
-      bouncedCount: findContact?.bouncedCount ?? 0,
-      hardBouncedCount: findContact?.hardBouncedCount ?? 0,
-      clickedCount: findContact?.clickedCount ?? 0,
-      lastActivity: findContact?.lastActivity ?? null,
+      ...findContact,
     }
   })
-  console.log(result)
 
   return result
 }
