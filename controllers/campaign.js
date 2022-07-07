@@ -1,4 +1,8 @@
-const { sendEmail, getCampaignOverview } = require('../utils/mailer')
+const {
+  sendEmail,
+  getCampaignOverview,
+  getRecieversStatstics,
+} = require('../utils/mailer')
 const { defaultEmailTemplates } = require('./emailTemplate')
 const EmailTemplate = require('../models/emailTemplate')
 const Campaign = require('../models/campaign')
@@ -35,6 +39,27 @@ exports.getCampaigns = async (req, res, next) => {
     res.status(200).json({
       total: count,
       data: campaigns,
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
+exports.getSingleCampaign = async (req, res, next) => {
+  try {
+    const { selectedCompany } = req.auth
+    const { id } = req.params
+
+    const campaign = await Campaign.findOne({
+      _id: id,
+      company: selectedCompany,
+    })
+
+    const recievers = await getRecieversStatstics(campaign.recievers)
+
+    res.status(200).json({
+      data: campaign,
+      recievers,
     })
   } catch (err) {
     next(err)

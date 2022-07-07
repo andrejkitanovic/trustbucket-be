@@ -19,6 +19,50 @@ exports.getCampaignOverview = async () => {
   return result.Data
 }
 
+exports.getRecieversStatstics = async (recievers) => {
+  const { body: contactData } = await mailjet.get('contact').request()
+
+  const { body: statisticData } = await mailjet
+    .get('contactstatistics')
+    .request()
+
+  const contacts = {}
+  contactData.Data.forEach(
+    (contact) =>
+      (contacts[contact.ID] = {
+        email: contact.Email,
+      })
+  )
+  statisticData.Data.forEach(
+    (statistic) =>
+      (contacts[statistic.ContactID] = {
+        ...contacts[statistic.ContactID],
+        openedCount: statistic.OpenedCount,
+        bouncedCount: statistic.BouncedCount,
+        hardBouncedCount: statistic.HardBouncedCount,
+        clickedCount: statistic.ClickedCount,
+        lastActivity: statistic.LastActivityAt,
+      })
+  )
+
+  const contactsArray = Object.values(contacts)
+
+  const result = recievers.map((reciever) => {
+    const findContact = contactsArray.find(
+      (contact) => contact.email === reciever.email
+    )
+
+    return {
+      firstName: reciever.firstName,
+      lastName: reciever.lastName,
+      ...findContact,
+    }
+  })
+  console.log(result)
+
+  return result
+}
+
 exports.sendEmail = async (
   template,
   recievers,
