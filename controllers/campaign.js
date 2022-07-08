@@ -8,6 +8,7 @@ const EmailTemplate = require('../models/emailTemplate')
 const Campaign = require('../models/campaign')
 const Company = require('../models/company')
 const User = require('../models/user')
+const Rating = require('../models/rating')
 const InvitationSettings = require('../models/invitationSettings')
 const dayjs = require('dayjs')
 
@@ -68,7 +69,12 @@ exports.getCampaignsRecievers = async (req, res, next) => {
       listOfRecieversRaw.filter((reciever) => Boolean(reciever.email))
     )
 
-    const recievers = await getRecieversStatstics(listOfRecievers)
+    const listOfSubscribed = await Rating.find({
+      company: selectedCompany,
+      type: 'trustbucket',
+    }).select('email')
+
+    const recievers = await getRecieversStatstics(listOfRecievers, listOfSubscribed)
 
     res.status(200).json({
       data: recievers,

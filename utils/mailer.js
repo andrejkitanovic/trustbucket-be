@@ -19,7 +19,7 @@ exports.getCampaignOverview = async () => {
   return result.Data
 }
 
-exports.getRecieversStatstics = async (recievers) => {
+exports.getRecieversStatstics = async (recievers, subscribed) => {
   const { body: contactData } = await mailjet.get('contact').request()
 
   const { body: statisticData } = await mailjet
@@ -52,11 +52,26 @@ exports.getRecieversStatstics = async (recievers) => {
       (contact) => contact.email === reciever.email
     )
 
+    let status = 'pending'
+
+    if (subscribed.some((user) => user.email === reciever.email)) {
+      status = 'responded'
+    } else if (findContact && findContact.hardBouncedCount) {
+      status = 'hard-bounced'
+    } else if (findContact && findContact.bouncedCount) {
+      status = 'bounced'
+    } else if (findContact && findContact.openedCount) {
+      status = 'opened'
+    } else if (findContact) {
+      status = 'delivered'
+    }
+
     return {
       firstName: reciever.firstName,
       lastName: reciever.lastName,
       email: reciever.email,
-      ...findContact,
+      status,
+      lastActivity: findContact && findContact.lastActivity
     }
   })
 
