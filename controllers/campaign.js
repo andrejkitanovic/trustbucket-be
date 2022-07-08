@@ -74,7 +74,10 @@ exports.getCampaignsRecievers = async (req, res, next) => {
       type: 'trustbucket',
     }).select('email')
 
-    const recievers = await getRecieversStatstics(listOfRecievers, listOfSubscribed)
+    const recievers = await getRecieversStatstics(
+      listOfRecievers,
+      listOfSubscribed
+    )
 
     res.status(200).json({
       data: recievers,
@@ -170,7 +173,7 @@ const appsumoLimit = {
 exports.postCampaign = async (req, res, next) => {
   try {
     const { id, selectedCompany } = req.auth
-    const { templateId, reminder, recievers } = req.body
+    const { templateId, reminder, recieversRaw } = req.body
 
     const user = await User.findById(id)
     const company = await Company.findById(selectedCompany)
@@ -182,11 +185,20 @@ exports.postCampaign = async (req, res, next) => {
       limit = appsumoLimit[user.availableProCompanies]
     }
 
-    const emailsSent = (await sentThisMonth(selectedCompany)) + recievers.length
+    const emailsSent =
+      (await sentThisMonth(selectedCompany)) + recieversRaw.length
     console.log('Emails count:', emailsSent)
     if (limit && emailsSent > limit) {
       throw new Error(`Exceeded Limit of ${limit} emails per month`)
     }
+
+    const listOfSubscribed = await Rating.find({
+      company: selectedCompany,
+      type: 'trustbucket',
+    }).select('email')
+    const recievers = recieversRaw.filter((reciever) =>
+      !listOfSubscribed.some((subscriber) => subscriber.email === reciever.email)
+    )
 
     const campaignObject = new Campaign({
       company: selectedCompany,
