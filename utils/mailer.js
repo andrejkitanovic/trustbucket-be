@@ -71,7 +71,7 @@ exports.getRecieversStatstics = async (recievers, subscribed) => {
       lastName: reciever.lastName,
       email: reciever.email,
       status,
-      lastActivity: findContact && findContact.lastActivity
+      lastActivity: findContact && findContact.lastActivity,
     }
   })
 
@@ -169,6 +169,8 @@ exports.sendEmail = async (
               subject,
               content: personalizedContent,
               button,
+              color: invitation.color,
+              logo: invitation.logo,
             }),
             CustomCampaign: campaignId,
           }

@@ -1,4 +1,4 @@
-module.exports = ({ content, button }) => `<!DOCTYPE html>
+module.exports = ({ content, button, color, logo }) => `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -134,7 +134,11 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                                   Powered by
                                   <img
                                     alt="Trustbucket"
-                                    src="http://trustbucket.io/wp-content/uploads/2022/06/Group-58-2.png"
+                                    src="${
+                                      logo
+                                        ? logo
+                                        : 'http://trustbucket.io/wp-content/uploads/2022/06/Group-58-2.png'
+                                    }"
                                     style="
                                       margin-bottom: 6px;
                                       margin-left: 8px;
@@ -230,7 +234,9 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                     </div>
                   </div>
                 </div>
-                ${ button ? `
+                ${
+                  button
+                    ? `
                 <div
                   id="m_-5072298247928332435section-2"
                   class="m_-5072298247928332435hse-section"
@@ -303,7 +309,7 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                                       <td
                                         align="center"
                                         valign="middle"
-                                        bgcolor="#2563EB"
+                                        bgcolor="${color ? color : '#2563EB'}"
                                         role="presentation"
                                         style="
                                           border-collapse: collapse;
@@ -312,7 +318,9 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                                           color: #222d38;
                                           word-break: break-word;
                                           border-radius: 3px;
-                                          background-color: #2563eb;
+                                          background-color: ${
+                                            color ? color : '#2563EB'
+                                          };
                                         "
                                       >
                                         <a
@@ -352,7 +360,9 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                     </div>
                   </div>
                 </div>
-                ` : '' }
+                `
+                    : ''
+                }
                 <div
                   style="
                     text-align: left;
