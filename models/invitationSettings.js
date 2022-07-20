@@ -15,6 +15,12 @@ const invitationSettingsSchema = new Schema({
     type: String,
     required: true,
   },
+  color: {
+    type: String,
+  },
+  logo: {
+    type: String,
+  },
 })
 
 module.exports = mongoose.model('Invitation Setting', invitationSettingsSchema)
