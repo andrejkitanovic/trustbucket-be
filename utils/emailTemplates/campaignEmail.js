@@ -7,10 +7,16 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
     <title>Trustbucket Campaign</title>
     <style>
       p {
-        margin: 4px 0;
+        margin: 0;
+        min-height: 22px;
       }
-      h2,h3 {
-        margin-bottom: 4px;
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        margin-bottom: 0px;
+        min-height: 22px;
       }
     </style>
   </head>
@@ -209,12 +215,12 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                                     line-height: inherit;
                                   "
                                 >
-                                  <p
+                                  <div
                                     style="line-height: 175%; text-align: left"
                                     align="left"
                                   >
                                     ${content}
-                                  </p>
+                                  </div>
                                 </div>
                               </div>
                             </td>
@@ -241,7 +247,7 @@ module.exports = ({ content, button }) => `<!DOCTYPE html>
                       border-collapse: collapse;
                       border-spacing: 0;
                       background-color: #ffffff;
-                      padding-bottom: 20px;
+                      padding-bottom: 15px;
                     "
                     bgcolor="#ffffff"
                   >
