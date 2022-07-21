@@ -211,7 +211,7 @@ module.exports = ({ content, button, color, logo, plan }) => `<!DOCTYPE html>
                                   object-fit: contain;
                                 "
                                   alt="Logo"
-                                  src=${logo}
+                                  src="${logo}"
                                 />
                               </td>
                             </tr>`
