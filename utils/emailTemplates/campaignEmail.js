@@ -15,7 +15,7 @@ module.exports = ({ content, button, color, logo, plan }) => `<!DOCTYPE html>
       h4,
       h5,
       h6 {
-        margin-bottom: 0px;
+        margin: 0px;
         min-height: 22px;
       }
     </style>
