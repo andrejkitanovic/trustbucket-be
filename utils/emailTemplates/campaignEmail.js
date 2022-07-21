@@ -93,7 +93,7 @@ module.exports = ({ content, button, color, logo, plan }) => `<!DOCTYPE html>
                           line-height: inherit;
                         "
                       >
-                        ${plan === 'free' && `<table
+                        ${plan === 'free' ? `<table
                           role="presentation"
                           width="100%"
                           cellpadding="0"
@@ -147,7 +147,7 @@ module.exports = ({ content, button, color, logo, plan }) => `<!DOCTYPE html>
                               </td>
                             </tr>
                           </tbody>
-                        </table>`}
+                        </table>` : null}
                       </div>
                     </div>
                   </div>
