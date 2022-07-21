@@ -93,7 +93,9 @@ module.exports = ({ content, button, color, logo, plan }) => `<!DOCTYPE html>
                           line-height: inherit;
                         "
                       >
-                        ${plan === 'free' ? `<table
+                        ${
+                          plan === 'free'
+                            ? `<table
                           role="presentation"
                           width="100%"
                           cellpadding="0"
@@ -147,7 +149,9 @@ module.exports = ({ content, button, color, logo, plan }) => `<!DOCTYPE html>
                               </td>
                             </tr>
                           </tbody>
-                        </table>` : null}
+                        </table>`
+                            : ''
+                        }
                       </div>
                     </div>
                   </div>
@@ -187,6 +191,32 @@ module.exports = ({ content, button, color, logo, plan }) => `<!DOCTYPE html>
                         "
                       >
                         <tbody>
+                        ${
+                          logo
+                            ? `<tr>
+                              <td
+                                style="
+                                border-collapse: collapse;
+                                font-family: Arial, sans-serif;
+                                font-size: 15px;
+                                color: #222d38;
+                                word-break: break-word;
+                                padding: 0px 20px 30px;
+                              "
+                              >
+                                <img
+                                  style="
+                                  width: 124px;
+                                  height: 32px;
+                                  object-fit: contain;
+                                "
+                                  alt="Logo"
+                                  src=${logo}
+                                />
+                              </td>
+                            </tr>`
+                            : ''
+                        }
                           <tr>
                             <td
                               class="m_-5072298247928332435hs_padded"
