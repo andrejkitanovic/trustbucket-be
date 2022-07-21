@@ -1,4 +1,4 @@
-module.exports = ({ content, button, color, logo }) => `<!DOCTYPE html>
+module.exports = ({ content, button, color, logo, plan }) => `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -93,7 +93,7 @@ module.exports = ({ content, button, color, logo }) => `<!DOCTYPE html>
                           line-height: inherit;
                         "
                       >
-                        <table
+                        ${plan === 'free' && `<table
                           role="presentation"
                           width="100%"
                           cellpadding="0"
@@ -134,11 +134,7 @@ module.exports = ({ content, button, color, logo }) => `<!DOCTYPE html>
                                   Powered by
                                   <img
                                     alt="Trustbucket"
-                                    src="${
-                                      logo
-                                        ? logo
-                                        : 'http://trustbucket.io/wp-content/uploads/2022/06/Group-58-2.png'
-                                    }"
+                                    src="http://trustbucket.io/wp-content/uploads/2022/06/Group-58-2.png"
                                     style="
                                       margin-bottom: 6px;
                                       margin-left: 8px;
@@ -151,7 +147,7 @@ module.exports = ({ content, button, color, logo }) => `<!DOCTYPE html>
                               </td>
                             </tr>
                           </tbody>
-                        </table>
+                        </table>`}
                       </div>
                     </div>
                   </div>

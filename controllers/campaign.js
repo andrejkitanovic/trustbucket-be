@@ -230,7 +230,8 @@ exports.postCampaign = async (req, res, next) => {
       campaign._id,
       invitation,
       company.name,
-      user.firstName
+      user.firstName,
+      company.subscription.plan
     )
 
     res.status(200).json({

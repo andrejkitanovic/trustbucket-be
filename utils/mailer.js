@@ -84,7 +84,8 @@ exports.sendEmail = async (
   campaignId,
   invitation,
   companyName,
-  firstNameofUser
+  firstNameofUser,
+  plan
 ) => {
   try {
     const { subject, content, linkUrl } = template
@@ -171,6 +172,7 @@ exports.sendEmail = async (
               button,
               color: invitation.color,
               logo: invitation.logo,
+              plan
             }),
             CustomCampaign: campaignId,
           }
