@@ -173,7 +173,7 @@ const appsumoLimit = {
 exports.postCampaign = async (req, res, next) => {
   try {
     const { id, selectedCompany } = req.auth
-    const { templateId, reminder, recieversRaw } = req.body
+    const { templateId, reminder, recievers: recieversRaw } = req.body
 
     const user = await User.findById(id)
     const company = await Company.findById(selectedCompany)

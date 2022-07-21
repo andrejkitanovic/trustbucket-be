@@ -17,9 +17,15 @@ exports.updateInvitationSettings = async (req, res, next) => {
   try {
     const { selectedCompany } = req.auth
 
+    let image = null
+    if (req.file && req.file.path) {
+      image = `https://backend.trustbucket.io/${req.file.path}`
+    }
+
     const invitationSettings = await InvitationSettings.findOneAndUpdate(
       { company: selectedCompany },
       {
+        image,
         ...req.body,
       },
       { new: true }
