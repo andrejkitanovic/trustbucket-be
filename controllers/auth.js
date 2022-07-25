@@ -287,7 +287,7 @@ exports.getWelcome = async (req, res, next) => {
 
     res.status(200).json({
       type,
-      email: userObject.email
+      email: userObject.email,
     })
   } catch (err) {
     next(err)
@@ -399,6 +399,44 @@ exports.deactivateAccount = async (req, res, next) => {
 
     res.status(200).json({
       message: 'Successfully deactivated account!',
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
+exports.setPassword = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const { password } = req.body
+
+    const hashedPassword = await bcrypt.hash(password, 12)
+
+    await User.findByIdAndUpdate(id, {
+      password: hashedPassword,
+    })
+
+    const loginUser = await User.findById(id)
+
+    const token = jwt.sign(
+      {
+        id: loginUser._id,
+        type: loginUser.type,
+        selectedCompany: loginUser.selectedCompany,
+      },
+      process.env.DECODE_KEY,
+      {
+        // expiresIn: "1h",
+      }
+    )
+
+    await loginUser.populate('selectedCompany')
+    await loginUser.populate('companies', '_id name')
+
+    res.status(200).json({
+      token,
+      data: loginUser,
+      message: 'Successfully signed up!',
     })
   } catch (err) {
     next(err)

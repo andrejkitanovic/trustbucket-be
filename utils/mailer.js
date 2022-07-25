@@ -7,6 +7,7 @@ const confirmEmail = require('./emailTemplates/confirmEmail')
 const forgotPassword = require('./emailTemplates/forgotPassword')
 const reviewEmail = require('./emailTemplates/reviewEmail')
 const welcomeEmail = require('./emailTemplates/welcomeEmail')
+const inviteEmail = require('./emailTemplates/inviteEmail')
 
 const From = {
   Email: 'no-reply@trustbucket.io',
@@ -172,7 +173,7 @@ exports.sendEmail = async (
               button,
               color: invitation.color,
               logo: invitation.logo,
-              plan
+              plan,
             }),
             CustomCampaign: campaignId,
           }
@@ -285,6 +286,38 @@ exports.confirmReview = async (review) => {
             ],
             Subject: 'Trustbucket Confirmation Email',
             HTMLPart: reviewEmail(review),
+          },
+        ],
+      })
+
+    return result.Data
+  } catch (err) {
+    console.log(err)
+    return 'Error while sending!'
+  }
+}
+
+exports.inviteUserEmail = async (user, adminName, companyName) => {
+  try {
+    const { body: result } = await mailjet
+      .post('send', { version: 'v3.1' })
+      .request({
+        Messages: [
+          {
+            From,
+            To: [
+              {
+                Email: user.email,
+                Name: `${user.firstName} ${user.lastName}`,
+              },
+            ],
+            Subject: 'You are invited to join Trustbucket',
+            HTMLPart: inviteEmail({
+              id: user._id,
+              firstName: user.firstName,
+              FirstNameAdmin: adminName,
+              companyName,
+            }),
           },
         ],
       })

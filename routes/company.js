@@ -30,5 +30,7 @@ router.post(
 )
 router.post('/change-plan', auth, companyController.changePlanSession)
 router.post('/upload-photo', auth, companyController.uploadPhoto)
+router.get('/users', auth, companyController.getCompanyUsers)
+router.post('/invite', auth, companyController.inviteUser)
 
 module.exports = router

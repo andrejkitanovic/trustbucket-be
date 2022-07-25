@@ -5,6 +5,7 @@ const User = require('../models/user')
 const Company = require('../models/company')
 const InvitationSettings = require('../models/invitationSettings')
 const { isAbsoluteURL } = require('../helpers/utils')
+const { inviteUserEmail } = require('../utils/mailer')
 
 const products = {
   monthly: {
@@ -419,6 +420,48 @@ exports.uploadPhoto = async (req, res, next) => {
 
     res.status(200).json({
       message: 'Updated company image',
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
+exports.getCompanyUsers = async (req, res, next) => {
+  try {
+    const { selectedCompany } = req.auth
+
+    const users = await User.find({
+      companies: selectedCompany,
+    })
+
+    res.status(200).json({
+      users,
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
+exports.inviteUser = async (req, res, next) => {
+  try {
+    const { selectedCompany } = req.auth
+
+    const { firstName, lastName, email } = req.body
+
+    const userObject = await User.create({
+      firstName,
+      lastName,
+      email,
+      selectedCompany,
+      companies: [selectedCompany],
+    })
+
+    const company = await Company.findById(selectedCompany).populate('user')
+
+    await inviteUserEmail(userObject, company.user.firstName, company.name)
+
+    res.status(200).json({
+      message: 'User invited',
     })
   } catch (err) {
     next(err)

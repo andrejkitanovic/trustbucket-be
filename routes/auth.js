@@ -87,5 +87,13 @@ router.post(
     controller: authController.deactivateAccount,
   })
 )
+router.post(
+  ...defineRoute({
+    route: '/set-password/:id',
+    auth,
+    validator: null,
+    controller: authController.setPassword,
+  })
+)
 
 module.exports = router
