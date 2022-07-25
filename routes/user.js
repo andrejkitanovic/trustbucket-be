@@ -7,6 +7,6 @@ const router = express.Router()
 router.get('/', auth, userController.getUsers)
 router.post('/filter', auth, userController.filterUsers)
 // Should be auth admin
-router.delete('/', auth, userController.deleteUser)
+router.delete('/:id', auth, userController.deleteUser)
 
 module.exports = router
