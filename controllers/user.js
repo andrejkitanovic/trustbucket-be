@@ -37,17 +37,27 @@ exports.filterUsers = async (req, res, next) => {
   }
 }
 
-// exports.deleteUser = async (req, res, next) => {
-//   try {
-//     const userId = req.query.id;
+exports.deleteUser = async (req, res, next) => {
+  try {
+    const { selectedCompany } = req.auth
+    const { id } = req.params
 
-//     const userDeleted = await User.deleteOne({ _id: userId });
-//     const companies = await Company.find({ user: userId });
+    const user = await User.findById(id)
+    if (user.companies.length === 1) {
+      await User.findByIdAndDelete(id)
+    } else {
+      user.companies.filter(
+        (company) => company._id.toString() !== selectedCompany
+      )
+      user.selectedCompany = user.companies[0]
 
-//     res.status(200).json({
-//       message: 'User successfully deleted!',
-//     });
-//   } catch (err) {
-//     next(err);
-//   }
-// };
+      await user.save()
+    }
+
+    res.status(200).json({
+      message: 'User successfully deleted!',
+    })
+  } catch (err) {
+    next(err)
+  }
+}
