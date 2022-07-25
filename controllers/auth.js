@@ -414,6 +414,7 @@ exports.setPassword = async (req, res, next) => {
 
     await User.findByIdAndUpdate(id, {
       password: hashedPassword,
+      confirmed: true,
     })
 
     const loginUser = await User.findById(id)

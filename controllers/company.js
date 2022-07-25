@@ -428,11 +428,12 @@ exports.uploadPhoto = async (req, res, next) => {
 
 exports.getCompanyUsers = async (req, res, next) => {
   try {
-    const { selectedCompany } = req.auth
+    const { id, selectedCompany } = req.auth
 
-    const users = await User.find({
+    let users = await User.find({
       companies: selectedCompany,
     })
+    users = users.filter((user) => user._id.toString() !== id)
 
     res.status(200).json({
       users,
