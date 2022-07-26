@@ -449,7 +449,7 @@ exports.inviteUser = async (req, res, next) => {
 
     const { firstName, lastName, email } = req.body
 
-    const userExists = await User.find({ email })
+    const userExists = await User.exists({ email })
     if (userExists) {
       throw new Error('User already exists')
     }
