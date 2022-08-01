@@ -92,7 +92,7 @@ exports.postCompany = async (req, res, next) => {
     const profile = await User.findById(id)
 
     let plan = 'free'
-    if (profile.password === 'appsumo') {
+    if (profile.type === 'appsumo') {
       if (profile.availableProCompanies === 'unlimited') {
         plan = 'pro'
       } else {

@@ -314,7 +314,9 @@ module.exports = () => `<!DOCTYPE html>
                               text-decoration: underline;
                               color: #99adc1;
                             "
-                            href="#"
+                            href="[[UNSUB_LINK]]"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             >Unsubscribe</a
                           >
                         </td>
