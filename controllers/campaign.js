@@ -167,7 +167,7 @@ const appsumoLimit = {
   3: 500,
   10: 750,
   30: 1000,
-  unlimited: 2000,
+  unlimited: null,
 }
 
 exports.postCampaign = async (req, res, next) => {
