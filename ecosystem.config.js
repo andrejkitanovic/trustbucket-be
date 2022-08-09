@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'trustbucket',
-      script: './app.js',
+      script: './dist/app.js',
       // max_memory_restart: '980M'
     },
   ],
