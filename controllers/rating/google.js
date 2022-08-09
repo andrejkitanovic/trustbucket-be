@@ -220,10 +220,12 @@ exports.getGoogleLocations = async (req, res, next) => {
         },
       }
     )
-    const { locations } = locationsData;
+    const { locations } = locationsData
 
     if (!locationsData || !locations || locations === {}) {
-      throw new Error('There is no Google Business Profile connected to this email account - please try with another email')
+      throw new Error(
+        'There is no Google Business Profile connected to this email account - please try with another email'
+      )
     }
 
     const parsedLocations = locations.map((location) => ({
@@ -234,7 +236,7 @@ exports.getGoogleLocations = async (req, res, next) => {
       placeId: location.metadata.placeId,
       refreshToken,
       accessToken,
-      googleId
+      googleId,
     }))
 
     res.json(parsedLocations)
@@ -261,7 +263,8 @@ const wordToNumber = (word) => {
 
 exports.saveGoogleReviews = async (req, res, next) => {
   try {
-    const { route, name, url, refreshToken, accessToken, placeId, googleId } = req.body
+    const { route, name, url, refreshToken, accessToken, placeId, googleId } =
+      req.body
     const selectedCompany = req.auth.selectedCompany._id
 
     const { data: reviewsData } = await axios.get(
@@ -287,32 +290,36 @@ exports.saveGoogleReviews = async (req, res, next) => {
 
     const { reviews } = reviewsData
 
-    let items = reviews.map((review) => {
-      let description = review.comment
+    let items = []
 
-      if (description && description.includes('(Original)')) {
-        description = description.split('(Original)')[1]
-      }
+    if (reviews) {
+      items = reviews.map((review) => {
+        let description = review.comment
 
-      let reply
-      if (review.reviewReply && review.reviewReply.comment) {
-        reply = review.reviewReply.comment
-      }
+        if (description && description.includes('(Original)')) {
+          description = description.split('(Original)')[1]
+        }
 
-      return {
-        company: selectedCompany._id,
-        url,
-        image: review.reviewer.profilePhotoUrl,
-        type: 'google',
-        name: review.reviewer.displayName,
-        description,
-        rating: wordToNumber(review.starRating),
-        date: new Date(review.createTime),
-        reply: {
-          text: reply,
-        },
-      }
-    })
+        let reply
+        if (review.reviewReply && review.reviewReply.comment) {
+          reply = review.reviewReply.comment
+        }
+
+        return {
+          company: selectedCompany._id,
+          url,
+          image: review.reviewer.profilePhotoUrl,
+          type: 'google',
+          name: review.reviewer.displayName,
+          description,
+          rating: wordToNumber(review.starRating),
+          date: new Date(review.createTime),
+          reply: {
+            text: reply,
+          },
+        }
+      })
+    }
 
     if (items.length) {
       console.log(`LOADED REVIEWS:${items.length}`)
