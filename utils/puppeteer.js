@@ -312,8 +312,10 @@ const getFreshaReviews = async ({ page, url, selectedCompany }) => {
 
 const getTrustpilotReviews = async ({ page, url, selectedCompany }) => {
   try {
-    if (await page.$('a[name=show-all-reviews]')) {
-      await page.click('a[name=show-all-reviews]')
+    const showAllReviews = await page.$('a[name=show-all-reviews]');
+    if (showAllReviews) {
+      // await page.click('a[name=show-all-reviews]')
+      await showAllReviews.evaluate(b => b.click());
       await page.waitForNetworkIdle()
     }
 
