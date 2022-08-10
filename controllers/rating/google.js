@@ -276,13 +276,19 @@ exports.saveGoogleReviews = async (req, res, next) => {
       }
     )
 
+    let averageRating = 0;
+    let totalReviewCount = 0;
+
+    if(reviewsData.averageRating) averageRating = reviewsData.averageRating;
+    if(reviewsData.totalReviewCount) totalReviewCount = reviewsData.totalReviewCount;
+
     const rating = {
       placeId,
       route,
       type: 'google',
       name: name,
-      rating: reviewsData.averageRating,
-      ratingCount: reviewsData.totalReviewCount,
+      rating: averageRating,
+      ratingCount: totalReviewCount,
       url,
       refreshToken,
     }
