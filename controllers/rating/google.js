@@ -213,7 +213,7 @@ exports.getGoogleLocations = async (req, res, next) => {
     const googleId = await getGoogleIdFromAccesToken(accessToken)
 
     const { data: locationsData } = await axios.get(
-      `https://mybusinessbusinessinformation.googleapis.com/v1/${googleId}/locations?readMask=name,metadata,websiteUri,title`,
+      `https://mybusinessbusinessinformation.googleapis.com/v1/${googleId}/locations?readMask=name,metadata,websiteUri,title&pageSize=20`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
