@@ -19,7 +19,7 @@ exports.searchYelpProfile = async (req, res, next) => {
     if (response.data.businesses && response.data.businesses.length) {
       const business = response.data.businesses[0]
       object = {
-        // placeId: business.id,
+        placeId: business.id,
         title: business.name,
         image: business.image_url,
         rating: business.rating,
