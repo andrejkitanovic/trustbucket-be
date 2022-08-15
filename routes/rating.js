@@ -8,6 +8,7 @@ const bookingRatingController = require('../controllers/rating/booking')
 const trustpilotController = require('../controllers/rating/trustpilot')
 const bokadirektController = require('../controllers/rating/bokadirekt')
 const hittaController = require('../controllers/rating/hitta')
+const yelpController = require('../controllers/rating/yelp')
 
 const trustbucketValidation = require('../validation/rating/trustbucket')
 
@@ -96,5 +97,9 @@ router.post('/hitta', auth, hittaController.saveHittaProfile)
 // AIRBNB - ON HOLD
 // router.get('/airbnb/search', airbnbController.searchAirbnbProfile);
 // router.post('/airbnb', airbnbController.saveAirbnbProfile);
+
+// YELP
+router.post('/yelp/search', auth, yelpController.searchYelpProfile)
+router.post('/yelp', auth, yelpController.saveYelpProfile)
 
 module.exports = router
