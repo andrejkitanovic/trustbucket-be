@@ -284,6 +284,7 @@ exports.saveGoogleReviews = async (req, res, next) => {
 
     const rating = {
       placeId,
+      googleId,
       route,
       type: 'google',
       name: name,
@@ -347,6 +348,7 @@ exports.cronGoogleProfile = async (
   url,
   name,
   placeId,
+  googleId,
   selectedCompany,
   previousRatings
 ) => {
@@ -354,7 +356,7 @@ exports.cronGoogleProfile = async (
     const accessToken = await getAccessTokenFromRefreshToken(refreshToken)
 
     const { data: reviewsData } = await axios.get(
-      `https://mybusiness.googleapis.com/v4/${route}/reviews`,
+      `https://mybusiness.googleapis.com/v4/${googleId}/${route}/reviews`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

@@ -29,13 +29,14 @@ schedule.scheduleJob('0 0 0 * * ?', async () => {
             await cronRecoseProfile(rating.url, id, rating.ratingCount)
             break
           case 'google':
-            if (rating.refreshToken) {
+            if (rating.refreshToken && rating.googleId) {
               await cronGoogleProfile(
                 rating.refreshToken,
                 rating.route,
                 rating.url,
                 rating.name,
                 rating.placeId,
+                rating.googleId,
                 id,
                 rating.ratingCount
               )

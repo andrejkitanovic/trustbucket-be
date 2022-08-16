@@ -87,6 +87,9 @@ const companySchema = new Schema(
         placeId: {
           type: String,
         },
+        googleId: {
+          type: String
+        },
         type: {
           type: String,
           enum: [
