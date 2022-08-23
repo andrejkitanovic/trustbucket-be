@@ -28,7 +28,9 @@ exports.getWidget = async (req, res, next) => {
       params.type = widget.object.reviewSources
     }
 
-    const ratings = await Rating.find({ company: companyId }).limit(10)
+    const ratings = await Rating.find({ company: companyId })
+      .sort([['date', -1]])
+      .limit(10)
 
     res.status(200).json({ widget, ratings })
   } catch (err) {
