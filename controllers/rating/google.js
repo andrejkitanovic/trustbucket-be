@@ -1,7 +1,7 @@
 const axios = require('axios')
 // const utf8 = require('utf8')
 
-// const Company = require('../../models/company')
+const Company = require('../../models/company')
 const Rating = require('../../models/rating')
 // const { addAddress } = require('../company')
 const { updateRatingHandle, deleteRatingHandle } = require('../profile')
@@ -276,11 +276,12 @@ exports.saveGoogleReviews = async (req, res, next) => {
       }
     )
 
-    let averageRating = 0;
-    let totalReviewCount = 0;
+    let averageRating = 0
+    let totalReviewCount = 0
 
-    if(reviewsData.averageRating) averageRating = reviewsData.averageRating;
-    if(reviewsData.totalReviewCount) totalReviewCount = reviewsData.totalReviewCount;
+    if (reviewsData.averageRating) averageRating = reviewsData.averageRating
+    if (reviewsData.totalReviewCount)
+      totalReviewCount = reviewsData.totalReviewCount
 
     const rating = {
       placeId,
@@ -311,10 +312,11 @@ exports.saveGoogleReviews = async (req, res, next) => {
         if (review.reviewReply && review.reviewReply.comment) {
           reply = review.reviewReply.comment
         }
+        console.log(review)
 
         return {
           company: selectedCompany._id,
-          url,
+          url: review.reviewId,
           image: review.reviewer.profilePhotoUrl,
           type: 'google',
           name: review.reviewer.displayName,
@@ -418,5 +420,33 @@ exports.cronGoogleProfile = async (
     } else console.log('Same google reviews as previous')
   } catch (err) {
     console.log(err)
+  }
+}
+
+exports.replyGoogleReview = async (req, res, next) => {
+  try {
+    const { selectedCompany } = req.auth
+    const { reviewId, comment } = req.body
+
+    const ratings = await Company.findById(selectedCompany).select('ratings')
+    const googleRating = ratings.find((rating) => rating.type === 'google')
+
+    const accessToken = await getAccessTokenFromRefreshToken(
+      googleRating.refreshToken
+    )
+
+    await axios.put(
+      `https://mybusiness.googleapis.com/v4/accounts/${googleRating.googleId}/${googleRating.route}/reviews/${reviewId}/reply`,
+      { comment },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+
+    res.json({ message: 'Successfully replied!' })
+  } catch (err) {
+    next(err)
   }
 }

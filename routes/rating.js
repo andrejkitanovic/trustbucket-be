@@ -57,6 +57,7 @@ router.post(
   googleRatingController.getGoogleLocations
 )
 router.post('/google', auth, googleRatingController.saveGoogleReviews)
+router.post('/google/reply', auth, googleRatingController.replyGoogleReview)
 
 // TRUSTPILOT - DONE
 router.post(
