@@ -450,7 +450,7 @@ exports.replyGoogleReview = async (req, res, next) => {
     await Rating.findOneAndUpdate(
       { url: reviewId },
       {
-        reply: comment,
+        reply: { text: comment },
       }
     )
 
