@@ -25,6 +25,7 @@ function slugify(text) {
       .replace(/\-\-+/g, '-')
   ) // Replace multiple - with single -
 }
+exports.slugify = slugify;
 
 exports.getCurrentUser = async (req, res, next) => {
   try {

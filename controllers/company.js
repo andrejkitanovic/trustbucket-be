@@ -6,6 +6,7 @@ const Company = require('../models/company')
 const InvitationSettings = require('../models/invitationSettings')
 const { isAbsoluteURL } = require('../helpers/utils')
 const { inviteUserEmail } = require('../utils/mailer')
+const { slugify } = require('../controllers/auth')
 
 const products = {
   monthly: {
@@ -83,7 +84,14 @@ exports.postCompany = async (req, res, next) => {
   try {
     const { id } = req.auth
 
-    const { companyName, websiteURL, slug } = req.body
+    const { companyName, websiteURL } = req.body
+
+    let slug = slugify(companyName)
+
+    const hasSlug = await Company.findOne({ slug })
+    if (hasSlug) {
+      slug = slug + '-' + Math.floor(1000 + Math.random() * 9000)
+    }
 
     const customer = await stripe.customers.create({
       name: companyName,
@@ -233,9 +241,17 @@ exports.updateCompany = async (req, res, next) => {
   try {
     const { id, selectedCompany } = req.auth
 
+    let slug = slugify(req.body.name)
+
+    const hasSlug = await Company.findOne({ slug })
+    if (hasSlug) {
+      slug = slug + '-' + Math.floor(1000 + Math.random() * 9000)
+    }
+
     const companyUpdated = await Company.findOneAndUpdate(
       { _id: selectedCompany },
       {
+        slug,
         ...req.body,
       },
       { new: true }
