@@ -428,8 +428,8 @@ exports.replyGoogleReview = async (req, res, next) => {
     const { selectedCompany } = req.auth
     const { reviewId, comment } = req.body
 
-    const ratings = await Company.findById(selectedCompany).select('ratings')
-    const googleRating = ratings.find((rating) => rating.type === 'google')
+    const company = await Company.findById(selectedCompany).select('ratings')
+    const googleRating = company.ratings.find((rating) => rating.type === 'google')
 
     const accessToken = await getAccessTokenFromRefreshToken(
       googleRating.refreshToken
