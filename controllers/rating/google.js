@@ -447,9 +447,12 @@ exports.replyGoogleReview = async (req, res, next) => {
       }
     )
 
-    await Rating.find({ url: reviewId }).update({
-      reply: comment,
-    })
+    await Rating.findOneAndUpdate(
+      { url: reviewId },
+      {
+        reply: comment,
+      }
+    )
 
     res.json({ message: 'Successfully replied!' })
   } catch (err) {
@@ -460,7 +463,7 @@ exports.replyGoogleReview = async (req, res, next) => {
 exports.deleteGoogleReview = async (req, res, next) => {
   try {
     const { selectedCompany } = req.auth
-    const { reviewId } = req.body
+    const { reviewId } = req.params
 
     const company = await Company.findById(selectedCompany).select('ratings')
     const googleRating = company.ratings.find(

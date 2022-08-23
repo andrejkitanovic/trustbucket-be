@@ -58,7 +58,7 @@ router.post(
 )
 router.post('/google', auth, googleRatingController.saveGoogleReviews)
 router.post('/google/reply', auth, googleRatingController.replyGoogleReview)
-router.delete('/google/reply', auth, googleRatingController.deleteGoogleReview)
+router.delete('/google/reply/:reviewId', auth, googleRatingController.deleteGoogleReview)
 
 // TRUSTPILOT - DONE
 router.post(
