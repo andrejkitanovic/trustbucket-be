@@ -429,12 +429,13 @@ exports.replyGoogleReview = async (req, res, next) => {
     const { reviewId, comment } = req.body
 
     const company = await Company.findById(selectedCompany).select('ratings')
-    const googleRating = company.ratings.find((rating) => rating.type === 'google')
+    const googleRating = company.ratings.find(
+      (rating) => rating.type === 'google'
+    )
 
     const accessToken = await getAccessTokenFromRefreshToken(
       googleRating.refreshToken
     )
-    console.log(`https://mybusiness.googleapis.com/v4/${googleRating.googleId}/${googleRating.route}/reviews/${reviewId}/reply`)
 
     await axios.put(
       `https://mybusiness.googleapis.com/v4/${googleRating.googleId}/${googleRating.route}/reviews/${reviewId}/reply`,
@@ -446,7 +447,42 @@ exports.replyGoogleReview = async (req, res, next) => {
       }
     )
 
+    await Rating.find({ url: reviewId }).update({
+      reply: comment,
+    })
+
     res.json({ message: 'Successfully replied!' })
+  } catch (err) {
+    next(err)
+  }
+}
+
+exports.deleteGoogleReview = async (req, res, next) => {
+  try {
+    const { selectedCompany } = req.auth
+    const { reviewId } = req.body
+
+    const company = await Company.findById(selectedCompany).select('ratings')
+    const googleRating = company.ratings.find(
+      (rating) => rating.type === 'google'
+    )
+
+    const accessToken = await getAccessTokenFromRefreshToken(
+      googleRating.refreshToken
+    )
+
+    await axios.delete(
+      `https://mybusiness.googleapis.com/v4/${googleRating.googleId}/${googleRating.route}/reviews/${reviewId}/reply`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+
+    await Rating.findOneAndDelete({ url: reviewId })
+
+    res.json({ message: 'Successfully deleted replied!' })
   } catch (err) {
     next(err)
   }
