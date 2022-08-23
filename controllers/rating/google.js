@@ -434,6 +434,7 @@ exports.replyGoogleReview = async (req, res, next) => {
     const accessToken = await getAccessTokenFromRefreshToken(
       googleRating.refreshToken
     )
+    console.log(`https://mybusiness.googleapis.com/v4/${googleRating.googleId}/${googleRating.route}/reviews/${reviewId}/reply`)
 
     await axios.put(
       `https://mybusiness.googleapis.com/v4/${googleRating.googleId}/${googleRating.route}/reviews/${reviewId}/reply`,
