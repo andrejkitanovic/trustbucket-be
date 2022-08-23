@@ -25,7 +25,9 @@ exports.getRecieversStatstics = async (recievers, subscribed) => {
 
   const { body: statisticData } = await mailjet
     .get('contactstatistics')
-    .request()
+    .request({
+      Limit: 1000,
+    })
 
   const contacts = {}
   contactData.Data.forEach(
@@ -72,7 +74,7 @@ exports.getRecieversStatstics = async (recievers, subscribed) => {
       lastName: reciever.lastName,
       email: reciever.email,
       status,
-      lastActivity: findContact && findContact.lastActivity,
+      lastActivity: findContact ? findContact.lastActivity : null,
     }
   })
 
