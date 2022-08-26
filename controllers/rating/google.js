@@ -371,6 +371,7 @@ exports.cronGoogleProfile = async (
 
       const rating = {
         placeId,
+        googleId,
         route,
         type: 'google',
         name: name,
