@@ -13,6 +13,7 @@ const widgetRoutes = require('./widget')
 const webhookRoutes = require('./webhook')
 const feedbackRoutes = require('./feedback')
 const appSumoRoutes = require('./appSumo')
+const announcementRoutes = require('./announcement')
 
 module.exports = (app) => {
   // API routes
@@ -30,4 +31,5 @@ module.exports = (app) => {
   app.use('/api/webhook', webhookRoutes)
   app.use('/api/feedback', feedbackRoutes)
   app.use('/api/app-sumo', appSumoRoutes)
+  app.use('/api/announcement', announcementRoutes)
 }
