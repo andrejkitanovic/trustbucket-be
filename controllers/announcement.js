@@ -19,7 +19,7 @@ exports.getLatestAnnouncement = async (req, res, next) => {
     const announcement = await Announcement.findOne(
       {},
       {},
-      { sort: { created_at: -1 } }
+      { sort: { createdAt: -1 } }
     )
 
     res.status(200).json({
