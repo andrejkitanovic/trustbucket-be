@@ -335,7 +335,7 @@ exports.inviteUserEmail = async (user, adminName, companyName) => {
 
 exports.announcementAllUsersEmail = async (announcement) => {
   try {
-    const users = await User.find({ email: 'nikollanik17@gmail.com' })
+    const users = await User.find()
 
     const chunkSize = 50
     for (let i = 0; i < users.length; i += chunkSize) {
