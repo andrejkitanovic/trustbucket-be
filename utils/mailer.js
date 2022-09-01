@@ -2,12 +2,14 @@ const mailjet = require('node-mailjet').connect(
   process.env.MJ_APIKEY_PUBLIC,
   process.env.MJ_APIKEY_PRIVATE
 )
+const User = require('../models/user')
 const campaignEmail = require('./emailTemplates/campaignEmail')
 const confirmEmail = require('./emailTemplates/confirmEmail')
 const forgotPassword = require('./emailTemplates/forgotPassword')
 const reviewEmail = require('./emailTemplates/reviewEmail')
 const welcomeEmail = require('./emailTemplates/welcomeEmail')
 const inviteEmail = require('./emailTemplates/inviteEmail')
+const announcementEmail = require('./emailTemplates/announcementEmail')
 
 const From = {
   Email: 'no-reply@trustbucket.io',
@@ -325,6 +327,38 @@ exports.inviteUserEmail = async (user, adminName, companyName) => {
       })
 
     return result.Data
+  } catch (err) {
+    console.log(err)
+    return 'Error while sending!'
+  }
+}
+
+exports.announcementAllUsersEmail = async (announcement) => {
+  try {
+    const users = await User.find({ email: 'nikollanik17@gmail.com' })
+
+    const chunkSize = 50
+    for (let i = 0; i < users.length; i += chunkSize) {
+      const chunk = users.slice(i, i + chunkSize)
+
+      await mailjet.post('send', { version: 'v3.1' }).request({
+        Messages: [
+          {
+            From,
+            To: chunk.forEach((user) => ({
+              Email: user.email,
+              Name: `${user.firstName} ${user.lastName}`,
+            })),
+            Subject: 'Trustbucket New Features',
+            HTMLPart: announcementEmail({
+              message: announcement.message,
+            }),
+          },
+        ],
+      })
+    }
+
+    return
   } catch (err) {
     console.log(err)
     return 'Error while sending!'

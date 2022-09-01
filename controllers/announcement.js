@@ -1,3 +1,4 @@
+const { announcementAllUsersEmail } = require('utils/mailer')
 const Announcement = require('../models/announcement')
 
 exports.getAnnouncements = async (req, res, next) => {
@@ -42,6 +43,7 @@ exports.postAnnouncement = async (req, res, next) => {
       ...req.body,
     })
     await announcementObject.save()
+    await announcementAllUsersEmail(announcementObject);
 
     res.status(200).json({
       message: 'Announcement created!',
