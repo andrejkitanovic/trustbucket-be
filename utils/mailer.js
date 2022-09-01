@@ -13,7 +13,7 @@ const announcementEmail = require('./emailTemplates/announcementEmail')
 
 const From = {
   Email: 'no-reply@trustbucket.io',
-  Name: 'Trustbucket IO',
+  Name: 'Trustbucket',
 }
 
 exports.getCampaignOverview = async () => {

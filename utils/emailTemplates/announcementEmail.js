@@ -113,7 +113,7 @@ module.exports = ({ message }) => `<!DOCTYPE html>
                                     max-width: 100%;
                                     font-size: 16px;
                                   "
-                                  width="211"
+                                  width="150"
                                   align="middle"
                                   class="CToWUd"
                                 />
@@ -220,10 +220,11 @@ module.exports = ({ message }) => `<!DOCTYPE html>
                                     <a
                                       style="
                                         font-size: 15px;
-                                        line-height: 18px;
+                                        line-height: 23px;
                                         letter-spacing: 0.03em;
                                         display: block;
                                         color: #2563eb;
+                                        text-decoration: none;
                                       "
                                       href="https://admin.trustbucket.io"
                                     >

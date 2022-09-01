@@ -113,7 +113,7 @@ module.exports = ({ id, name, slug }) => `<!DOCTYPE html>
                                       max-width: 100%;
                                       font-size: 16px;
                                     "
-                                    width="211"
+                                    width="150"
                                     align="middle"
                                     class="CToWUd"
                                   />
