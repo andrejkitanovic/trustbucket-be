@@ -340,6 +340,7 @@ exports.announcementAllUsersEmail = async (announcement) => {
     const chunkSize = 50
     for (let i = 0; i < users.length; i += chunkSize) {
       const chunk = users.slice(i, i + chunkSize)
+      console.log(chunk)
 
       await mailjet.post('send', { version: 'v3.1' }).request({
         Messages: [
