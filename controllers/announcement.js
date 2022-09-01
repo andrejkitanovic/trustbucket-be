@@ -1,4 +1,4 @@
-const { announcementAllUsersEmail } = require('utils/mailer')
+const { announcementAllUsersEmail } = require('../utils/mailer')
 const Announcement = require('../models/announcement')
 
 exports.getAnnouncements = async (req, res, next) => {
