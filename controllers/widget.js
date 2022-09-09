@@ -30,7 +30,7 @@ exports.getWidget = async (req, res, next) => {
 
     const ratings = await Rating.find({ company: companyId })
       .sort([['date', -1]])
-      .limit(10)
+      .limit(50)
 
     res.status(200).json({ widget, ratings })
   } catch (err) {
