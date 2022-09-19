@@ -345,7 +345,7 @@ exports.announcementAllUsersEmail = async (announcement) => {
         Messages: [
           {
             From,
-            To: chunk.map((user) => ({
+            Bcc: chunk.map((user) => ({
               Email: user.email,
               Name: `${user.firstName} ${user.lastName}`,
             })),
