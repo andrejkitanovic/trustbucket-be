@@ -77,7 +77,6 @@ const companySchema = new Schema(
     },
     reviewsPageLanguage: {
       type: String,
-      enum: ['en', 'se'],
       default: 'en',
     },
     ratings: [
