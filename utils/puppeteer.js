@@ -335,7 +335,7 @@ const getTrustpilotReviews = async ({ page, url, selectedCompany }) => {
           company: selectedCompany,
           type: 'trustpilot',
           url,
-          name: $el('div[data-consumer-name-typography]').text(),
+          name: $el('[data-consumer-name-typography]').text(),
           rating: Number(
             $el('div[data-service-review-rating]').attr(
               'data-service-review-rating'
@@ -380,11 +380,11 @@ const getTrustpilotReviews = async ({ page, url, selectedCompany }) => {
       result = await page.content()
       await loadReviews(items, result)
 
-      if (await page.$('a[name=pagination-button-next]')) {
+      if (await page.$('a[name=pagination-button-next]:not([aria-disabled=true])')) {
         await loadMore()
       }
     }
-    if (await page.$('a[name=pagination-button-next]')) {
+    if (await page.$('a[name=pagination-button-next]:not([aria-disabled=true])')) {
       await loadMore()
     }
 
@@ -465,7 +465,7 @@ const getRecoseReviews = async ({ page, url, selectedCompany }) => {
 
 const getBookingReviews = async ({ page, url, selectedCompany }) => {
   try {
-    await page.click('a.toggle_review')
+    await page.click('a[rel=reviews][role=button]')
     await page.waitForNetworkIdle()
 
     const items = []
