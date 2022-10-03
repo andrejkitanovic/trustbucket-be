@@ -47,6 +47,10 @@ const ratingSchema = new Schema({
     default: false,
   },
   email: String,
+  tags: [{
+    type: Schema.Types.ObjectID,
+    ref: "Tag"
+  }]
 })
 
 module.exports = mongoose.model('Rating', ratingSchema)
