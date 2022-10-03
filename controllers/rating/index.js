@@ -62,7 +62,7 @@ exports.getRatings = async (req, res, next) => {
   try {
     const { selectedCompany } = req.auth
 
-    const ratings = await Rating.find({ company: selectedCompany })
+    const ratings = await Rating.find({ company: selectedCompany }).populate('tags')
     const count = await Rating.countDocuments({ company: selectedCompany })
 
     const notRepliedCount = await Rating.countDocuments({
@@ -114,6 +114,7 @@ exports.filterRatings = async (req, res, next) => {
       .sort([[sortField, sortOrder === 'asc' ? 1 : -1]])
       .skip(Number((pageNumber - 1) * pageSize))
       .limit(Number(pageSize))
+      .populate('tags')
     const count = await Rating.countDocuments(filterObject)
     const notRepliedCount = await Rating.countDocuments({
       ...filterObject,
