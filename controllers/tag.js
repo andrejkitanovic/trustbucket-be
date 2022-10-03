@@ -4,8 +4,10 @@ const Tag = require('../models/tag')
 
 exports.getTags = async (req, res, next) => {
     try {
-        const tags = await Tag.find()
-        const count = await Tag.countDocuments()
+        const { selectedCompany } = req.auth
+
+        const tags = await Tag.find({ company: selectedCompany })
+        const count = await Tag.countDocuments({ company: selectedCompany })
 
         res.status(200).json({
             data: tags,
