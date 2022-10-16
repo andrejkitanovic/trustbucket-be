@@ -154,7 +154,6 @@ exports.stats = async (req, res, next) => {
     const { from, to } = req.query
 
     const company = await Company.findById(selectedCompany)
-    console.log(company)
     const types = company.ratings.map((el) => !el.downloading && el.type)
 
     let matchObjectCore = {

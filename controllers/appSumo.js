@@ -5,7 +5,6 @@ const Company = require('../models/company')
 exports.postToken = async (req, res, next) => {
   try {
     const { username, password } = req.query
-    console.log(req.query)
 
     const token = jwt.sign(
       {
