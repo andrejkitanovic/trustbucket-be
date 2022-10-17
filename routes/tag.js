@@ -6,6 +6,7 @@ const router = express.Router()
 
 router.get('/', auth, tagController.getTags)
 router.post('/', auth, tagController.postTag)
+router.post('/assign', auth, tagController.assignTag)
 router.delete('/:id', auth, tagController.deleteTag)
 
 module.exports = router

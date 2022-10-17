@@ -52,6 +52,27 @@ exports.postTag = async (req, res, next) => {
   }
 }
 
+exports.assignTag = async (req, res, next) => {
+  try {
+    const { selectedCompany } = req.auth
+    const { tagId, reviewId } = req.body
+
+    await Rating.findOneAndUpdate(
+      {
+        company: selectedCompany,
+        _id: reviewId,
+      },
+      { $addToSet: { tags: tagId } }
+    )
+
+    res.status(200).json({
+      message: 'Tag assigned!',
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
 exports.deleteTag = async (req, res, next) => {
   try {
     const { selectedCompany } = req.auth
