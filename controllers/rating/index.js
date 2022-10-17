@@ -38,6 +38,7 @@ exports.companyRatings = async (req, res, next) => {
 
       filterObject.tags = { $in: tags }
     }
+    
 
     const ratings = await Rating.find({ ...filterObject })
       .sort([[sortField, sortOrder === 'asc' ? 1 : -1]])
@@ -112,6 +113,11 @@ exports.filterRatings = async (req, res, next) => {
 
     if (req.body.reply === false) {
       additionalObject.reply = undefined
+    }
+    if (req.body.tags) {
+      const { tags } = req.body
+
+      filterObject.tags = { $in: tags }
     }
 
     const ratings = await Rating.find({
