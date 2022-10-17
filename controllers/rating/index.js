@@ -114,7 +114,7 @@ exports.filterRatings = async (req, res, next) => {
     if (req.body.reply === false) {
       additionalObject.reply = undefined
     }
-    if (req.body.tags) {
+    if (req.body.tags && req.body.tags.length) {
       const { tags } = req.body
 
       filterObject.tags = { $in: tags }
