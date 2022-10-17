@@ -318,6 +318,7 @@ const getTrustpilotReviews = async ({ page, url, selectedCompany }) => {
     //   await showAllReviews.evaluate(b => b.click());
     //   await page.waitForNetworkIdle()
     // }
+    await page.goto(page.url() + "?languages=all")
 
     const items = []
     let result = await page.content()
@@ -369,24 +370,24 @@ const getTrustpilotReviews = async ({ page, url, selectedCompany }) => {
       page.click('button[id=onetrust-accept-btn-handler]')
     }
 
-    const loadMore = async () => {
-      await page.evaluate(() => {
-        // eslint-disable-next-line no-undef
-        const nextEl = document.querySelector('a[name=pagination-button-next]')
-        if (nextEl) nextEl.click()
-      })
-      await page.waitForNetworkIdle()
+    // const loadMore = async () => {
+    //   await page.evaluate(() => {
+    //     // eslint-disable-next-line no-undef
+    //     const nextEl = document.querySelector('a[name=pagination-button-next]')
+    //     if (nextEl) nextEl.click()
+    //   })
+    //   await page.waitForNetworkIdle()
 
-      result = await page.content()
-      await loadReviews(items, result)
+    //   result = await page.content()
+    //   await loadReviews(items, result)
 
-      if (await page.$('a[name=pagination-button-next]:not([aria-disabled=true])')) {
-        await loadMore()
-      }
-    }
-    if (await page.$('a[name=pagination-button-next]:not([aria-disabled=true])')) {
-      await loadMore()
-    }
+    //   if (await page.$('a[name=pagination-button-next]:not([aria-disabled=true])')) {
+    //     await loadMore()
+    //   }
+    // }
+    // if (await page.$('a[name=pagination-button-next]:not([aria-disabled=true])')) {
+    //   await loadMore()
+    // }
 
     return items
   } catch (err) {
