@@ -53,7 +53,13 @@ exports.postTag = async (req, res, next) => {
 
 exports.deleteTag = async (req, res, next) => {
     try {
-        const tagDeleted = await Tag.findByIdAndDelete(req.query.id)
+        const { selectedCompany } = req.auth
+
+        const tagDeleted = await Tag.findOneAndDelete({
+            company: selectedCompany,
+            _id: req.query.id,
+        })
+        console.log(tagDeleted)
 
         if (!tagDeleted) {
             const error = new Error('Not Found!')
