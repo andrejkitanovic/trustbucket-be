@@ -19,7 +19,9 @@ exports.getWidget = async (req, res, next) => {
 
     await widget.populate('selectedCompany')
 
-    const params = {}
+    const params = {
+      company: companyId,
+    }
     if (
       widget.object &&
       widget.object.reviewSources &&
@@ -27,8 +29,14 @@ exports.getWidget = async (req, res, next) => {
     ) {
       params.type = widget.object.reviewSources
     }
+    if (
+      widget.object &&
+      widget.object.tags
+    ){
+      params.tags = widget.object.tags
+    }
 
-    const ratings = await Rating.find({ company: companyId })
+    const ratings = await Rating.find({ ...params })
       .sort([['date', -1]])
       .limit(50)
 

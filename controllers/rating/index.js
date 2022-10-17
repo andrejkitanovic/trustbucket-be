@@ -33,6 +33,11 @@ exports.companyRatings = async (req, res, next) => {
         $lte: _.max(rating),
       }
     }
+    if (req.body.tags) {
+      const { tags } = req.body
+
+      filterObject.tags = { $in: tags }
+    }
 
     const ratings = await Rating.find({ ...filterObject })
       .sort([[sortField, sortOrder === 'asc' ? 1 : -1]])
@@ -62,7 +67,9 @@ exports.getRatings = async (req, res, next) => {
   try {
     const { selectedCompany } = req.auth
 
-    const ratings = await Rating.find({ company: selectedCompany }).populate('tags')
+    const ratings = await Rating.find({ company: selectedCompany }).populate(
+      'tags'
+    )
     const count = await Rating.countDocuments({ company: selectedCompany })
 
     const notRepliedCount = await Rating.countDocuments({
