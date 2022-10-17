@@ -57,12 +57,15 @@ exports.assignTag = async (req, res, next) => {
     const { selectedCompany } = req.auth
     const { tagId, reviewId } = req.body
 
+    const findRating = await Rating.findById(reviewId);
+    const hasTag = findRating.tags.includes(tagId);
+
     await Rating.findOneAndUpdate(
       {
         company: selectedCompany,
         _id: reviewId,
       },
-      { $addToSet: { tags: tagId } }
+      { [hasTag ? `$pull` : `$addToSet`]: { tags: tagId } }
     )
 
     res.status(200).json({
