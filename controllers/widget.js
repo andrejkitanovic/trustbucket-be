@@ -29,11 +29,8 @@ exports.getWidget = async (req, res, next) => {
     ) {
       params.type = widget.object.reviewSources
     }
-    if (
-      widget.object &&
-      widget.object.tags
-    ){
-      params.tags = widget.object.tags
+    if (widget.object && widget.object.tags && widget.object.tags.length) {
+      params.tags = { $in: widget.object.tags }
     }
 
     const ratings = await Rating.find({ ...params })

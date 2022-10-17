@@ -33,7 +33,7 @@ exports.companyRatings = async (req, res, next) => {
         $lte: _.max(rating),
       }
     }
-    if (req.body.tags) {
+    if (req.body.tags && req.body.tags.length) {
       const { tags } = req.body
 
       filterObject.tags = { $in: tags }
