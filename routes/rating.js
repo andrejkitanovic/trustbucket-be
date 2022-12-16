@@ -5,7 +5,6 @@ const googleRatingController = require('../controllers/rating/google')
 const freshaRatingController = require('../controllers/rating/fresha')
 const recoseRatingController = require('../controllers/rating/recose')
 const bookingRatingController = require('../controllers/rating/booking')
-const trustpilotController = require('../controllers/rating/trustpilot')
 const bokadirektController = require('../controllers/rating/bokadirekt')
 const hittaController = require('../controllers/rating/hitta')
 const yelpController = require('../controllers/rating/yelp')
@@ -59,14 +58,6 @@ router.post(
 router.post('/google', auth, googleRatingController.saveGoogleReviews)
 router.post('/google/reply', auth, googleRatingController.replyGoogleReview)
 router.delete('/google/reply/:reviewId', auth, googleRatingController.deleteGoogleReview)
-
-// TRUSTPILOT - DONE
-router.post(
-  '/trustpilot/search',
-  auth,
-  trustpilotController.searchTrustpilotProfile
-)
-router.post('/trustpilot', auth, trustpilotController.saveTrustpilotProfile)
 
 // FRESHA - DONE
 router.post('/fresha/search', auth, freshaRatingController.searchFreshaProfile)
