@@ -1,0 +1,64 @@
+version: "3.4"
+
+services:
+
+  mongo:
+    image: mongo:5.0.15
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: trustbucket
+
+  mongo-express:
+    image: mongo-express:latest
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+
+  trustbucket-be:
+    image: "trustbucket-be"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      DECODE_KEY: trustbucket-CHANGEME
+      MONGODB_URI: mongodb://root:example@mongo/trustbucket?retryWrites=true
+      API_KEY_GOOGLE: SETME
+      CLIENT_ID_GOOGLE: SETME
+      CLIENT_SECRET_GOOGLE: SETME
+      MJ_APIKEY_PUBLIC: SETME
+      MJ_APIKEY_PRIVATE: SETME
+      STRIPE_PUBLISH_KEY: SETME
+      STRIPE_SECRET_KEY: SETME
+    # env_file:
+    #   - .env
+
+  trustbucket-fe:
+    image: "trustbucket-fe"
+    build:
+      context: ../review.trustbucket.io
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_API_URL: http:///trustbucket-be/api/
+
+  trustbucketadmin:
+    image: "trustbucketadmin"
+    build:
+      context: ../trustbucketadmin
+      dockerfile: Dockerfile
+    ports:
+      - "80:9000"
+    environment:
+      REACT_APP_API_URL: http://trustbucket-be/api/
+      REACT_APP_GOOGLE_CLIENT_ID: SETME
